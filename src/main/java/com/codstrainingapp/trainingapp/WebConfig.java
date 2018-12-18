@@ -7,21 +7,23 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+//import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import javax.sql.DataSource;
+import java.util.Properties;
 
 
 @Configuration
 @EnableWebMvc
 //@EnableJpaRepositories("com.codstrainingapp.trainingapp.repositories")
 @ComponentScan(basePackages= {"com.codstrainingapp.trainingapp.*"})
-//@PropertySource(value = { "classpath:application.properties" })
+@PropertySource("classpath:application.properties")
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Bean
@@ -33,19 +35,38 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return viewResolver;
     }
 
-//    @Autowired
-//    private Environment environment;
-//
-//    @Bean
-//    public DataSource dataSource() {
-//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-//        dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
-//        dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
-//        dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
-//        dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
-//        return dataSource;
-//    }
-////
+    @Autowired
+    private Environment environment;
+
+    @Bean
+    public LocalSessionFactoryBean sessionFactory() {
+        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+        sessionFactory.setDataSource(dataSource());
+        sessionFactory.setPackagesToScan("com.codstrainingapp.trainingapp.models");
+        sessionFactory.setHibernateProperties(hibernateProperties());
+        return sessionFactory;
+    }
+
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(environment.getRequiredProperty("spring.datasource.driver-class-name"));
+        dataSource.setUrl(environment.getRequiredProperty("spring.datasource.url"));
+        dataSource.setUsername(environment.getRequiredProperty("spring.datasource.username"));
+        dataSource.setPassword(environment.getRequiredProperty("spring.datasource.password"));
+        return dataSource;
+    }
+
+    private Properties hibernateProperties() {
+        Properties properties = new Properties();
+//        properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
+//        properties.put("hibernate.format_sql", environment.getRequiredProperty("hibernate.format_sql"));
+        properties.put("true", environment.getRequiredProperty("spring.jpa.show-sql"));
+        properties.put("org.hibernate.dialect.MySQLDialect", environment.getRequiredProperty("spring.jpa.database-platform"));
+        properties.put("hibernate.hbm2ddl.auto", environment.getRequiredProperty("spring.jpa.hibernate.ddl-auto"));
+        return properties;
+    }
+
 }
 
 //    @Configuration indicates that this class contains one or more bean methods annotated with
