@@ -10,31 +10,31 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-//@Entity
-//@Table(name="users")
+@Entity
+@Table(name="users")
 public class User {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-increment
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-increment
     private Long id;
 
-//    @Column(nullable = false, unique = true)
-//    @NotBlank(message="Please enter a username.")
-//    @Length(min = 2, max = 20, message="Your username must be between 2-20 characters.")
+    @Column(nullable = false, unique = true)
+    @NotBlank(message="Please enter a username.")
+    @Length(min = 2, max = 20, message="Your username must be between 2-20 characters.")
     private String username;
 
-//    @Column(nullable = false, unique = true)
-//    @NotBlank(message = "Please enter an email address.")
-//    @Email(message = "That email is not a valid email address.")
+    @Column(nullable = false, unique = true)
+    @NotBlank(message = "Please enter an email address.")
+    @Email(message = "That email is not a valid email address.")
     private String email;
 
-//    @Column(nullable = false)
-//    @NotBlank(message = "Your password cannot be empty.")
-//    @Length(min = 8, max = 100, message="Your password must be between 8-100 characters.") // BCrypt PasswordEncoder hashes passwords with 60 random characters. Make sure the max is >= 60
-//    @JsonIgnore //password is hidden from the client
+    @Column(nullable = false)
+    @NotBlank(message = "Your password cannot be empty.")
+    @Length(min = 8, max = 100, message="Your password must be between 8-100 characters.") // BCrypt PasswordEncoder hashes passwords with 60 random characters. Make sure the max is >= 60
+    @JsonIgnore //password is hidden from the client
     private String password;
 
-//    @Column(name = "JOINED_DATE")
+    @Column(name = "joined_date")
     private LocalDateTime date;
 
     public User(){}
@@ -54,8 +54,8 @@ public class User {
 
 //    ============================= relationships ==========================
 
-    @OneToMany
-    public List<Post> posts;
+//    @OneToMany
+//    public List<Post> posts;
 
 //    ============================ getters and setters =====================
 

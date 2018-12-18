@@ -10,10 +10,6 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <spring.version>4.3.21.RELEASE</spring.version>
         <jdk.version>1.8</jdk.version>
-        <!--<jstl.version>1.2.1</jstl.version>-->
-        <!--<tld.version>1.1.2</tld.version>-->
-        <!--<servlets.version>3.1.0</servlets.version>-->
-        <!--<jsp.version>2.3.1</jsp.version>-->
     </properties>
     <dependencies>
 
@@ -30,11 +26,11 @@
             <version>1.4.1.RELEASE</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jpa</artifactId>
-            <version>1.9.4.RELEASE</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.data</groupId>-->
+            <!--<artifactId>spring-data-jpa</artifactId>-->
+            <!--<version>1.9.4.RELEASE</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.springframework</groupId>
@@ -102,7 +98,6 @@
             <artifactId>hibernate-entitymanager</artifactId>
             <version>5.4.0.Final</version>
         </dependency>
-
 
         <!--================== jackson =================-->
         <dependency>
