@@ -19,6 +19,13 @@
 <body>
 <jsp:include page="/WEB-INF/views/partials/navbar.jsp" />
 
+<% String username = request.getParameter("username");
+    if (username == null) username = "";
+    String email = request.getParameter("email");
+    if (email == null) email = "";
+%>
+
+
 <h3>${message}</h3>
 
 <div class="container" ng-controller="RegisterController">
@@ -30,12 +37,12 @@
 
         <div class="form-group">
             <label for="username">Username</label>
-            <input id="username" name="username" class="form-control">
+            <input id="username" name="username" class="form-control" value="<%=username%>">
         </div>
 
         <div class="form-group">
             <label for="email">Email</label>
-            <input id="email" name="email" class="form-control" type="text">
+            <input id="email" name="email" class="form-control" type="text" value="<%=email%>">
         </div>
 
         <div class="form-group">
