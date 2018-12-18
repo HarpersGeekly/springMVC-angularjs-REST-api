@@ -2,4 +2,4 @@
 target/
 .idea/
 
-src/main/application.properties
+src/main/resources/application.properties
