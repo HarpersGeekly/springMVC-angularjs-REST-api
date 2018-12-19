@@ -4,9 +4,11 @@ import com.codstrainingapp.trainingapp.models.Password;
 import com.codstrainingapp.trainingapp.models.User;
 import com.codstrainingapp.trainingapp.repositories.ListUsersDao;
 import com.codstrainingapp.trainingapp.repositories.UsersRepository;
+import com.sun.xml.bind.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -16,15 +18,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 //@SessionAttributes("user")
 public class UsersController {
 
-//    private UsersRepository usersDao;
+    //TODO
+    //private UsersRepository usersDao;
     private ListUsersDao usersDao = new ListUsersDao();
 
+    //TODO
 //    @Autowired
 //    public UsersController(UsersRepository usersDao) {
 //        this.usersDao = usersDao;
@@ -52,30 +57,62 @@ public class UsersController {
     @PostMapping("/login")
     public String login(@ModelAttribute("user") User user, Model viewModel, HttpServletRequest request, RedirectAttributes redirect) {
 
+        boolean usernameIsEmpty = user.getUsername().isEmpty();
+        boolean passwordIsEmpty = user.getPassword().isEmpty();
+        System.out.println(user.getUsername());
+        System.out.println(usernameIsEmpty);
+        System.out.println(passwordIsEmpty);
 
         User existingUser = usersDao.findByUsername(user.getUsername());
-
         System.out.println("got to login POST method");
-        System.out.println(existingUser.getId());
-        System.out.println(existingUser.getUsername());
-        System.out.println(existingUser.getPassword());
 
-        boolean usernameIsEmpty = user.getUsername() == null;
-        boolean passwordIsEmpty = user.getPassword() == null;
-        boolean passwordsMatch = existingUser.getPassword().equals(user.getPassword());
+        boolean userExists = (existingUser != null);
+        boolean validAttempt = userExists && existingUser.getUsername().equals(user.getUsername()) && existingUser.getPassword().equals(user.getPassword());
 
-//
-        boolean validAttempt = existingUser.getUsername().equals(user.getUsername()) && existingUser.getPassword().equals(user.getPassword());
-            if(!validAttempt || usernameIsEmpty || passwordIsEmpty || !passwordsMatch) {
-                System.out.println("not a valid attempt");
-                viewModel.addAttribute("errorMessage", true);
+        if (userExists && !passwordIsEmpty) {
+            boolean passwordCorrect = existingUser.getPassword().equals(user.getPassword()); // check the submitted password against what I have in the database
+            // incorrect password:
+            if (!passwordCorrect) {
+                viewModel.addAttribute("passwordIsIncorrect", true);
                 viewModel.addAttribute("user", user);
                 return "users/login";
             }
+        }
 
-        request.getSession().setAttribute("user", existingUser);
-        redirect.addFlashAttribute("user", existingUser);
-        return "redirect:/profile/" + existingUser.getId() + "/" + existingUser.getUsername();
+        // both empty...
+        if (usernameIsEmpty && passwordIsEmpty) {
+            viewModel.addAttribute("usernameIsEmpty", true);
+            viewModel.addAttribute("passwordIsEmpty", true);
+            return "users/login";
+        }
+        //one or the other...
+        if (!usernameIsEmpty && passwordIsEmpty) {
+            viewModel.addAttribute("passwordIsEmpty", true);
+            viewModel.addAttribute("user", user);
+            return "users/login";
+        }
+        if (usernameIsEmpty && !passwordIsEmpty) {
+            viewModel.addAttribute("usernameIsEmpty", true);
+            viewModel.addAttribute("user", user);
+            return "users/login";
+        }
+
+        // username doesn't exist:
+        if ((!usernameIsEmpty && !passwordIsEmpty) && !userExists) {
+            request.setAttribute("userNotExist", !userExists);
+            return "users/login";
+        }
+
+        if (!validAttempt) {
+            System.out.println("not a valid attempt");
+            viewModel.addAttribute("errorMessage", true);
+            viewModel.addAttribute("user", user);
+            return "users/login";
+        } else {
+            request.getSession().setAttribute("user", existingUser);
+            redirect.addFlashAttribute("user", existingUser);
+            return "redirect:/profile/" + existingUser.getId() + "/" + existingUser.getUsername();
+        }
     }
 
     @GetMapping("/register")
@@ -87,51 +124,67 @@ public class UsersController {
         }
 
         viewModel.addAttribute("message", "Welcome to the register page - TEST");
+        viewModel.addAttribute("user", new User());
         return "users/register";
     }
 
     @PostMapping("/register")
-    public String register(@RequestParam(name = "username") String username,
-                           @RequestParam(name = "email") String email,
-                           @RequestParam(name = "password") String password,
-                           HttpServletRequest request) {
+    public String register(
+//                           @RequestParam(name = "username") String username,
+//                           @RequestParam(name = "email") String email,
+//                           @RequestParam(name = "password") String password,
+//                           @RequestParam(name = "password_confirm") String passwordConfirmation,
+//                           HttpServletRequest request) {
+            @Valid User user,
+            BindingResult result,
+            Model viewModel,
+            HttpServletRequest request,
+            @RequestParam(name = "confirm_password") String passwordConfirmation) {
 
-        User user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(password);
+        User existingUser = usersDao.findByUsername(user.getUsername());
+        if (existingUser != null) {
+            result.rejectValue(
+                    "username",
+                    "user.username",
+                    "Username is already taken.");
+        }
+
+        User existingEmail = usersDao.findByEmail(user.getEmail());
+        if (existingEmail != null) {
+            result.rejectValue(
+                    "email",
+                    "user.email",
+                    "Email is already used.");
+        }
+
+        //compare passwords:
+        if (!passwordConfirmation.equals(user.getPassword())) {
+            result.rejectValue(
+                    "password",
+                    "user.password",
+                    "Your passwords do not match.");
+        }
+
+        // if there are errors, show the form again.
+        if (result.hasErrors()) {
+            viewModel.addAttribute("errors", result);
+            viewModel.addAttribute("user", user);
+            return "users/register";
+        }
+
         user.setDate(LocalDateTime.now());
-
         usersDao.insert(user);
-
-        System.out.println(user.getId());
-        System.out.println(user.getUsername());
-//        User existingUser = usersDao.findByUsername(user.getUsername());
-
-//        if (existingUser != null) {
-        //if there is already a user in the database...
-//        }
-
-//        usersDao.save(user);
-//        return "/login";
-//        userSvc.authenticate(user); //automatically login user
         request.getSession().setAttribute("user", user);
-
-
-//        long id = user.getId();
-//        String newUserUsername = user.getUsername();
         return "redirect:/profile/" + user.getId() + '/' + user.getUsername();
-//        return "redirect:/profile";
     }
 
     @GetMapping("/profile/{id}/{username}")
     public String showOtherUsersProfile(@PathVariable long id, Model viewModel) {
         User user = usersDao.findOne(id);
-        viewModel.addAttribute("message", "Welcome to the profile page - TEST");
         viewModel.addAttribute("user", user);
         System.out.println("user: " + user.getUsername());
 
-//        old way
+//        "old way"
 //        User u = (User)request.getSession().getAttribute("user");
 //        System.out.println(u.getUsername());
 //        viewModel.addAttribute("user", u.getUsername());
@@ -141,7 +194,7 @@ public class UsersController {
     @GetMapping("/profile")
     public String showProfile(HttpServletRequest request) {
 
-        User sessionUser = (User)request.getSession().getAttribute("user");
+        User sessionUser = (User) request.getSession().getAttribute("user");
         if (sessionUser == null) {
             return "redirect:/login";
         }
@@ -151,6 +204,12 @@ public class UsersController {
 
         return "redirect:/profile" + user.getId() + '/' + user.getUsername();
     }
+
+    @GetMapping("/getUser/{id}")
+    @ResponseBody
+    public User getUser(@PathVariable(name="id") long id) {
+        return usersDao.findOne(id);
+}
 
 }
 
