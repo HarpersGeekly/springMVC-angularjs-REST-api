@@ -22,7 +22,7 @@ import java.util.Properties;
 @Configuration
 @EnableWebMvc
 //@EnableJpaRepositories("com.codstrainingapp.trainingapp.repositories")
-@ComponentScan(basePackages= {"com.codstrainingapp.trainingapp.*"})
+@ComponentScan(basePackages= {"com.codstrainingapp.trainingapp"})
 @PropertySource("classpath:application.properties")
 public class WebConfig extends WebMvcConfigurerAdapter {
 
