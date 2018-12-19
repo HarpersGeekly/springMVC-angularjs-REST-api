@@ -39,6 +39,17 @@ public class ListUsersDao {
         return null;
     }
 
+    public User findByEmail(String email) {
+        User user;
+        for(User u : users) {
+            if(u.getEmail().equals(email)) {
+                user = u;
+                return user;
+            }
+        }
+        return null;
+    }
+
     public Long insert(User user) {
         // make sure we have users
         if (users == null) {
