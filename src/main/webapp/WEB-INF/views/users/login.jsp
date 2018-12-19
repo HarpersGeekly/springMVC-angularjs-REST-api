@@ -22,13 +22,11 @@
     <h1>Please Log In</h1>
     <form:form action="/login" method="POST" modelAttribute="user">
 
-        <h3>${errorMessage}</h3>
-
         <div class="form-group">
             <label for="username">Username</label>
             <input id="username" name="username" class="form-control" type="text" value="${user.username}">
         </div>
-        <c:if test="${usernameEmpty}">
+        <c:if test="${usernameIsEmpty}">
             <div class="alert alert-danger alert-dismissible" role="alert">
                 <strong>Please enter a username</strong>
             </div>
@@ -43,12 +41,12 @@
             <label for="password">Password</label>
             <input id="password" name="password" class="form-control" type="password" value="${user.password}">
         </div>
-        <c:if test="${passwordEmpty}">
+        <c:if test="${passwordIsEmpty}">
             <div class="alert alert-danger alert-dismissible" role="alert">
                 <strong>Please enter a password</strong>
             </div>
         </c:if>
-        <c:if test="${passwordIncorrect != null}">
+        <c:if test="${passwordIsIncorrect}">
             <div class="alert alert-danger alert-dismissible" role="alert">
                 <strong>Incorrect password</strong>
             </div>
