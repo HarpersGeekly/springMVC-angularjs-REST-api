@@ -26,11 +26,11 @@
 %>
 
 
-<h3>${message}</h3>
+<h3>Register here:</h3>
 
-<div class="container" ng-controller="RegisterController">
+<div class="container">
 
-    <form action="/register" method="POST" >
+    <form:form action="/register" method="POST" modelAttribute="user">
 
         <input id="id" name="id" type="hidden">
         <input id="joinDate" name="joinDate" type="hidden">
@@ -38,16 +38,19 @@
         <div class="form-group">
             <label for="username">Username</label>
             <input id="username" name="username" class="form-control" value="<%=username%>">
+            <form:errors path="username" />
         </div>
 
         <div class="form-group">
             <label for="email">Email</label>
             <input id="email" name="email" class="form-control" type="text" value="<%=email%>">
+            <div><form:errors path="email" /></div>
         </div>
 
         <div class="form-group">
             <label for="password">Password</label>
             <input id="password" name="password" class="form-control" type="password">
+            <form:errors path="password" />
         </div>
 
         <div class="form-group">
@@ -57,7 +60,7 @@
 
         <input type="submit" class="btn btn-primary btn-block" value="Register">
 
-    </form>
+    </form:form>
 </div>
 <jsp:include page="/WEB-INF/views/partials/footer.jsp"/>
 </body>
