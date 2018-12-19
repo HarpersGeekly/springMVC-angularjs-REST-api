@@ -9,46 +9,52 @@
 
 <html data-ng-app="app"> <!-- an angular directive, defines that this is an angularjs application, give it a name-->
 <head>
-    <title>Hello AngularJS</title>
+    <jsp:include page="/WEB-INF/views/partials/header.jsp">
+        <jsp:param name="title" value="trainingapp" />
+    </jsp:include>
 </head>
-<body>
+<jsp:include page="/WEB-INF/views/partials/navbar.jsp" />
 
-    <div data-ng-controller="Hello">
+<div class="container flex-center">
+    <h1>Welcome!</h1>
+</div>
 
-        Your name: <input data-ng-model="name">
-        You entered: {{ name }}
-        <button data-ng-click="update()" data-ng-enter="update()">Update</button>
+    <%--<div data-ng-controller="Hello">--%>
 
-        <p>The count is {{greeting.id}}</p>
-        <p>The content is {{greeting.content}}</p>
+        <%--Your name: <input data-ng-model="name">--%>
+        <%--You entered: {{ name }}--%>
+        <%--<button data-ng-click="update()" data-ng-enter="update()">Update</button>--%>
 
-    </div>
+        <%--<p>The count is {{greeting.id}}</p>--%>
+        <%--<p>The content is {{greeting.content}}</p>--%>
+
+    <%--</div>--%>
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
 <script>
 
-    let app = angular.module('app', []);
-
-    app.controller('Hello', function($scope, $http) { //name is the same as the controller in index.jsp
-        //$http wil be used for accessing the server side data
-        // will are using a get call, accessing the greeting path
-        $http({
-            method: 'GET',
-            url: '/greeting'
-        }).then((function(response) {
-            console.log(response);
-                $scope.greeting = response.data; // in the view, index.jsp, this will refer and synchronized to {{greeting.id}} {greeting.content}}. Technically, {{$scope.greeting.id}}
-            }),
-
-        $scope.update = function() {
-            $http.get('greeting', {
-                params: {name: $scope.name}
-            }).then((function(response) {
-                $scope.greeting = response.data;
-            }))
-        })
-
-    })
+    // let app = angular.module('app', []);
+    //
+    // app.controller('Hello', function($scope, $http) { //name is the same as the controller in index.jsp
+    //     //$http wil be used for accessing the server side data
+    //     // will are using a get call, accessing the greeting path
+    //     $http({
+    //         method: 'GET',
+    //         url: '/greeting'
+    //     }).then((function(response) {
+    //         console.log(response);
+    //             $scope.greeting = response.data; // in the view, index.jsp, this will refer and synchronized to {{greeting.id}} {greeting.content}}. Technically, {{$scope.greeting.id}}
+    //         }),
+    //
+    //     $scope.update = function() {
+    //         $http.get('greeting', {
+    //             params: {name: $scope.name}
+    //         }).then((function(response) {
+    //             $scope.greeting = response.data;
+    //         }))
+    //     })
+    //
+    // })
 
 </script>
 </body>
