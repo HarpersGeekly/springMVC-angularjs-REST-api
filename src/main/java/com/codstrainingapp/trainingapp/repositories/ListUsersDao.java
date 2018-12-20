@@ -50,6 +50,11 @@ public class ListUsersDao {
         return null;
     }
 
+    public void update(User user) {
+        int index = users.indexOf(user);
+        users.set(index, user);
+    }
+
     public Long insert(User user) {
         // make sure we have users
         if (users == null) {
