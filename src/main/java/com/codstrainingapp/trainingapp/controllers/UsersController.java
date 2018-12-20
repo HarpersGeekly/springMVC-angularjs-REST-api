@@ -6,6 +6,8 @@ import com.codstrainingapp.trainingapp.repositories.ListUsersDao;
 import com.codstrainingapp.trainingapp.repositories.UsersRepository;
 import com.sun.xml.bind.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -182,12 +184,6 @@ public class UsersController {
     public String showOtherUsersProfile(@PathVariable long id, Model viewModel) {
         User user = usersDao.findOne(id);
         viewModel.addAttribute("user", user);
-        System.out.println("user: " + user.getUsername());
-
-//        "old way"
-//        User u = (User)request.getSession().getAttribute("user");
-//        System.out.println(u.getUsername());
-//        viewModel.addAttribute("user", u.getUsername());
         return "users/profile";
     }
 
@@ -200,9 +196,7 @@ public class UsersController {
         }
 
         User user = usersDao.findOne(sessionUser.getId());
-
-
-        return "redirect:/profile" + user.getId() + '/' + user.getUsername();
+        return "redirect:/profile/" + user.getId() + '/' + user.getUsername();
     }
 
     @GetMapping("/getUser/{id}")
@@ -210,6 +204,32 @@ public class UsersController {
     public User getUser(@PathVariable(name="id") long id) {
         return usersDao.findOne(id);
 }
+
+//------------------- Update a User --------------------------------------------------------
+
+    @RequestMapping(value = "/editUser/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<User> updateUser(@PathVariable("id") long id, @RequestBody User user) {
+        System.out.println("Updating User " + id);
+
+        User currentUser = usersDao.findOne(id);
+
+        if (currentUser==null) {
+            System.out.println("User with id " + id + " not found");
+            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+        }
+
+        currentUser.setUsername(user.getUsername());
+        currentUser.setEmail(user.getEmail());
+
+        usersDao.update(currentUser);
+
+        List<User> users = usersDao.findAll();
+        for(User u : users) {
+            System.out.println(u.getUsername());
+        }
+        return new ResponseEntity<User>(currentUser, HttpStatus.OK);
+    }
+
 
 }
 
