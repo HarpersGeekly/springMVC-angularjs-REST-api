@@ -19,38 +19,42 @@
 <body>
 <jsp:include page="/WEB-INF/views/partials/navbar.jsp" />
 
-<% String username = request.getParameter("username");
-    if (username == null) username = "";
-    String email = request.getParameter("email");
-    if (email == null) email = "";
-%>
-
-
-<h3>Register here:</h3>
+<%--<% String username = request.getParameter("username");--%>
+    <%--if (username == null) username = "";--%>
+    <%--String email = request.getParameter("email");--%>
+    <%--if (email == null) email = "";--%>
+<%--//    String bio = request.getParameter("bio");--%>
+<%--//    if (bio == null) bio = "";--%>
+<%--%>--%>
 
 <div class="container">
-
+    <h1>Register here:</h1>
     <form:form action="/register" method="POST" modelAttribute="user">
 
-        <input id="id" name="id" type="hidden">
         <input id="joinDate" name="joinDate" type="hidden">
 
         <div class="form-group">
             <label for="username">Username</label>
-            <input id="username" name="username" class="form-control" value="<%=username%>">
-            <form:errors path="username" />
+            <input id="username" name="username" class="form-control" value="${user.username}">
+            <form:errors  path="username" />
         </div>
 
         <div class="form-group">
             <label for="email">Email</label>
-            <input id="email" name="email" class="form-control" type="text" value="<%=email%>">
-            <div><form:errors path="email" /></div>
+            <input id="email" name="email" class="form-control" type="text" value="${user.email}">
+            <form:errors  path="email" />
+        </div>
+
+        <div class="form-group">
+            <label for="bio">Bio</label><span>(optional)</span>
+            <textarea id="bio" name="bio" class="form-control" value="${user.bio}"></textarea>
+            <form:errors path="bio" />
         </div>
 
         <div class="form-group">
             <label for="password">Password</label>
             <input id="password" name="password" class="form-control" type="password">
-            <form:errors path="password" />
+            <form:errors  path="password" />
         </div>
 
         <div class="form-group">
