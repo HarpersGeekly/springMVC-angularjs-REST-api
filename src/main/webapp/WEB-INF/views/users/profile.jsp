@@ -78,7 +78,6 @@
                  console.log("failure");
                  console.log(error);
              });
-
         };
 
         $scope.saveUser = function() {
@@ -95,7 +94,7 @@
                 console.log(error);
             })
         };
-        
+
     });
 
 </script>
