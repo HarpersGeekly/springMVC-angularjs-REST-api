@@ -4,6 +4,7 @@ import com.codstrainingapp.trainingapp.models.Password;
 import com.codstrainingapp.trainingapp.models.User;
 import com.codstrainingapp.trainingapp.repositories.ListUsersDao;
 import com.codstrainingapp.trainingapp.repositories.UsersRepository;
+import com.google.gson.Gson;
 import com.sun.xml.bind.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,8 @@ public class UsersController {
 //    public UsersController(UsersRepository usersDao) {
 //        this.usersDao = usersDao;
 //    }
+
+//------------------------------------------- Login -------------------------------------------------
 
     @GetMapping("/login")
     public String showLoginForm(Model viewModel, HttpServletRequest request) {
@@ -117,6 +120,8 @@ public class UsersController {
         }
     }
 
+//-------------------------------------- Register --------------------------------------------------
+
     @GetMapping("/register")
     public String register(Model viewModel) {
 
@@ -125,7 +130,6 @@ public class UsersController {
             System.out.println("user:" + u.getUsername());
         }
 
-        viewModel.addAttribute("message", "Welcome to the register page - TEST");
         viewModel.addAttribute("user", new User());
         return "users/register";
     }
@@ -137,12 +141,23 @@ public class UsersController {
 //                           @RequestParam(name = "password") String password,
 //                           @RequestParam(name = "password_confirm") String passwordConfirmation,
 //                           HttpServletRequest request) {
-            @Valid User user,
+            @Valid @ModelAttribute("user") User user,
             BindingResult result,
             Model viewModel,
             HttpServletRequest request,
             @RequestParam(name = "confirm_password") String passwordConfirmation) {
 
+        System.out.println("bio:" + user.getBio());
+
+        if (user.getBio().isEmpty()) {
+            user.setBio(null);
+        } else {
+            user.setBio(user.getBio());
+        }
+
+        System.out.println(user.getBio());
+
+        System.out.println("get to register post");
         User existingUser = usersDao.findByUsername(user.getUsername());
         if (existingUser != null) {
             result.rejectValue(
@@ -169,6 +184,8 @@ public class UsersController {
 
         // if there are errors, show the form again.
         if (result.hasErrors()) {
+            result.getFieldErrors().stream().forEach(f -> System.out.println((f.getField() + ": " + f.getDefaultMessage())));
+            System.out.println("errors");
             viewModel.addAttribute("errors", result);
             viewModel.addAttribute("user", user);
             return "users/register";
@@ -177,13 +194,28 @@ public class UsersController {
         user.setDate(LocalDateTime.now());
         usersDao.insert(user);
         request.getSession().setAttribute("user", user);
+
+        List<User> users = usersDao.findAll();
+        for (User u : users) {
+            System.out.println("user:" + u.getUsername());
+        }
         return "redirect:/profile/" + user.getId() + '/' + user.getUsername();
     }
+
+// ---------------------------- Profile -------------------------------------------------------
 
     @GetMapping("/profile/{id}/{username}")
     public String showOtherUsersProfile(@PathVariable long id, Model viewModel) {
         User user = usersDao.findOne(id);
         viewModel.addAttribute("user", user);
+
+        System.out.println("===GOT TO PROFILE===");
+        System.out.println(user.getUsername());
+
+        Gson gson = new Gson();
+        String userJson = gson.toJson(user);
+
+        viewModel.addAttribute("userJson", userJson);
         return "users/profile";
     }
 
@@ -199,35 +231,36 @@ public class UsersController {
         return "redirect:/profile/" + user.getId() + '/' + user.getUsername();
     }
 
-    @GetMapping("/getUser/{id}")
+//----------------------- Get User -------------------------------------------------------
+
+    @GetMapping(value = "/getUser/{id}", produces = "application/json")
     @ResponseBody
-    public User getUser(@PathVariable(name="id") long id) {
-        return usersDao.findOne(id);
+    public String getUser(@PathVariable(name="id") long id) {
+        Gson gson = new Gson();
+        System.out.println(gson.toJson(usersDao.findOne(id)));
+        return gson.toJson(usersDao.findOne(id));
 }
 
-//------------------- Update a User --------------------------------------------------------
+//---------------------- Update a User ---------------------------------------------------
 
-    @RequestMapping(value = "/editUser/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<User> updateUser(@PathVariable("id") long id, @RequestBody User user) {
-        System.out.println("Updating User " + id);
+    @PostMapping("/editUser/{id}")
+    @ResponseBody
+    public User updateUser(@PathVariable("id") long id, @RequestBody User user, Model viewModel) {
+        User updatedUser = usersDao.findOne(id);
 
-        User currentUser = usersDao.findOne(id);
+        updatedUser.setUsername(user.getUsername());
+        updatedUser.setEmail(user.getEmail());
 
-        if (currentUser==null) {
-            System.out.println("User with id " + id + " not found");
-            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-        }
-
-        currentUser.setUsername(user.getUsername());
-        currentUser.setEmail(user.getEmail());
-
-        usersDao.update(currentUser);
+        usersDao.update(updatedUser);
 
         List<User> users = usersDao.findAll();
         for(User u : users) {
             System.out.println(u.getUsername());
+            System.out.println(u.getEmail());
         }
-        return new ResponseEntity<User>(currentUser, HttpStatus.OK);
+
+        viewModel.addAttribute("user", updatedUser);
+        return updatedUser;
     }
 
 

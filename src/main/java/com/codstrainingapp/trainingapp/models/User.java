@@ -41,11 +41,11 @@ public class User {
 
     public User(){}
 
-    public User(long id, String username, String email, String password, LocalDateTime date) {
+    public User(long id, String username, String email, String bio, String password, LocalDateTime date) {
         this.id = id;
         this.username = username;
         this.email = email;
-//        this.bio = bio;
+        this.bio = bio;
         this.password = password;
         this.date = date;
     }

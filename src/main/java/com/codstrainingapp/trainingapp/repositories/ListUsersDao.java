@@ -73,6 +73,7 @@ public class ListUsersDao {
                 1,
                 "user1",
                 "user1@email.com",
+                null,
                 "password",
                 LocalDateTime.now()
         ));
@@ -80,6 +81,7 @@ public class ListUsersDao {
                 2,
                 "user2",
                 "user2@email.com",
+                null,
                 "password",
                 LocalDateTime.now()
         ));
@@ -87,6 +89,7 @@ public class ListUsersDao {
                 3,
                 "user3",
                 "user3@email.com",
+                null,
                 "password",
                 LocalDateTime.now()
         ));
@@ -94,6 +97,7 @@ public class ListUsersDao {
                 4,
                 "user4",
                 "user4@email.com",
+                null,
                 "password",
                 LocalDateTime.now()
         ));
