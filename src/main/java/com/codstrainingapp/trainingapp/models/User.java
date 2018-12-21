@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
-import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name="users")
@@ -28,6 +26,10 @@ public class User {
     @Email(message = "That email is not a valid email address.")
     private String email;
 
+    @Column(nullable = true)
+    @Length(max = 1500, message="Your bio must be less than 1500 characters.")
+    private String bio;
+
     @Column(nullable = false)
     @NotBlank(message = "Your password cannot be empty.")
     @Length(min = 8, max = 100, message="Your password must be between 8-100 characters.") // BCrypt PasswordEncoder hashes passwords with 60 random characters. Make sure the max is >= 60
@@ -39,17 +41,19 @@ public class User {
 
     public User(){}
 
-    public User(String username, String password){
-        this.username = username;
-        this.password = password;
-    }
-
     public User(long id, String username, String email, String password, LocalDateTime date) {
         this.id = id;
         this.username = username;
         this.email = email;
+//        this.bio = bio;
         this.password = password;
         this.date = date;
+    }
+
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = null;
     }
 
 //    ============================= relationships ==========================
@@ -98,5 +102,13 @@ public class User {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 }
