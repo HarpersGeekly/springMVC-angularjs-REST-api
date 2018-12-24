@@ -237,12 +237,9 @@ public class UsersController {
     @PostMapping("/editUser/{id}")
     @ResponseBody
     public User updateUser(@PathVariable("id") long id, @RequestBody User user, Model viewModel) {
-        User updatedUser = userSvc.findOne(id);
 
-        updatedUser.setUsername(user.getUsername());
-        updatedUser.setEmail(user.getEmail());
-
-        userSvc.update(updatedUser);
+//        User updatedUser = userSvc.findOne(id); //Do not need to find user, user is already provided by @RequestBody User user, which is the converted JSON string back to user object.
+        User updatedUser = userSvc.update(id, user.getUsername());
 
         List<User> users = userSvc.findAll();
         for(User u : users) {
