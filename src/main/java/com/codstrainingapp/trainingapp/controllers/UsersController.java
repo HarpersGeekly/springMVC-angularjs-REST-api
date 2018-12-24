@@ -109,7 +109,12 @@ public class UsersController {
 //-------------------------------------- Register --------------------------------------------------
 
     @GetMapping("/register")
-    public String register(Model viewModel) {
+    public String register(Model viewModel, HttpServletRequest request) {
+
+        User user = (User) request.getSession().getAttribute("user");
+        if (user != null) {
+            return "redirect:/profile";
+        }
 
         List<User> users = userSvc.findAll();
         for (User u : users) {
