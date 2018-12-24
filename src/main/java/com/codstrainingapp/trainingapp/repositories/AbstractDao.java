@@ -36,7 +36,7 @@ public abstract class AbstractDao<PK extends Serializable, T> {
     }
 
     public void update(T entity) {
-        getSession().saveOrUpdate(entity);
+        getSession().merge(entity);
     }
 
     public void delete(T entity) {
