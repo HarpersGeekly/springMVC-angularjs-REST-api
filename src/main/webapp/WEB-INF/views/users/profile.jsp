@@ -11,16 +11,16 @@
 <html>
 <head>
     <jsp:include page="/WEB-INF/views/partials/header.jsp">
-        <jsp:param name="title" value="${user}'s Profile" />
+        <jsp:param name="title" value="${user.username}'s Profile" />
     </jsp:include>
 </head>
 
-<body ng-app="myApp">
+<body ng-app="myApp" ng-controller="editUserController as ctrl">
 <jsp:include page="/WEB-INF/views/partials/navbar.jsp" />
 
 <%--ng-init="JSON.parse('${jsonData}')--%>
 
-<div class="container" ng-controller="editUserController as ctrl" ng-init="initMe(${user.id})">
+<div class="container" ng-init="initMe(${user.id})"> <!-- moved ng-controller to body for now? -->
 
     <h3>{{displayName}}'s profile</h3>
 
