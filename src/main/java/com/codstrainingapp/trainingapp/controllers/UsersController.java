@@ -1,42 +1,28 @@
 package com.codstrainingapp.trainingapp.controllers;
 
-import com.codstrainingapp.trainingapp.models.Password;
 import com.codstrainingapp.trainingapp.models.User;
-import com.codstrainingapp.trainingapp.repositories.ListUsersDao;
-import com.codstrainingapp.trainingapp.repositories.UsersRepository;
+import com.codstrainingapp.trainingapp.services.UserService;
 import com.google.gson.Gson;
-import com.sun.xml.bind.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.naming.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-//@SessionAttributes("user")
 public class UsersController {
 
-    //TODO
-    //private UsersRepository usersDao;
-    private ListUsersDao usersDao = new ListUsersDao();
+    private UserService userSvc;
 
-    //TODO
-//    @Autowired
-//    public UsersController(UsersRepository usersDao) {
-//        this.usersDao = usersDao;
-//    }
+    @Autowired
+    public UsersController(UserService userSvc) {
+        this.userSvc = userSvc;
+    }
 
 //------------------------------------------- Login -------------------------------------------------
 
@@ -49,7 +35,7 @@ public class UsersController {
             return "redirect:/profile";
         }
 
-        List<User> users = usersDao.findAll();
+        List<User> users = userSvc.findAll();
         for (User u : users) {
             System.out.println("current users: " + u.getUsername() + ", password: " + u.getPassword());
         }
@@ -68,7 +54,7 @@ public class UsersController {
         System.out.println(usernameIsEmpty);
         System.out.println(passwordIsEmpty);
 
-        User existingUser = usersDao.findByUsername(user.getUsername());
+        User existingUser = userSvc.findByUsername(user.getUsername());
         System.out.println("got to login POST method");
 
         boolean userExists = (existingUser != null);
@@ -125,7 +111,7 @@ public class UsersController {
     @GetMapping("/register")
     public String register(Model viewModel) {
 
-        List<User> users = usersDao.findAll();
+        List<User> users = userSvc.findAll();
         for (User u : users) {
             System.out.println("user:" + u.getUsername());
         }
@@ -158,7 +144,7 @@ public class UsersController {
         System.out.println(user.getBio());
 
         System.out.println("get to register post");
-        User existingUser = usersDao.findByUsername(user.getUsername());
+        User existingUser = userSvc.findByUsername(user.getUsername());
         if (existingUser != null) {
             result.rejectValue(
                     "username",
@@ -166,7 +152,7 @@ public class UsersController {
                     "Username is already taken.");
         }
 
-        User existingEmail = usersDao.findByEmail(user.getEmail());
+        User existingEmail = userSvc.findByEmail(user.getEmail());
         if (existingEmail != null) {
             result.rejectValue(
                     "email",
@@ -192,10 +178,10 @@ public class UsersController {
         }
 
         user.setDate(LocalDateTime.now());
-        usersDao.insert(user);
+        userSvc.save(user);
         request.getSession().setAttribute("user", user);
 
-        List<User> users = usersDao.findAll();
+        List<User> users = userSvc.findAll();
         for (User u : users) {
             System.out.println("user:" + u.getUsername());
         }
@@ -206,7 +192,7 @@ public class UsersController {
 
     @GetMapping("/profile/{id}/{username}")
     public String showOtherUsersProfile(@PathVariable long id, Model viewModel) {
-        User user = usersDao.findOne(id);
+        User user = userSvc.findOne(id);
         viewModel.addAttribute("user", user);
 
         System.out.println("===GOT TO PROFILE===");
@@ -227,7 +213,7 @@ public class UsersController {
             return "redirect:/login";
         }
 
-        User user = usersDao.findOne(sessionUser.getId());
+        User user = userSvc.findOne(sessionUser.getId());
         return "redirect:/profile/" + user.getId() + '/' + user.getUsername();
     }
 
@@ -237,23 +223,23 @@ public class UsersController {
     @ResponseBody
     public String getUser(@PathVariable(name="id") long id) {
         Gson gson = new Gson();
-        System.out.println(gson.toJson(usersDao.findOne(id)));
-        return gson.toJson(usersDao.findOne(id));
+        System.out.println(gson.toJson(userSvc.findOne(id)));
+        return gson.toJson(userSvc.findOne(id));
 }
 
-//---------------------- Update a User ---------------------------------------------------
+//---------------------- Update User ---------------------------------------------------
 
     @PostMapping("/editUser/{id}")
     @ResponseBody
     public User updateUser(@PathVariable("id") long id, @RequestBody User user, Model viewModel) {
-        User updatedUser = usersDao.findOne(id);
+        User updatedUser = userSvc.findOne(id);
 
         updatedUser.setUsername(user.getUsername());
         updatedUser.setEmail(user.getEmail());
 
-        usersDao.update(updatedUser);
+        userSvc.save(updatedUser);
 
-        List<User> users = usersDao.findAll();
+        List<User> users = userSvc.findAll();
         for(User u : users) {
             System.out.println(u.getUsername());
             System.out.println(u.getEmail());
