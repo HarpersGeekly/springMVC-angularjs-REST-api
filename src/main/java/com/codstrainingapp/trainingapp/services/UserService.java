@@ -43,8 +43,10 @@ public class UserService {
         usersDao.save(user);
     }
 
-    public void update(User user) {
-        usersDao.update(user);
+    public User update(long id, String field) {
+        User updatedUser = usersDao.findOne(id);
+        updatedUser.setUsername(field);
+        return updatedUser;
     }
 
     public void delete(User user) {

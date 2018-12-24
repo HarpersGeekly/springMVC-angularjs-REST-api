@@ -35,10 +35,6 @@ public class UsersRepositoryImpl extends AbstractDao<Long, User> implements User
         persist(user);
     }
 
-    public void update(User user) {
-        update(user);
-    }
-
 //    public User findById(Long id) {
 //        return findOne(id);
 //    }

@@ -11,7 +11,6 @@ public interface UsersRepository {
     List<User> findAll();
     User findOne(long id);
     void save(User user);
-    void update(User user);
     void delete(User user);
 
 //    @Query(nativeQuery = true,
