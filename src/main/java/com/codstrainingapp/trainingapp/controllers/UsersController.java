@@ -237,7 +237,7 @@ public class UsersController {
         updatedUser.setUsername(user.getUsername());
         updatedUser.setEmail(user.getEmail());
 
-        userSvc.save(updatedUser);
+        userSvc.update(updatedUser);
 
         List<User> users = userSvc.findAll();
         for(User u : users) {
