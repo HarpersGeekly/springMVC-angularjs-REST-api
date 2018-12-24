@@ -12,9 +12,9 @@ import java.util.List;
 @Transactional
 public class UserService {
 
-    @Autowired
     private UsersRepository usersDao;
 
+    @Autowired
     public UserService(UsersRepository usersDao) {
         this.usersDao = usersDao;
     }
