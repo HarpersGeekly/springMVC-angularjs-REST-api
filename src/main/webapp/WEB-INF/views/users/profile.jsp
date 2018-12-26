@@ -22,8 +22,6 @@
 
 <div class="container" ng-init="initMe(${user.id})"> <!-- moved ng-controller to body for now? -->
 
-    <h3 class="alert alert-success alert-dismissible" ng-model="successfulDeleteMessage">Your account has been successfully deactivated.</h3>
-
     <h3>{{displayName}}'s profile</h3>
 
     <button class="btn" ng-click="toggleEditUserForm()">
@@ -49,10 +47,14 @@
         </button>
     </form>
 
-    <h2>Danger Zone:</h2>
-    <button class="btn btn-danger" ng-click="deleteUser()">
-        Delete Your Account
-    </button>
+    <form action="/deleteUser/ + ${user.id}" method="post" ng-model="deleteUserForm" ng-show="deleteUserForm">
+        <input type="hidden" name="id" value="${user.id}" />
+        <h2>Danger Zone:</h2>
+        <button class="btn btn-danger">
+            <%--ng-click="deleteUser()"--%>
+            Delete Your Account
+        </button>
+    </form>
 
 </div>
 
@@ -66,15 +68,12 @@
     app.controller('editUserController', function($scope, $http) { //$http will be used for accessing the server side data
 
         $scope.originalUser = {};
-
         $scope.editUserForm = false;
+        $scope.deleteUserForm = false;
+
         $scope.toggleEditUserForm = function () {
             $scope.editUserForm = !$scope.editUserForm;
-        };
-
-        $scope.successfulDeleteMessage = false;
-        $scope.toggleSuccessfulDeleteMessage = function() {
-            $scope.successfulDeleteMessage = !$scope.successfulDeleteMessage;
+            $scope.deleteUserForm = !$scope.deleteUserForm;
         };
 
         $scope.initMe = function(userId) {
@@ -84,11 +83,10 @@
                  url: '/getUser/' + userId
              }).then(function (response) {
                  console.log("success");
-                 console.log(response.data.username);
+                 console.log("Get user username: " + response.data.username);
                  $scope.displayName = response.data.username;
              }, function(error) {
-                 console.log("failure");
-                 console.log(error);
+                 console.log("Get user error: " + error);
              });
         };
 
@@ -103,24 +101,30 @@
                 $scope.toggleEditUserForm();
 
             }, function(error) {
-                console.log(error);
+                console.log("Save user error: " + error);
             })
         };
 
-        $scope.deleteUser = function() {
-            $http({
-                method: 'POST',
-                url: 'deleteUser/' + $scope.originalUser.id,
-                data: JSON.stringify($scope.originalUser)
-            }).then((response) => {
-                console.log(response);
+        // <h3 class="alert alert-success alert-dismissible" ng-model="successfulDeleteMessage" ng-show="successfulDeleteMessage">Your account has been successfully deactivated.</h3>
+        // $scope.successfulDeleteMessage = false;
+        // $scope.toggleSuccessfulDeleteMessage = function() {
+        //     $scope.successfulDeleteMessage = !$scope.successfulDeleteMessage;
+        // };
 
-                // $scope.toggleSuccessfulDeleteMessage();
-
-            }, (error) => {
-                console.log(error)
-            })
-        };
+        // $scope.deleteUser = function() {
+        //     $http({
+        //         method: 'POST',
+        //         url: '/deleteUser/' + $scope.originalUser.id,
+        //         data: JSON.stringify($scope.originalUser)
+        //     }).then((response) => {
+        //         console.log("delete user response:" + response);
+        //         window.location.href = '/register';
+        //         // $scope.toggleSuccessfulDeleteMessage();
+        //
+        //     }, (error) => {
+        //         console.log("Delete user error: " + error);
+        //     })
+        // };
 
 
     });
