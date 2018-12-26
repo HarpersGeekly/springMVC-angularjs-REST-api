@@ -52,6 +52,10 @@ public class UserService {
     public void delete(User user) {
         usersDao.delete(user);
     }
+    public void deleteSession() {
+//        SecurityContextHolder.getContext().setAuthentication(null);
+        
+    }
 
 
 }
