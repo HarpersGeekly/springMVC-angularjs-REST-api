@@ -1,5 +1,6 @@
 package com.codstrainingapp.trainingapp.controllers;
 
+import com.codstrainingapp.trainingapp.models.Password;
 import com.codstrainingapp.trainingapp.models.User;
 import com.codstrainingapp.trainingapp.services.UserService;
 import com.google.gson.Gson;
@@ -12,7 +13,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Controller
 public class UsersController {
@@ -155,6 +155,7 @@ public class UsersController {
             return "users/register";
         }
 
+        user.setPassword(Password.hash(user.getPassword()));
         user.setDate(LocalDateTime.now());
         userSvc.save(user);
         request.getSession().setAttribute("user", user);
