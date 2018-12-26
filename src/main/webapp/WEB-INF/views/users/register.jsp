@@ -28,6 +28,17 @@
 <%--%>--%>
 
 <div class="container">
+
+    <c:if test="${successDelete}">
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <i class="fas fa-check"></i>
+            <c:out value="${successMessage}"></c:out>
+        </div>
+    </c:if>
+
     <h1>Register here:</h1>
     <form:form action="/register" method="POST" modelAttribute="user">
 
