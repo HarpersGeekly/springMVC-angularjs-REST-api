@@ -43,6 +43,8 @@ public class UsersController {
         boolean passwordIsEmpty = user.getPassword().isEmpty();
         User existingUser = userSvc.findByUsername(user.getUsername());
         boolean userExists = (existingUser != null);
+
+        //TODO use Password.check() when logging in for valid attempt
         boolean validAttempt = userExists && existingUser.getUsername().equals(user.getUsername()) && existingUser.getPassword().equals(user.getPassword());
 
         if (userExists && !passwordIsEmpty) {
@@ -155,6 +157,8 @@ public class UsersController {
             return "users/register";
         }
 
+        //TODO need to set to null???
+        user.setPosts(null);
         user.setPassword(Password.hash(user.getPassword()));
         user.setDate(LocalDateTime.now());
         userSvc.save(user);
@@ -168,8 +172,12 @@ public class UsersController {
     public String showOtherUsersProfile(@PathVariable long id, Model viewModel) {
         User user = userSvc.findOne(id);
         viewModel.addAttribute("user", user);
+        System.out.println(user);
         Gson gson = new Gson();
+
+        //TODO this is the issue: error: org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: com.codstrainingapp.trainingapp.models.User.posts, could not initialize proxy - no Session
         String userJson = gson.toJson(user);
+        System.out.println(userJson);
         viewModel.addAttribute("userJson", userJson);
         return "users/profile";
     }
