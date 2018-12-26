@@ -28,18 +28,10 @@ public class UsersController {
 
     @GetMapping("/login")
     public String showLoginForm(Model viewModel, HttpServletRequest request) {
-        System.out.println("got to login GET method");
-
         User user = (User) request.getSession().getAttribute("user");
         if (user != null) {
             return "redirect:/profile";
         }
-
-        List<User> users = userSvc.findAll();
-        for (User u : users) {
-            System.out.println("current users: " + u.getUsername() + ", password: " + u.getPassword());
-        }
-
         viewModel.addAttribute("message", "Welcome to the login page - TEST");
         viewModel.addAttribute("user", new User());
         return "users/login";
@@ -47,16 +39,9 @@ public class UsersController {
 
     @PostMapping("/login")
     public String login(@ModelAttribute("user") User user, Model viewModel, HttpServletRequest request, RedirectAttributes redirect) {
-
         boolean usernameIsEmpty = user.getUsername().isEmpty();
         boolean passwordIsEmpty = user.getPassword().isEmpty();
-        System.out.println(user.getUsername());
-        System.out.println(usernameIsEmpty);
-        System.out.println(passwordIsEmpty);
-
         User existingUser = userSvc.findByUsername(user.getUsername());
-        System.out.println("got to login POST method");
-
         boolean userExists = (existingUser != null);
         boolean validAttempt = userExists && existingUser.getUsername().equals(user.getUsername()) && existingUser.getPassword().equals(user.getPassword());
 
@@ -110,17 +95,10 @@ public class UsersController {
 
     @GetMapping("/register")
     public String register(Model viewModel, HttpServletRequest request) {
-
         User user = (User) request.getSession().getAttribute("user");
         if (user != null) {
             return "redirect:/profile";
         }
-
-        List<User> users = userSvc.findAll();
-        for (User u : users) {
-            System.out.println("user:" + u.getUsername());
-        }
-
         viewModel.addAttribute("user", new User());
         return "users/register";
     }
@@ -138,17 +116,12 @@ public class UsersController {
             HttpServletRequest request,
             @RequestParam(name = "confirm_password") String passwordConfirmation) {
 
-        System.out.println("bio:" + user.getBio());
-
         if (user.getBio().isEmpty()) {
             user.setBio(null);
         } else {
             user.setBio(user.getBio());
         }
 
-        System.out.println(user.getBio());
-
-        System.out.println("get to register post");
         User existingUser = userSvc.findByUsername(user.getUsername());
         if (existingUser != null) {
             result.rejectValue(
@@ -185,11 +158,6 @@ public class UsersController {
         user.setDate(LocalDateTime.now());
         userSvc.save(user);
         request.getSession().setAttribute("user", user);
-
-        List<User> users = userSvc.findAll();
-        for (User u : users) {
-            System.out.println("user:" + u.getUsername());
-        }
         return "redirect:/profile/" + user.getId() + '/' + user.getUsername();
     }
 
@@ -199,25 +167,18 @@ public class UsersController {
     public String showOtherUsersProfile(@PathVariable long id, Model viewModel) {
         User user = userSvc.findOne(id);
         viewModel.addAttribute("user", user);
-
-        System.out.println("===GOT TO PROFILE===");
-        System.out.println(user.getUsername());
-
         Gson gson = new Gson();
         String userJson = gson.toJson(user);
-
         viewModel.addAttribute("userJson", userJson);
         return "users/profile";
     }
 
     @GetMapping("/profile")
     public String showProfile(HttpServletRequest request) {
-
         User sessionUser = (User) request.getSession().getAttribute("user");
         if (sessionUser == null) {
             return "redirect:/login";
         }
-
         User user = userSvc.findOne(sessionUser.getId());
         return "redirect:/profile/" + user.getId() + '/' + user.getUsername();
     }
@@ -228,7 +189,6 @@ public class UsersController {
     @ResponseBody
     public String getUser(@PathVariable(name="id") long id) {
         Gson gson = new Gson();
-        System.out.println(gson.toJson(userSvc.findOne(id)));
         return gson.toJson(userSvc.findOne(id));
 }
 
@@ -237,20 +197,24 @@ public class UsersController {
     @PostMapping("/editUser/{id}")
     @ResponseBody
     public User updateUser(@PathVariable("id") long id, @RequestBody User user, Model viewModel) {
-
 //        User updatedUser = userSvc.findOne(id); //Do not need to find user, user is already provided by @RequestBody User user, which is the converted JSON string back to user object.
         User updatedUser = userSvc.update(id, user.getUsername());
-
-        List<User> users = userSvc.findAll();
-        for(User u : users) {
-            System.out.println(u.getUsername());
-            System.out.println(u.getEmail());
-        }
-
         viewModel.addAttribute("user", updatedUser);
         return updatedUser;
     }
 
+//--------------------- Delete User ----------------------------------------------------
+
+    @PostMapping("/deleteUser/{id}")
+    public String deleteUser(@PathVariable("id") long id, HttpServletRequest request, RedirectAttributes redirect, Model viewModel) {
+        User user = userSvc.findOne(id);
+        userSvc.delete(user);
+        request.getSession().removeAttribute("user");
+        request.getSession().invalidate();
+        redirect.addFlashAttribute("successDelete", userSvc.findOne(id) == null);
+        redirect.addFlashAttribute("successMessage", "Sorry to see you go! Your account has been deactivated.");
+        return "redirect:/register";
+    }
 
 }
 
