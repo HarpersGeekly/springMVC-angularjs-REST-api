@@ -22,6 +22,8 @@
 
 <div class="container" ng-init="initMe(${user.id})"> <!-- moved ng-controller to body for now? -->
 
+    <h3 class="alert alert-success alert-dismissible" ng-model="successfulDeleteMessage">Your account has been successfully deactivated.</h3>
+
     <h3>{{displayName}}'s profile</h3>
 
     <button class="btn" ng-click="toggleEditUserForm()">
@@ -47,6 +49,11 @@
         </button>
     </form>
 
+    <h2>Danger Zone:</h2>
+    <button class="btn btn-danger" ng-click="deleteUser()">
+        Delete Your Account
+    </button>
+
 </div>
 
 
@@ -63,6 +70,11 @@
         $scope.editUserForm = false;
         $scope.toggleEditUserForm = function () {
             $scope.editUserForm = !$scope.editUserForm;
+        };
+
+        $scope.successfulDeleteMessage = false;
+        $scope.toggleSuccessfulDeleteMessage = function() {
+            $scope.successfulDeleteMessage = !$scope.successfulDeleteMessage;
         };
 
         $scope.initMe = function(userId) {
@@ -83,7 +95,7 @@
         $scope.saveUser = function() {
             $http({
                 method: 'POST',
-                url: '/editUser/' + $scope.originalUser.id,
+                url: '/editUser/' + $scope.originalUser.id, // I don't need this id, do I?
                 data: JSON.stringify($scope.originalUser)
             }).then(function (response) {
                 console.log(response);
@@ -94,6 +106,22 @@
                 console.log(error);
             })
         };
+
+        $scope.deleteUser = function() {
+            $http({
+                method: 'POST',
+                url: 'deleteUser/' + $scope.originalUser.id,
+                data: JSON.stringify($scope.originalUser)
+            }).then((response) => {
+                console.log(response);
+
+                // $scope.toggleSuccessfulDeleteMessage();
+
+            }, (error) => {
+                console.log(error)
+            })
+        };
+
 
     });
 
