@@ -120,6 +120,7 @@
         </dependency>
 
         <!--================ password hashing ==================-->
+
         <dependency>
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>

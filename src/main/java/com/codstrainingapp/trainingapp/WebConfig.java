@@ -1,5 +1,6 @@
 package com.codstrainingapp.trainingapp;
 
+import com.codstrainingapp.trainingapp.models.Password;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -73,7 +74,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         txManager.setSessionFactory(s);
         return txManager;
     }
-
 
 }
 
