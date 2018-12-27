@@ -36,11 +36,13 @@
             <input type="hidden" name="id" ng-model="originalUser.id" ng-init="originalUser.id='${user.id}'">
 
             <label for="userEditName">Username:</label>
-            <input id="userEditName" type="text" name="username" ng-model="originalUser.username" ng-init="originalUser.username='${user.username}'" required>
+            <input id="userEditName" class="form-control" type="text" name="username" ng-model="originalUser.username" ng-init="originalUser.username='${user.username}'" required>
 
-            <label for="userEditEmail">Change email:</label>
-            <input id="userEditEmail" type="text" name="email" ng-model="originalUser.email" ng-init="originalUser.email='${user.email}'" required>
+            <label for="userEditEmail">Email:</label>
+            <input id="userEditEmail" class="form-control" type="text" name="email" ng-model="originalUser.email" ng-init="originalUser.email='${user.email}'" required>
 
+            <label for="userEditBio">Bio:</label>
+            <textarea id="userEditBio" class="form-control" name="bio" ng-model="originalUser.bio" ng-init="originalUser.bio='${user.bio}'" style="resize:none">${user.bio}</textarea>
         </div>
         <button class="btn btn-success">
              Save Changes
