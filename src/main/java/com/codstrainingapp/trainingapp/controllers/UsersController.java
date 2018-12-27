@@ -93,6 +93,15 @@ public class UsersController {
         }
     }
 
+//-------------------------------------- Logout ----------------------------------------------------
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        request.getSession().removeAttribute("user");
+        request.getSession().invalidate();
+        return "redirect:/login";
+    }
+
 //-------------------------------------- Register --------------------------------------------------
 
     @GetMapping("/register")
@@ -107,11 +116,6 @@ public class UsersController {
 
     @PostMapping("/register")
     public String register(
-//                           @RequestParam(name = "username") String username,
-//                           @RequestParam(name = "email") String email,
-//                           @RequestParam(name = "password") String password,
-//                           @RequestParam(name = "password_confirm") String passwordConfirmation,
-//                           HttpServletRequest request) {
             @Valid @ModelAttribute("user") User user,
             BindingResult result,
             Model viewModel,
