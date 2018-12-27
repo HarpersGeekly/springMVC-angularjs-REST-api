@@ -2,11 +2,15 @@ package com.codstrainingapp.trainingapp.services;
 
 import com.codstrainingapp.trainingapp.models.User;
 import com.codstrainingapp.trainingapp.repositories.UsersRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -56,9 +60,16 @@ public class UserService {
         
     }
 
-    public String toJson(User user) {
-        Gson gson = new Gson();
-        return gson.toJson(user);
+    public String toJson(User user) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        String result = mapper.writeValueAsString(user);
+        System.out.println(result);
+        return result;
+    }
+
+    public Object fromJson(String jsonString, Object valueType) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(jsonString, (JavaType) valueType);
     }
 
 

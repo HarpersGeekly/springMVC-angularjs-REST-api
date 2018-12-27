@@ -3,10 +3,10 @@ package com.codstrainingapp.trainingapp.controllers;
 import com.codstrainingapp.trainingapp.models.Password;
 import com.codstrainingapp.trainingapp.models.User;
 import com.codstrainingapp.trainingapp.services.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -174,14 +174,16 @@ public class UsersController {
 
     @GetMapping("/profile/{id}/{username}")
 //    @Transactional
-    public String showOtherUsersProfile(@PathVariable long id, Model viewModel) {
+    public String showOtherUsersProfile(@PathVariable long id, Model viewModel) throws JsonProcessingException {
         User user = userSvc.findOne(id);
         viewModel.addAttribute("user", user);
-        System.out.println(user);
+        System.out.println("get to profile");
+        System.out.println("user: " + user.getUsername());
+        System.out.println("user posts: " + user.getPosts());
 
-        //TODO: Message Request processing failed; nested exception is org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: com.codstrainingapp.trainingapp.models.User.posts, could not initialize proxy - no Session
+        //TODO: SOLVED WITH EAGER. WHY? Message Request processing failed; nested exception is org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: com.codstrainingapp.trainingapp.models.User.posts, could not initialize proxy - no Session
         viewModel.addAttribute("userJson", userSvc.toJson(user));
-
+        System.out.println("jsonUser:" + userSvc.toJson(user));
         return "users/profile";
     }
 
@@ -199,9 +201,8 @@ public class UsersController {
 
     @GetMapping(value = "/getUser/{id}", produces = "application/json")
     @ResponseBody
-    public String getUser(@PathVariable(name="id") long id) {
-        Gson gson = new Gson();
-        return gson.toJson(userSvc.findOne(id));
+    public String getUser(@PathVariable(name="id") long id) throws JsonProcessingException {
+        return userSvc.toJson(userSvc.findOne(id));
 }
 
 //---------------------- Update User ---------------------------------------------------
