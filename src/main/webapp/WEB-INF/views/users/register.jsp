@@ -58,7 +58,7 @@
 
         <div class="form-group">
             <label for="bio">Bio</label><span>(optional)</span>
-            <textarea id="bio" name="bio" class="form-control" value="${user.bio}"></textarea>
+            <textarea id="bio" name="bio" class="form-control" style="resize:none"></textarea>
             <form:errors path="bio" />
         </div>
 
