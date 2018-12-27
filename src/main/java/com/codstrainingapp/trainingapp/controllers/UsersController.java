@@ -43,12 +43,11 @@ public class UsersController {
         boolean passwordIsEmpty = user.getPassword().isEmpty();
         User existingUser = userSvc.findByUsername(user.getUsername());
         boolean userExists = (existingUser != null);
-
-        //TODO use Password.check() when logging in for valid attempt
-        boolean validAttempt = userExists && existingUser.getUsername().equals(user.getUsername()) && existingUser.getPassword().equals(user.getPassword());
+        
+        boolean validAttempt = userExists && existingUser.getUsername().equals(user.getUsername()) && Password.check(user.getPassword(), existingUser.getPassword());
 
         if (userExists && !passwordIsEmpty) {
-            boolean passwordCorrect = existingUser.getPassword().equals(user.getPassword()); // check the submitted password against what I have in the database
+            boolean passwordCorrect =  Password.check(user.getPassword(), existingUser.getPassword()); // check the submitted password against what I have in the database
             // incorrect password:
             if (!passwordCorrect) {
                 viewModel.addAttribute("passwordIsIncorrect", true);
