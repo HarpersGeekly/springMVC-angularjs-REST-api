@@ -6,6 +6,7 @@ import com.codstrainingapp.trainingapp.services.UserService;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,7 @@ public class UsersController {
         boolean passwordIsEmpty = user.getPassword().isEmpty();
         User existingUser = userSvc.findByUsername(user.getUsername());
         boolean userExists = (existingUser != null);
-        
+
         boolean validAttempt = userExists && existingUser.getUsername().equals(user.getUsername()) && Password.check(user.getPassword(), existingUser.getPassword());
 
         if (userExists && !passwordIsEmpty) {
@@ -156,8 +157,8 @@ public class UsersController {
             return "users/register";
         }
 
-        //TODO need to set to null???
-        user.setPosts(null);
+//        //TODO need to set to null???
+//        user.setPosts(null);
         user.setPassword(Password.hash(user.getPassword()));
         user.setDate(LocalDateTime.now());
         userSvc.save(user);
@@ -168,16 +169,15 @@ public class UsersController {
 // ---------------------------- Profile -------------------------------------------------------
 
     @GetMapping("/profile/{id}/{username}")
+//    @Transactional
     public String showOtherUsersProfile(@PathVariable long id, Model viewModel) {
         User user = userSvc.findOne(id);
         viewModel.addAttribute("user", user);
         System.out.println(user);
-        Gson gson = new Gson();
 
-        //TODO this is the issue: error: org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: com.codstrainingapp.trainingapp.models.User.posts, could not initialize proxy - no Session
-        String userJson = gson.toJson(user);
-        System.out.println(userJson);
-        viewModel.addAttribute("userJson", userJson);
+        //TODO: Message Request processing failed; nested exception is org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: com.codstrainingapp.trainingapp.models.User.posts, could not initialize proxy - no Session
+        viewModel.addAttribute("userJson", userSvc.toJson(user));
+
         return "users/profile";
     }
 
@@ -206,7 +206,7 @@ public class UsersController {
     @ResponseBody
     public User updateUser(@PathVariable("id") long id, @RequestBody User user, Model viewModel) {
 //        User updatedUser = userSvc.findOne(id); //Do not need to find user, user is already provided by @RequestBody User user, which is the converted JSON string back to user object.
-        User updatedUser = userSvc.update(id, user.getUsername());
+        User updatedUser = userSvc.update(id, user.getUsername(), user.getEmail(), user.getBio());
         viewModel.addAttribute("user", updatedUser);
         return updatedUser;
     }
