@@ -2,6 +2,7 @@ package com.codstrainingapp.trainingapp.services;
 
 import com.codstrainingapp.trainingapp.models.User;
 import com.codstrainingapp.trainingapp.repositories.UsersRepository;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,9 +40,11 @@ public class UserService {
         usersDao.save(user);
     }
 
-    public User update(long id, String field) {
+    public User update(long id, String username, String email, String bio) {
         User updatedUser = usersDao.findOne(id);
-        updatedUser.setUsername(field);
+        updatedUser.setUsername(username);
+        updatedUser.setEmail(email);
+        updatedUser.setBio(bio);
         return updatedUser;
     }
 
@@ -51,6 +54,11 @@ public class UserService {
     public void deleteSession() {
 //        SecurityContextHolder.getContext().setAuthentication(null);
         
+    }
+
+    public String toJson(User user) {
+        Gson gson = new Gson();
+        return gson.toJson(user);
     }
 
 
