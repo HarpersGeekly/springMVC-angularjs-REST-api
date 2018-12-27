@@ -61,8 +61,7 @@
 </div>
 
 
-<%--<jsp:include page="/WEB-INF/views/partials/footer.jsp" />--%>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
+<jsp:include page="/WEB-INF/views/partials/footer.jsp" />
 <script>
 
     let app = angular.module('myApp', []);

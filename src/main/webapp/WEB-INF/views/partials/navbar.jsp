@@ -23,7 +23,7 @@
             <c:if test="${sessionScope.user != null}">
                 <li><a href="/posts">All posts</a></li>
                 <li><a href="/posts/create">Create Post</a></li>
-                <li><a href="/profile/">{{displayName}}'s Profile</a></li>
+                <li><a href="/profile/">My Profile</a></li>
                 <li><a href="/logout">Logout</a></li>
             </c:if>
 
