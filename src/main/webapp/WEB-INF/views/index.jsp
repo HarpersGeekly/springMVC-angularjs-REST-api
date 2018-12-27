@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: ryan.c.harper
@@ -17,6 +18,15 @@
 
 <div class="container flex-center">
     <h1>Welcome!</h1>
+</div>
+
+<div class="container">
+    <c:forEach var="post" items="${posts}">
+        <c:out value="${post.title}"></c:out>
+        <c:out value="${post.subtitle}"></c:out>
+        <c:out value="${post.body}"></c:out>
+        <c:out value="${post.user}"></c:out>
+    </c:forEach>
 </div>
 
     <%--<div data-ng-controller="Hello">--%>
