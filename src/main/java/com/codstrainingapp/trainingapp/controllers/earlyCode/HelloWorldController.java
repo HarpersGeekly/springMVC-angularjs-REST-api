@@ -1,4 +1,4 @@
-package com.codstrainingapp.trainingapp.controllers;
+package com.codstrainingapp.trainingapp.controllers.earlyCode;
 
 import com.codstrainingapp.trainingapp.models.User;
 import org.springframework.stereotype.Controller;
@@ -9,12 +9,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HelloWorldController {
 //    @RequestMapping annotation declares that this class is default handler for all requests of type ‘/’.
 
-    @GetMapping("/")
-    public String index() {
-        System.out.println("get to index.jsp");
-        return "index";
-//        return "indexOriginal";
-    }
+//    @GetMapping("/")
+//    public String index(Model viewModel) {
+//        System.out.println("get to index.jsp");
+//
+//        return "index";
+////        return "indexOriginal";
+//    }
 
 
 //    @GetMapping("/ng")

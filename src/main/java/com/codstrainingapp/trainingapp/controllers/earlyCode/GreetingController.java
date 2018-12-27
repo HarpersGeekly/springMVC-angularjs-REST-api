@@ -1,4 +1,4 @@
-package com.codstrainingapp.trainingapp.controllers;
+package com.codstrainingapp.trainingapp.controllers.earlyCode;
 
 import com.codstrainingapp.trainingapp.models.Greeting;
 import org.springframework.web.bind.annotation.RequestMapping;
