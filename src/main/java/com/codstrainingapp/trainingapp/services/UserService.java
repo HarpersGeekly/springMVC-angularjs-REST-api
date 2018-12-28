@@ -61,10 +61,6 @@ public class UserService {
 //        SecurityContextHolder.getContext().setAuthentication(null);
     }
 
-    public String dateFormatter(LocalDateTime ldt) {
-        return ldt.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
-    }
-
     public String toJson(User user) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         String result = mapper.writeValueAsString(user);

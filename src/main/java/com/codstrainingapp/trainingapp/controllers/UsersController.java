@@ -176,7 +176,6 @@ public class UsersController {
     public String showOtherUsersProfile(@PathVariable long id, Model viewModel) throws JsonProcessingException {
         User user = userSvc.findOne(id);
         viewModel.addAttribute("user", user);
-        viewModel.addAttribute("userDateFormatted", userSvc.dateFormatter(user.getDate()));
         viewModel.addAttribute("userJson", userSvc.toJson(user));
         return "users/profile";
     }
