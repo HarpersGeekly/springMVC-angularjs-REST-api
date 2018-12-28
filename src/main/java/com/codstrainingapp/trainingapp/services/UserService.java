@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -57,13 +59,15 @@ public class UserService {
     }
     public void deleteSession() {
 //        SecurityContextHolder.getContext().setAuthentication(null);
-        
+    }
+
+    public String dateFormatter(LocalDateTime ldt) {
+        return ldt.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
     }
 
     public String toJson(User user) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         String result = mapper.writeValueAsString(user);
-        System.out.println(result);
         return result;
     }
 
