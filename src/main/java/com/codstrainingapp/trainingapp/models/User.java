@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 //JPA specification defines an object-relational mapping between tables in a relational database and a set of Java classes.
@@ -99,8 +100,12 @@ public class User {
         this.email = email;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public String getDate() {
+        return date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+    }
+
+    public String getHoursMinutes() {
+        return date.format(DateTimeFormatter.ofPattern("h:mm a"));
     }
 
     public void setDate(LocalDateTime date) {

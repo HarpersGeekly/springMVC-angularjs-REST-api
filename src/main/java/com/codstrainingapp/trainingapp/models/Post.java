@@ -2,6 +2,8 @@ package com.codstrainingapp.trainingapp.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity(name = "posts") //required
 public class Post {
@@ -13,16 +15,19 @@ public class Post {
     private String subtitle;                            // } maps attributes automagically
     private String leadImage;
     private String body;
+    @Column(name="created_date")
+    private LocalDateTime date;
 
     public Post() {}
 
-    public Post(Long id, String title, String subtitle, String leadImage, String body, User user) {
+    public Post(Long id, String title, String subtitle, String leadImage, String body, User user, LocalDateTime date) {
         this.id = id;
         this.title = title;
         this.subtitle = subtitle;
         this.leadImage = leadImage;
         this.body = body;
         this.user = user;
+        this.date = date;
     }
 
     @ManyToOne
@@ -75,5 +80,17 @@ public class Post {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getDate() {
+        return date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    public String getHoursMinutes() {
+        return date.format(DateTimeFormatter.ofPattern("h:mm a"));
     }
 }
