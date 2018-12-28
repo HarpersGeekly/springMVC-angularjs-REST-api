@@ -173,17 +173,11 @@ public class UsersController {
 // ---------------------------- Profile -------------------------------------------------------
 
     @GetMapping("/profile/{id}/{username}")
-//    @Transactional
     public String showOtherUsersProfile(@PathVariable long id, Model viewModel) throws JsonProcessingException {
         User user = userSvc.findOne(id);
         viewModel.addAttribute("user", user);
-        System.out.println("get to profile");
-        System.out.println("user: " + user.getUsername());
-        System.out.println("user posts: " + user.getPosts());
-
-        //TODO: SOLVED WITH EAGER. WHY? Message Request processing failed; nested exception is org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: com.codstrainingapp.trainingapp.models.User.posts, could not initialize proxy - no Session
+        viewModel.addAttribute("userDateFormatted", userSvc.dateFormatter(user.getDate()));
         viewModel.addAttribute("userJson", userSvc.toJson(user));
-        System.out.println("jsonUser:" + userSvc.toJson(user));
         return "users/profile";
     }
 
