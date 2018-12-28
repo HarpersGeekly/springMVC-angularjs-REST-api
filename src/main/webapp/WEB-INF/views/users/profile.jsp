@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%--
   Created by IntelliJ IDEA.
   User: ryan.c.harper
@@ -22,7 +23,9 @@
 
 <div class="container" ng-init="initMe(${user.id})"> <!-- moved ng-controller to body for now? -->
 
-    <h3>{{displayName}}'s profile</h3>
+    <h3>{{jsonUser.username}}'s profile</h3>
+    <h4>Joined: ${userDateFormatted}</h4>
+    <h4>Bio: {{jsonUser.bio}}</h4>
 
     <button class="btn" ng-click="toggleEditUserForm()">
         Edit Account
@@ -69,6 +72,7 @@
     app.controller('editUserController', function($scope, $http) { //$http will be used for accessing the server side data
 
         $scope.originalUser = {};
+        $scope.jsonUser = {};
         $scope.editUserForm = false;
         $scope.deleteUserForm = false;
 
@@ -85,7 +89,7 @@
              }).then(function (response) {
                  console.log("success");
                  console.log("Get user username: " + response.data.username);
-                 $scope.displayName = response.data.username;
+                 $scope.jsonUser = response.data;
              }, function(error) {
                  console.log("Get user error: " + error);
              });
@@ -97,8 +101,8 @@
                 url: '/editUser/' + $scope.originalUser.id, // I don't need this id, do I?
                 data: JSON.stringify($scope.originalUser)
             }).then(function (response) {
-                console.log(response);
-                $scope.displayName = response.data.username;
+                console.log(response.data);
+                $scope.jsonUser = response.data;
                 $scope.toggleEditUserForm();
 
             }, function(error) {
