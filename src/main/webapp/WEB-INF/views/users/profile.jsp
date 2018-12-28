@@ -19,17 +19,37 @@
 <body ng-app="myApp" ng-controller="editUserController as ctrl">
 <jsp:include page="/WEB-INF/views/partials/navbar.jsp" />
 
-<%--ng-init="JSON.parse('${jsonData}')--%>
-
 <div class="container" ng-init="initMe(${user.id})"> <!-- moved ng-controller to body for now? -->
 
+    <div class="alert alert-success alert-dismissible" role="alert" ng-model="successfulUpdateMessage" ng-show="successfulUpdateMessage">
+        <strong>You have successfully updated your profile.</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
     <h3>{{jsonUser.username}}'s profile</h3>
-    <h4>Joined: ${userDateFormatted}</h4>
+    <h4>Joined: ${user.date}</h4>
     <h4>Bio: {{jsonUser.bio}}</h4>
 
-    <button class="btn" ng-click="toggleEditUserForm()">
-        Edit Account
-    </button>
+    <h3>Posts:</h3>
+    <div ng-repeat="post in jsonUser.posts">
+        <%--<jsp:include page="/WEB-INF/views/partials/postAngular.jsp" />--%>
+            <h3>{{post.title}}</h3>
+            <h4>{{post.subtitle}}</h4>
+            <div>
+                <img style="width:200px" ng-src="{{post.leadImage}}"/>
+            </div>
+            <div>{{post.hoursMinutes}} <span style="margin-left:20px">{{post.date}}</span></div>
+
+            <button ng-click="deletePost(post)">Delete</button>
+    </div>
+
+    <c:if test="${sessionScope.user.id == user.id}">
+        <button class="btn" ng-click="toggleEditUserForm()">
+            Edit Account
+        </button>
+    </c:if>
 
     <form class="form-horizontal" ng-submit="saveUser()" ng-model="editUserForm" ng-show="editUserForm" >
 
@@ -67,72 +87,82 @@
 <jsp:include page="/WEB-INF/views/partials/footer.jsp" />
 <script>
 
-    let app = angular.module('myApp', []);
+        let app = angular.module('myApp', []);
 
-    app.controller('editUserController', function($scope, $http) { //$http will be used for accessing the server side data
+        app.controller('editUserController', function ($scope, $http) { //$http will be used for accessing the server side data
 
-        $scope.originalUser = {};
-        $scope.jsonUser = {};
-        $scope.editUserForm = false;
-        $scope.deleteUserForm = false;
+            $scope.originalUser = {};
+            $scope.jsonUser = {};
+            $scope.editUserForm = false;
+            $scope.deleteUserForm = false;
+            $scope.successfulUpdateMessage = false;
 
-        $scope.toggleEditUserForm = function () {
-            $scope.editUserForm = !$scope.editUserForm;
-            $scope.deleteUserForm = !$scope.deleteUserForm;
-        };
+            $scope.toggleEditUserForm = function () {
+                $scope.editUserForm = !$scope.editUserForm;
+                $scope.deleteUserForm = !$scope.deleteUserForm;
+            };
 
-        $scope.initMe = function(userId) {
+            $scope.initMe = function (userId) {
 
-             $http({
-                 method: 'GET',
-                 url: '/getUser/' + userId
-             }).then(function (response) {
-                 console.log("success");
-                 console.log("Get user username: " + response.data.username);
-                 $scope.jsonUser = response.data;
-             }, function(error) {
-                 console.log("Get user error: " + error);
-             });
-        };
+                $http({
+                    method: 'GET',
+                    url: '/getUser/' + userId
+                }).then(function (response) {
+                    console.log("success");
+                    console.log("Get user username: " + response.data.username);
+                    $scope.jsonUser = response.data;
+                    $scope.posts = response.data.posts;
+                }, function (error) {
+                    console.log("Get user error: " + error);
+                });
+            };
 
-        $scope.saveUser = function() {
-            $http({
-                method: 'POST',
-                url: '/editUser/' + $scope.originalUser.id, // I don't need this id, do I?
-                data: JSON.stringify($scope.originalUser)
-            }).then(function (response) {
-                console.log(response.data);
-                $scope.jsonUser = response.data;
-                $scope.toggleEditUserForm();
+            $scope.saveUser = function () {
+                $http({
+                    method: 'POST',
+                    url: '/editUser/' + $scope.originalUser.id, // I don't need this id, do I?
+                    data: JSON.stringify($scope.originalUser)
+                }).then(function (response) {
+                    console.log(response.data);
+                    $scope.jsonUser = response.data;
+                    $scope.toggleEditUserForm();
+                    $scope.successfulUpdateMessage = !$scope.successfulUpdateMessage;
 
-            }, function(error) {
-                console.log("Save user error: " + error);
-            })
-        };
+                }, function (error) {
+                    console.log("Save user error: " + error);
+                })
+            };
 
-        // <h3 class="alert alert-success alert-dismissible" ng-model="successfulDeleteMessage" ng-show="successfulDeleteMessage">Your account has been successfully deactivated.</h3>
-        // $scope.successfulDeleteMessage = false;
-        // $scope.toggleSuccessfulDeleteMessage = function() {
-        //     $scope.successfulDeleteMessage = !$scope.successfulDeleteMessage;
-        // };
+            // $scope.deletePost = function(post) {
+            //     $http({
+            //         method: 'POST',
+            //         url: '/deletePost/' + post.id,
+            //     }
+            //
+            // })
 
-        // $scope.deleteUser = function() {
-        //     $http({
-        //         method: 'POST',
-        //         url: '/deleteUser/' + $scope.originalUser.id,
-        //         data: JSON.stringify($scope.originalUser)
-        //     }).then((response) => {
-        //         console.log("delete user response:" + response);
-        //         window.location.href = '/register';
-        //         // $scope.toggleSuccessfulDeleteMessage();
-        //
-        //     }, (error) => {
-        //         console.log("Delete user error: " + error);
-        //     })
-        // };
+            // <h3 class="alert alert-success alert-dismissible" ng-model="successfulDeleteMessage" ng-show="successfulDeleteMessage">Your account has been successfully deactivated.</h3>
+            // $scope.successfulDeleteMessage = false;
+            // $scope.toggleSuccessfulDeleteMessage = function() {
+            //     $scope.successfulDeleteMessage = !$scope.successfulDeleteMessage;
+            // };
 
+            // $scope.deleteUser = function() {
+            //     $http({
+            //         method: 'POST',
+            //         url: '/deleteUser/' + $scope.originalUser.id,
+            //         data: JSON.stringify($scope.originalUser)
+            //     }).then((response) => {
+            //         console.log("delete user response:" + response);
+            //         window.location.href = '/register';
+            //         // $scope.toggleSuccessfulDeleteMessage();
+            //
+            //     }, (error) => {
+            //         console.log("Delete user error: " + error);
+            //     })
+            // };
 
-    });
+        });
 
 </script>
 </body>
