@@ -14,6 +14,7 @@
         <jsp:param name="title" value="trainingapp" />
     </jsp:include>
 </head>
+<body>
 <jsp:include page="/WEB-INF/views/partials/navbar.jsp" />
 
 <div class="container flex-center">
@@ -21,57 +22,9 @@
 </div>
 
 <div class="container">
-    <c:forEach var="post" items="${posts}">
-        <%--<jsp:include page="/WEB-INF/views/partials/post.jsp" />--%>
-        <h1><c:out value="${post.title}"/></h1>
-        <h3><c:out value="${post.subtitle}"/></h3>
-        <div>
-            By: <a href="/profile/${post.user.id}/${post.user.username}"><c:out value="${post.user.username}"/></a>
-            <span style="margin-left: 20px">${post.hoursMinutes}</span>
-            <span style="margin-left: 20px">${post.date}</span>
-        </div>
-        <img src="<c:out value="${post.leadImage}"/>" alt="image"/>
-
-    </c:forEach>
+    <jsp:include page="/WEB-INF/views/partials/post.jsp" />
 </div>
 
-    <%--<div data-ng-controller="Hello">--%>
-
-        <%--Your name: <input data-ng-model="name">--%>
-        <%--You entered: {{ name }}--%>
-        <%--<button data-ng-click="update()" data-ng-enter="update()">Update</button>--%>
-
-        <%--<p>The count is {{greeting.id}}</p>--%>
-        <%--<p>The content is {{greeting.content}}</p>--%>
-
-    <%--</div>--%>
-
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
-<script>
-
-    // let app = angular.module('app', []);
-    //
-    // app.controller('Hello', function($scope, $http) { //name is the same as the controller in index.jsp
-    //     //$http wil be used for accessing the server side data
-    //     // will are using a get call, accessing the greeting path
-    //     $http({
-    //         method: 'GET',
-    //         url: '/greeting'
-    //     }).then((function(response) {
-    //         console.log(response);
-    //             $scope.greeting = response.data; // in the view, index.jsp, this will refer and synchronized to {{greeting.id}} {greeting.content}}. Technically, {{$scope.greeting.id}}
-    //         }),
-    //
-    //     $scope.update = function() {
-    //         $http.get('greeting', {
-    //             params: {name: $scope.name}
-    //         }).then((function(response) {
-    //             $scope.greeting = response.data;
-    //         }))
-    //     })
-    //
-    // })
-
-</script>
 </body>
 </html>
