@@ -63,8 +63,7 @@ public class UserService {
 
     public String toJson(User user) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        String result = mapper.writeValueAsString(user);
-        return result;
+        return mapper.writeValueAsString(user);
     }
 
     public Object fromJson(String jsonString, Object valueType) throws IOException {
