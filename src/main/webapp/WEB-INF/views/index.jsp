@@ -22,10 +22,16 @@
 
 <div class="container">
     <c:forEach var="post" items="${posts}">
-        <c:out value="${post.title}"></c:out>
-        <c:out value="${post.subtitle}"></c:out>
-        <c:out value="${post.body}"></c:out>
-        <c:out value="${post.user}"></c:out>
+        <%--<jsp:include page="/WEB-INF/views/partials/post.jsp" />--%>
+        <h1><c:out value="${post.title}"/></h1>
+        <h3><c:out value="${post.subtitle}"/></h3>
+        <div>
+            By: <a href="/profile/${post.user.id}/${post.user.username}"><c:out value="${post.user.username}"/></a>
+            <span style="margin-left: 20px">${post.hoursMinutes}</span>
+            <span style="margin-left: 20px">${post.date}</span>
+        </div>
+        <img src="<c:out value="${post.leadImage}"/>" alt="image"/>
+
     </c:forEach>
 </div>
 
