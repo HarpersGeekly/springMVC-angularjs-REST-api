@@ -21,4 +21,8 @@ public class PostService {
     public List<Post> findAll() {
        return postsDao.findAll();
     }
+
+    public Post findOne(long id) {
+        return postsDao.findOne(id);
+    }
 }
