@@ -7,4 +7,6 @@ import java.util.List;
 public interface PostsRepository {
 
     List<Post> findAll();
+    Post findOne(long id);
+    void delete(Post post);
 }
