@@ -38,6 +38,14 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return viewResolver;
     }
 
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // <mvc:resources mapping="/styles/**" location="/css/" />
+        registry
+                .addResourceHandler("/static/**")
+                .addResourceLocations("/static/"); // Spring 4.1
+    }
+
     @Bean
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
