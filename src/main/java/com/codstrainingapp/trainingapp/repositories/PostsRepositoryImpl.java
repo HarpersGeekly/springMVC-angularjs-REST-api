@@ -14,6 +14,10 @@ public class PostsRepositoryImpl extends AbstractDao<Long, Post> implements Post
         Criteria criteria = createEntityCriteria();
         return (List<Post>) criteria.list();
     }
+
+    public Post findOne(long id) {
+        return getByKey(id);
+    }
 }
 
 

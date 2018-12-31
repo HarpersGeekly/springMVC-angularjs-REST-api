@@ -32,19 +32,6 @@
     <h4>Joined: ${user.date}</h4>
     <h4>Bio: {{jsonUser.bio}}</h4>
 
-    <h3>Posts:</h3>
-    <div ng-repeat="post in jsonUser.posts">
-        <%--<jsp:include page="/WEB-INF/views/partials/postAngular.jsp" />--%>
-            <h3>{{post.title}}</h3>
-            <h4>{{post.subtitle}}</h4>
-            <div>
-                <img style="width:200px" ng-src="{{post.leadImage}}"/>
-            </div>
-            <div>{{post.hoursMinutes}} <span style="margin-left:20px">{{post.date}}</span></div>
-
-            <button ng-click="deletePost(post)">Delete</button>
-    </div>
-
     <c:if test="${sessionScope.user.id == user.id}">
         <button class="btn" ng-click="toggleEditUserForm()">
             Edit Account
@@ -80,6 +67,21 @@
             Delete Your Account
         </button>
     </form>
+
+    <h3>Posts:</h3>
+    <div ng-repeat="post in jsonUser.posts">
+        <%--<jsp:include page="/WEB-INF/views/partials/postAngular.jsp" />--%>
+        <h3>{{post.title}}</h3>
+        <h4>{{post.subtitle}}</h4>
+        <div>
+            <img style="width:200px" ng-src="{{post.leadImage}}"/>
+        </div>
+        <div>{{post.hoursMinutes}} <span style="margin-left:20px">{{post.date}}</span></div>
+
+        <c:if test="${sessionScope.user.id == user.id}">
+            <button ng-click="jsonUser.posts.splice($index, 1); deletePost(post)">Delete</button>
+        </c:if>
+    </div>
 
 </div>
 
@@ -133,13 +135,17 @@
                 })
             };
 
-            // $scope.deletePost = function(post) {
-            //     $http({
-            //         method: 'POST',
-            //         url: '/deletePost/' + post.id,
-            //     }
-            //
-            // })
+            $scope.deletePost = function(post) {
+                $http({
+                    method: 'POST',
+                    url: '/deletePost/' + post.id,
+                }).then(function () {
+                }, function (error) {
+                    console.log("Delete post error: " + error);
+                })
+
+            };
+
 
             // <h3 class="alert alert-success alert-dismissible" ng-model="successfulDeleteMessage" ng-show="successfulDeleteMessage">Your account has been successfully deactivated.</h3>
             // $scope.successfulDeleteMessage = false;
