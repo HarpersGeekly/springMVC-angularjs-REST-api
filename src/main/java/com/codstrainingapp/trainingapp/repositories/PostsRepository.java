@@ -9,4 +9,5 @@ public interface PostsRepository {
     List<Post> findAll();
     Post findOne(long id);
     void delete(Post post);
+    void save(Post post);
 }
