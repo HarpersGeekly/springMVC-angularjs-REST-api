@@ -139,6 +139,13 @@
             <version>1.6.4</version>
         </dependency>
 
+        <!--================== Markdown Editor Parser =======================-->
+        <dependency>
+            <groupId>com.atlassian.commonmark</groupId>
+            <artifactId>commonmark</artifactId>
+            <version>0.9.0</version>
+        </dependency>
+
     </dependencies>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>

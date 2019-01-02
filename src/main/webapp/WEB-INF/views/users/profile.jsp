@@ -85,7 +85,6 @@
 
 </div>
 
-
 <jsp:include page="/WEB-INF/views/partials/footer.jsp" />
 <script>
 
