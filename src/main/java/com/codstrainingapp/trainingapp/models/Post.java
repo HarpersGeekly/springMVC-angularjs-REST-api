@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 
 @Entity(name = "posts") //required
 public class Post {
@@ -92,5 +94,31 @@ public class Post {
 
     public String getHoursMinutes() {
         return date.format(DateTimeFormatter.ofPattern("h:mm a"));
+    }
+
+    // MARKDOWN PARSING FOR VIEW ==============================================================
+
+    public String getHtmlTitle() {
+        Parser parser = Parser.builder().build();
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+        return renderer.render(parser.parse(title));
+    }
+
+    public String getHtmlImage() {
+        Parser parser = Parser.builder().build();
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+        return renderer.render(parser.parse(leadImage));
+    }
+
+    public String getHtmlSubtitle() {
+        Parser parser = Parser.builder().build();
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+        return renderer.render(parser.parse(subtitle));
+    }
+
+    public String getHtmlBody() {
+        Parser parser = Parser.builder().build();
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+        return renderer.render(parser.parse(body));
     }
 }
