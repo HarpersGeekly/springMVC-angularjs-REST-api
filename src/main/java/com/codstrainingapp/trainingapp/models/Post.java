@@ -6,17 +6,31 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 
 @Entity(name = "posts") //required
 public class Post {
 
-    @Id // required. Hibernate maps this attribute to a table column named "id"
+    @Id // required. Hibernate maps this attribute to a table column named "id". It then maps the following fields automagically
     @GeneratedValue(strategy = GenerationType.IDENTITY) //enable auto ID generation
     private Long id;
+
+    @NotBlank(message = "Title cannot be empty.")
+    @Length(min = 5, max = 100, message="Title must be between 5-100 characters.")
     private String title;
-    private String subtitle;                            // } maps attributes automagically
+
+    @NotBlank(message = "Subtitle cannot be empty.")
+    @Length(min = 5, max = 200, message="Subtitle must be between 5-200 characters.")
+    private String subtitle;
+
     private String leadImage;
+
+    @Column(columnDefinition = "TEXT", length = 50000, nullable = false)
+    @NotBlank(message = "Post body cannot be empty.")
+    @Length(min = 5, max = 50000, message="Description must be between 5-50000 characters.")
     private String body;
+
     @Column(name="created_date")
     private LocalDateTime date;
 
