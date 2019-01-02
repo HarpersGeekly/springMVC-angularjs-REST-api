@@ -4,6 +4,29 @@
     align-content: center;
 }
 
+.show {
+    display: flex;
+}
+
+.hidden {
+    display: none;
+}
+
+:root {
+    --main-bg-color: #fffafb;
+}
+
 body {
-    background-color: red;
+    background-color: var(--main-bg-color);
+}
+
+.CodeMirror-scroll {
+    max-height: 300px;
+}
+.CodeMirror-fullscreen.CodeMirror {
+    max-height: none;
+}
+
+.CodeMirror-fullscreen .CodeMirror-scroll {
+    max-height: none;
 }
