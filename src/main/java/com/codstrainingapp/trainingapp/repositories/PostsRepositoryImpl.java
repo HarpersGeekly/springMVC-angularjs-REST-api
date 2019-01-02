@@ -18,6 +18,10 @@ public class PostsRepositoryImpl extends AbstractDao<Long, Post> implements Post
     public Post findOne(long id) {
         return getByKey(id);
     }
+
+    public void save(Post post) {
+        persist(post);
+    }
 }
 
 
