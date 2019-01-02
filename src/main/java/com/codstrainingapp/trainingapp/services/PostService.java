@@ -29,4 +29,8 @@ public class PostService {
     public void delete(Post post) {
         postsDao.delete(post);
     }
+
+    public void save(Post post) {
+        postsDao.save(post);
+    }
 }
