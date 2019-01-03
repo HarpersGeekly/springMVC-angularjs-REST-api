@@ -1,4 +1,4 @@
-package com.codstrainingapp.trainingapp.repositories;
+package com.codstrainingapp.trainingapp.controllers.earlyCode;
 
 import com.codstrainingapp.trainingapp.models.User;
 

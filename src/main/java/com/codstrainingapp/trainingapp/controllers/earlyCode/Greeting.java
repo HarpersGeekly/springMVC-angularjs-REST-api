@@ -1,4 +1,4 @@
-package com.codstrainingapp.trainingapp.models;
+package com.codstrainingapp.trainingapp.controllers.earlyCode;
 
 public class Greeting {
 
