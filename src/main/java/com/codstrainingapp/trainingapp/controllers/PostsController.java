@@ -1,12 +1,18 @@
 package com.codstrainingapp.trainingapp.controllers;
 
+import com.codstrainingapp.trainingapp.models.Post;
+import com.codstrainingapp.trainingapp.models.User;
 import com.codstrainingapp.trainingapp.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @Controller
 public class PostsController {
@@ -21,8 +27,30 @@ public class PostsController {
     @GetMapping("/")
     public String index(Model viewModel) {
         System.out.println("get to Home Page");
-        viewModel.addAttribute("posts", postSvc.findAll());
+        viewModel.addAttribute("posts", postSvc.findAllOrderByIdDesc());
         return "index";
+    }
+
+    @GetMapping("/posts/create")
+    public String showCreatePostForm(Model viewModel) {
+        viewModel.addAttribute("post", new Post());
+        return "/posts/create";
+    }
+
+    @PostMapping("posts/create")
+    public String createPost(@Valid @ModelAttribute("post") Post post,
+                             BindingResult validation, Model viewModel, HttpServletRequest request) {
+
+        if(validation.hasErrors()) {
+            viewModel.addAttribute("hasErrors", validation.hasErrors());
+            return "/posts/create";
+        }
+
+        User user = (User) request.getSession().getAttribute("user");
+        post.setUser(user);
+        post.setDate(LocalDateTime.now());
+        postSvc.save(post);
+        return "redirect:/";
     }
 
     @PostMapping("deletePost/{id}")
