@@ -9,7 +9,8 @@ import org.commonmark.renderer.html.HtmlRenderer;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
-@Entity(name="posts") //Required. An annotation saying "will be a table", an entity in the database
+@Entity // annotation saying "will be a table", an entity in the database
+@Table(name = "posts") // name of database table, required for query syntax in Hibernate (org.hibernate.hql.internal.ast.QuerySyntaxException)
 public class Post {
 
     @Id // required. Hibernate maps this attribute to a table column named "id". It then maps the following fields automagically
