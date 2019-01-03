@@ -35,7 +35,9 @@
     <ul class="nav nav-tabs">
         <li class="nav active"><a data-toggle="tab" href="#posts">Posts</a></li>
         <li class="nav"><a data-toggle="tab" href="#comments">Comments</a></li>
-        <li class="nav"><a data-toggle="tab" href="#settings">Account Settings</a></li>
+        <c:if test="${sessionScope.user.id == user.id}">
+            <li class="nav"><a data-toggle="tab" href="#settings">Account Settings</a></li>
+        </c:if>
     </ul>
     <div class="tab-content">
         <div class="tab-pane fade in active" id="posts">
