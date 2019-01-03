@@ -1,10 +1,14 @@
 package com.codstrainingapp.trainingapp.repositories;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 
@@ -43,6 +47,25 @@ public abstract class AbstractDao<PK extends Serializable, T> {
         getSession().delete(entity);
     }
 
+//    [‎1/‎3/‎2019 11:09 AM]  Young, Tyler:
+//    https://stackoverflow.com/questions/40720799/deprecated-createcriteria-method-in-hibernate-5
+
+        //    protected
+        //    // Create CriteriaBuilder
+        //    CriteriaBuilder builder = session.getCriteriaBuilder();
+        //
+        //    // Create CriteriaQuery
+        //    CriteriaQuery<T> criteria = builder.createQuery(T entity);
+
+//    https://www.mkyong.com/hibernate/hibernate-query-examples-hql/
+//    criteria way: https://www.baeldung.com/hibernate-sort
+
+    @SuppressWarnings("unchecked")
+    protected Query createCustomQuery(String query) {
+        return getSession().createQuery(query);
+    }
+
+    @Deprecated
     protected Criteria createEntityCriteria(){
         return getSession().createCriteria(persistentClass);
     }
