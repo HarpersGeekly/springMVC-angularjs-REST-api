@@ -8,11 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 
 @Controller
 public class PostsController {
@@ -51,6 +49,13 @@ public class PostsController {
         post.setDate(LocalDateTime.now());
         postSvc.save(post);
         return "redirect:/";
+    }
+
+    @GetMapping("/posts/{id}/{title}")
+    public String showPostPage(@PathVariable(name="id") long id, @PathVariable(name="title") String title, Model viewModel) {
+        Post post = postSvc.findOne(id);
+        viewModel.addAttribute("post", post);
+        return "posts/show";
     }
 
     @PostMapping("deletePost/{id}")
