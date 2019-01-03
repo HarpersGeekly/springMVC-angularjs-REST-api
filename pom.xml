@@ -26,6 +26,7 @@
             <version>1.4.1.RELEASE</version>
         </dependency>
 
+        <!--=== why was this breaking things earlier but not now???====-->
         <!--<dependency>-->
             <!--<groupId>org.springframework.data</groupId>-->
             <!--<artifactId>spring-data-jpa</artifactId>-->
@@ -103,6 +104,11 @@
             <artifactId>validation-api</artifactId>
             <version>1.1.0.Final</version>
         </dependency>
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+            <version>2.2</version>
+        </dependency>
 
         <!--================== jackson =================-->
         <dependency>
@@ -145,6 +151,7 @@
             <artifactId>commonmark</artifactId>
             <version>0.9.0</version>
         </dependency>
+
 
     </dependencies>
     <build>

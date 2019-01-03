@@ -4,14 +4,14 @@
 <body>
 
 <c:forEach var="post" items="${posts}">
-    <h1><c:out value="${post.title}"/></h1>
-    <h3><c:out value="${post.subtitle}"/></h3>
+    <h1>${post.htmlTitle}</h1>
+    <h3>${post.htmlSubtitle}</h3>
     <div>
         By: <a href="/profile/${post.user.id}/${post.user.username}"><c:out value="${post.user.username}"/></a>
         <span style="margin-left: 20px">${post.hoursMinutes}</span>
         <span style="margin-left: 20px">${post.date}</span>
     </div>
-    <img src="<c:out value="${post.leadImage}"/>" alt="image"/>
+    <div>${post.htmlLeadImage}</div>
 </c:forEach>
 
 </body>
