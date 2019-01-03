@@ -18,8 +18,8 @@ public class PostService {
         this.postsDao = postsDao;
     }
 
-    public List<Post> findAll() {
-       return postsDao.findAll();
+    public List<Post> findAllOrderByIdDesc() {
+        return postsDao.findAllOrderByIdDesc();
     }
 
     public Post findOne(long id) {
