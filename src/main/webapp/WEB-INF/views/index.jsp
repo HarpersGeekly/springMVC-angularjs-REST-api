@@ -18,7 +18,18 @@
 <jsp:include page="/WEB-INF/views/partials/navbar.jsp" />
 
 <div class="container">
-    <jsp:include page="/WEB-INF/views/partials/post.jsp" />
+
+    <c:forEach var="post" items="${posts}">
+        <a href="/posts/${post.id}/${post.title}" title="${post.title}"><h1>${post.htmlTitle}</h1></a>
+        <h3>${post.htmlSubtitle}</h3>
+        <div>
+            By: <a href="/profile/${post.user.id}/${post.user.username}"><c:out value="${post.user.username}"/></a>
+            <span style="margin-left: 20px">${post.hoursMinutes}</span>
+            <span style="margin-left: 20px">${post.date}</span>
+        </div>
+        <div>${post.htmlLeadImage}</div>
+    </c:forEach>
+
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
