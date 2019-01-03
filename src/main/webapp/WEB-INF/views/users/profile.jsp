@@ -32,63 +32,87 @@
     <h4>Joined: ${user.date}</h4>
     <h4>Bio: {{jsonUser.bio}}</h4>
 
-    <c:if test="${sessionScope.user.id == user.id}">
-        <button class="btn" ng-click="toggleEditUserForm()">
-            Edit Account
-        </button>
-    </c:if>
+    <ul class="nav nav-tabs">
+        <li class="nav active"><a data-toggle="tab" href="#posts">Posts</a></li>
+        <li class="nav"><a data-toggle="tab" href="#comments">Comments</a></li>
+        <li class="nav"><a data-toggle="tab" href="#settings">Account Settings</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="posts">
 
-    <form class="form-horizontal" ng-submit="saveUser()" ng-model="editUserForm" ng-show="editUserForm" >
+            <div ng-repeat="post in jsonUser.posts | orderBy:'$index':true"> <%--<jsp:include page="/WEB-INF/views/partials/postAngular.jsp" />--%>
 
-        <h3>Edit User:</h3>
-        <div class="container form-group">
+                <div ng-if="jsonUser.posts === undefined || jsonUser.posts.length == 0">Posts are empty</div>
+                <h3 ng-bind-html="post.htmlTitle">{{post.title}}</h3> <%-- use ng-bind-html for parsing the markdown to html--%>
+                <h4 ng-bind-html="post.htmlSubtitle">{{post.subtitle}}</h4>
+                <span>{{post.hoursMinutes}} <span style="margin-left:20px">{{post.date}}</span></span>
+                <div id="profile-post-image" ng-bind-html="post.htmlLeadImage">{{post.leadImage}}</div>
 
-            <input type="hidden" name="id" ng-model="originalUser.id" ng-init="originalUser.id='${user.id}'">
+                <c:if test="${sessionScope.user.id == user.id}">
+                    <button ng-click="jsonUser.posts.splice($index, 1); deletePost(post)">Delete</button>
+                </c:if>
+            </div>
 
-            <label for="userEditName">Username:</label>
-            <input id="userEditName" class="form-control" type="text" name="username" ng-model="originalUser.username" ng-init="originalUser.username='${user.username}'" required>
-
-            <label for="userEditEmail">Email:</label>
-            <input id="userEditEmail" class="form-control" type="text" name="email" ng-model="originalUser.email" ng-init="originalUser.email='${user.email}'" required>
-
-            <label for="userEditBio">Bio:</label>
-            <textarea id="userEditBio" class="form-control" name="bio" ng-model="originalUser.bio" ng-init="originalUser.bio='${user.bio}'" style="resize:none">${user.bio}</textarea>
         </div>
-        <button class="btn btn-success">
-             Save Changes
-        </button>
-    </form>
 
-    <form action="/deleteUser/ + ${user.id}" method="post" ng-model="deleteUserForm" ng-show="deleteUserForm">
-        <input type="hidden" name="id" value="${user.id}" />
-        <h2>Danger Zone:</h2>
-        <button class="btn btn-danger">
-            <%--ng-click="deleteUser()"--%>
-            Delete Your Account
-        </button>
-    </form>
-
-    <h3>Posts:</h3>
-    <div ng-repeat="post in jsonUser.posts">
-        <%--<jsp:include page="/WEB-INF/views/partials/postAngular.jsp" />--%>
-        <h3>{{post.title}}</h3>
-        <h4>{{post.subtitle}}</h4>
-        <div>
-            <img style="width:200px" ng-src="{{post.leadImage}}"/>
+        <div class="tab-pane fade" id="comments">
+            <p>Tab two content</p>
         </div>
-        <div>{{post.hoursMinutes}} <span style="margin-left:20px">{{post.date}}</span></div>
 
-        <c:if test="${sessionScope.user.id == user.id}">
-            <button ng-click="jsonUser.posts.splice($index, 1); deletePost(post)">Delete</button>
-        </c:if>
+        <div class="tab-pane fade" id="settings">
+
+            <div class="container">
+                <button class="btn" ng-click="toggleEditUserForm()">
+                    Edit Account
+                </button>
+
+                <button class="btn" ng-click="toggleEditUserForm()">
+                    Change Password
+                </button>
+
+                <button class="btn" ng-click="toggleEditUserForm()">
+                    Change Profile Picture
+                </button>
+            </div>
+
+            <form class="form-horizontal" ng-submit="saveUser()" ng-model="editUserForm" ng-show="editUserForm" >
+
+                <h3>Edit User:</h3>
+                <div class="container form-group">
+
+                    <input type="hidden" name="id" ng-model="originalUser.id" ng-init="originalUser.id='${user.id}'">
+
+                    <label for="userEditName">Username:</label>
+                    <input id="userEditName" class="form-control" type="text" name="username" ng-model="originalUser.username" ng-init="originalUser.username='${user.username}'" required>
+
+                    <label for="userEditEmail">Email:</label>
+                    <input id="userEditEmail" class="form-control" type="text" name="email" ng-model="originalUser.email" ng-init="originalUser.email='${user.email}'" required>
+
+                    <label for="userEditBio">Bio:</label>
+                    <textarea id="userEditBio" class="form-control" name="bio" ng-model="originalUser.bio" ng-init="originalUser.bio='${user.bio}'" style="resize:none">${user.bio}</textarea>
+                </div>
+                <button class="btn btn-success">
+                     Save Changes
+                </button>
+            </form>
+
+            <form action="/deleteUser/ + ${user.id}" method="post" ng-model="deleteUserForm" ng-show="deleteUserForm">
+                <input type="hidden" name="id" value="${user.id}" />
+                <h2>Danger Zone:</h2>
+                <button class="btn btn-danger">
+                        <%--ng-click="deleteUser()"--%>
+                    Delete Your Account
+                </button>
+            </form>
+        </div>
+
     </div>
-
 </div>
 
 <jsp:include page="/WEB-INF/views/partials/footer.jsp" />
 <script>
 
-        let app = angular.module('myApp', []);
+        let app = angular.module('myApp', ['ngSanitize']);
 
         app.controller('editUserController', function ($scope, $http) { //$http will be used for accessing the server side data
 
@@ -104,15 +128,16 @@
             };
 
             $scope.initMe = function (userId) {
-
                 $http({
                     method: 'GET',
                     url: '/getUser/' + userId
                 }).then(function (response) {
                     console.log("success");
                     console.log("Get user username: " + response.data.username);
+                    console.log(response.data);
                     $scope.jsonUser = response.data;
                     $scope.posts = response.data.posts;
+                    // $scope.postLimit = 3; | limitTo:postLimit
                 }, function (error) {
                     console.log("Get user error: " + error);
                 });
