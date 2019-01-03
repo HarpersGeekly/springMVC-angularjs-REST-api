@@ -17,10 +17,6 @@
 <body>
 <jsp:include page="/WEB-INF/views/partials/navbar.jsp" />
 
-<div class="container flex-center">
-    <h1>Welcome!</h1>
-</div>
-
 <div class="container">
     <jsp:include page="/WEB-INF/views/partials/post.jsp" />
 </div>

@@ -4,7 +4,7 @@
 <body>
 
 <c:forEach var="post" items="${posts}">
-    <h1>${post.htmlTitle}</h1>
+    <a href="/posts/${post.id}/${post.title}" title="${post.title}"><h1>${post.htmlTitle}</h1></a>
     <h3>${post.htmlSubtitle}</h3>
     <div>
         By: <a href="/profile/${post.user.id}/${post.user.username}"><c:out value="${post.user.username}"/></a>
