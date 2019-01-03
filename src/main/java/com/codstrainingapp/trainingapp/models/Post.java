@@ -9,7 +9,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
-@Entity(name = "posts") //required
+@Entity(name="posts") //Required. An annotation saying "will be a table", an entity in the database
 public class Post {
 
     @Id // required. Hibernate maps this attribute to a table column named "id". It then maps the following fields automagically
@@ -118,7 +118,7 @@ public class Post {
         return renderer.render(parser.parse(title));
     }
 
-    public String getHtmlImage() {
+    public String getHtmlLeadImage() {
         Parser parser = Parser.builder().build();
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         return renderer.render(parser.parse(leadImage));
