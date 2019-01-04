@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 @Controller
@@ -23,10 +24,18 @@ public class PostsController {
     }
 
     @GetMapping("/")
-    public String index(Model viewModel) {
+    public String index() {
         System.out.println("get to Home Page");
-        viewModel.addAttribute("posts", postSvc.findAllOrderByIdDesc());
         return "index";
+    }
+
+    @GetMapping("/posts")
+    @ResponseBody
+    public String fetchPosts(Model viewModel) throws IOException {
+        String posts = postSvc.toJson(postSvc.findAllOrderByIdDesc());
+        viewModel.addAttribute("posts",posts);
+        System.out.println(posts);
+        return posts;
     }
 
     @GetMapping("/posts/create")
