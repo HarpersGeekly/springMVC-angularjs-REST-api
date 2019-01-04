@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.hibernate.validator.constraints.Length;
@@ -37,7 +39,7 @@ public class Post {
 
     public Post() {}
 
-    public Post(Long id, String title, String subtitle, String leadImage, String body, User user, LocalDateTime date) {
+    public Post(Long id, String title, String subtitle, String leadImage, String body, User user, LocalDateTime date, List<PostVote> votes) {
         this.id = id;
         this.title = title;
         this.subtitle = subtitle;
@@ -45,11 +47,15 @@ public class Post {
         this.body = body;
         this.user = user;
         this.date = date;
+        this.votes = votes;
     }
 
     @ManyToOne
     @JsonBackReference
     private User user;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<PostVote> votes;
 
     public Long getId() {
         return id;
@@ -111,6 +117,24 @@ public class Post {
         return date.format(DateTimeFormatter.ofPattern("h:mm a"));
     }
 
+    public List<PostVote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(List<PostVote> votes) {
+        this.votes = votes;
+    }
+
+    public void addVote(PostVote vote) {
+        votes.add(vote);
+    }
+
+    public void removeVote(PostVote vote) {
+        votes.remove(vote);
+    }
+
+
+
     // MARKDOWN PARSING FOR VIEW ==============================================================
 
     public String getHtmlTitle() {
@@ -136,4 +160,6 @@ public class Post {
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         return renderer.render(parser.parse(body));
     }
+
+
 }

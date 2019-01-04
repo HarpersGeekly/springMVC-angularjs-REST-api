@@ -43,7 +43,7 @@ public class User {
 
     public User(){}
 
-    public User(long id, String username, String email, String bio, String password, LocalDateTime date, List<Post> posts) {
+    public User(Long id, String username, String email, String bio, String password, LocalDateTime date, List<Post> posts, List<PostVote> votes) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -51,6 +51,7 @@ public class User {
         this.password = password;
         this.date = date;
         this.posts = posts;
+        this.votes = votes;
     }
 
     public User(String username, String email, String bio) {
@@ -65,9 +66,12 @@ public class User {
     @JsonManagedReference // solves Infinite Recursion issue
     private List<Post> posts;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
+    private List<PostVote> votes; // one user can have many votes.
+
 //    ============================ getters and setters =====================
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -126,5 +130,13 @@ public class User {
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
+    }
+
+    public List<PostVote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(List<PostVote> votes) {
+        this.votes = votes;
     }
 }
