@@ -12,6 +12,10 @@
     display: none;
 }
 
+.margin-right {
+    margin-right: 20px;
+}
+
 :root {
     --main-bg-color: #fffafb;
 }
@@ -29,4 +33,30 @@ body {
 
 .CodeMirror-fullscreen .CodeMirror-scroll {
     max-height: none;
+}
+
+#profile-post-image > p > img {
+    max-width:300px;
+}
+
+.upvoteIcon, .downvoteIcon {
+    color: #8c8c8c;
+}
+
+.upvoteIcon:hover {
+    color: #5bc0de;
+    cursor: pointer;
+}
+
+.upvoteActive {
+    color: #1b6d85;
+}
+
+.downvoteIcon:hover {
+    color: #ce8483;
+    cursor: pointer;
+}
+
+.downvoteActive {
+    color: #761c19;
 }
