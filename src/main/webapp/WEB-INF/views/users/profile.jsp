@@ -39,13 +39,15 @@
             <li class="nav"><a data-toggle="tab" href="#settings">Account Settings</a></li>
         </c:if>
     </ul>
+
     <div class="tab-content">
+
         <div class="tab-pane fade in active" id="posts">
 
             <div ng-repeat="post in jsonUser.posts | orderBy:'$index':true"> <%--<jsp:include page="/WEB-INF/views/partials/postAngular.jsp" />--%>
 
                 <div ng-if="jsonUser.posts === undefined || jsonUser.posts.length == 0">Posts are empty</div>
-                <h3 ng-bind-html="post.htmlTitle">{{post.title}}</h3> <%-- use ng-bind-html for parsing the markdown to html--%>
+                <a href="/posts/{{post.id}}/{{post.title}}"><h3 ng-bind-html="post.htmlTitle">{{post.title}}</h3></a> <%-- use ng-bind-html for parsing the markdown to html--%>
                 <h4 ng-bind-html="post.htmlSubtitle">{{post.subtitle}}</h4>
                 <span>{{post.hoursMinutes}} <span style="margin-left:20px">{{post.date}}</span></span>
                 <div id="profile-post-image" ng-bind-html="post.htmlLeadImage">{{post.leadImage}}</div>
@@ -58,7 +60,7 @@
         </div>
 
         <div class="tab-pane fade" id="comments">
-            <p>Tab two content</p>
+            <div ng-if="jsonUser.comments === undefined || jsonUser.comments.length == 0">Comments are empty</div>
         </div>
 
         <div class="tab-pane fade" id="settings">
