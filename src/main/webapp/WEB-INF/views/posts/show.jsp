@@ -16,5 +16,6 @@
 <jsp:include page="/WEB-INF/views/partials/navbar.jsp" />
 <body>
 <jsp:include page="/WEB-INF/views/partials/post.jsp" />
+<jsp:include page="/WEB-INF/views/partials/footer.jsp" />
 </body>
 </html>
