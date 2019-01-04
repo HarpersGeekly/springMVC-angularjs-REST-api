@@ -192,11 +192,17 @@ public class UsersController {
 
 //----------------------- Get User -------------------------------------------------------
 
+//    @GetMapping(value = "/getUser/{id}", produces = "application/json")
+//    @ResponseBody
+//    public String getUser(@PathVariable(name="id") long id) throws JsonProcessingException {
+//        return userSvc.toJson(userSvc.findOne(id));
+//    }
+    
     @GetMapping(value = "/getUser/{id}", produces = "application/json")
     @ResponseBody
-    public String getUser(@PathVariable(name="id") long id) throws JsonProcessingException {
-        return userSvc.toJson(userSvc.findOne(id));
-}
+    public User getUser(@PathVariable(name="id") long id) {
+        return userSvc.findOne(id);
+    }
 
 //---------------------- Update User ---------------------------------------------------
 
