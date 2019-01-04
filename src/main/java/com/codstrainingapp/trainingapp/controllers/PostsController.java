@@ -10,8 +10,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Controller
 public class PostsController {
@@ -30,12 +30,9 @@ public class PostsController {
     }
 
     @GetMapping("/posts")
-    @ResponseBody
-    public String fetchPosts(Model viewModel) throws IOException {
-        String posts = postSvc.toJson(postSvc.findAllOrderByIdDesc());
-        viewModel.addAttribute("posts",posts);
-        System.out.println(posts);
-        return posts;
+    @ResponseBody //returns jackson json string
+    public List<Post> fetchPosts() {
+        return postSvc.findAllOrderByIdDesc();
     }
 
     @GetMapping("/posts/create")

@@ -8,7 +8,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<html data-ng-app="app"> <!-- an angular directive, defines that this is an angularjs application, give it a name-->
+<html ng-app="app"> <!-- an angular directive, defines that this is an angularjs application, give it a name-->
 <head>
     <jsp:include page="/WEB-INF/views/partials/header.jsp">
         <jsp:param name="title" value="trainingapp" />
@@ -17,21 +17,48 @@
 <body>
 <jsp:include page="/WEB-INF/views/partials/navbar.jsp" />
 
-<div class="container">
+<div ng-controller="indexController">
+    <div class="container" ng-init="fetchPosts()">
 
-    <c:forEach var="post" items="${posts}">
-        <a href="/posts/${post.id}/${post.title}" title="${post.title}"><h1>${post.htmlTitle}</h1></a>
-        <h3>${post.htmlSubtitle}</h3>
-        <div>
-            By: <a href="/profile/${post.user.id}/${post.user.username}"><c:out value="${post.user.username}"/></a>
-            <span style="margin-left: 20px">${post.hoursMinutes}</span>
-            <span style="margin-left: 20px">${post.date}</span>
+        <div ng-repeat="post in posts">
+            <a href="/posts/{{post.id}}/{{post.title}}"><h3 ng-bind-html="post.htmlTitle">{{post.title}}</h3></a> <%-- use ng-bind-html for parsing the markdown to html--%>
+            <h4 ng-bind-html="post.htmlSubtitle">{{post.subtitle}}</h4>
+            <span>{{post.hoursMinutes}} <span>{{post.date}}</span></span>
+            <i class="fas fa-thumbs-up"></i><i class="far fa-eye"></i>
+            <div ng-bind-html="post.htmlLeadImage">{{post.leadImage}}</div>
         </div>
-        <div>${post.htmlLeadImage}</div>
-    </c:forEach>
 
+    </div>
 </div>
+<jsp:include page="/WEB-INF/views/partials/footer.jsp" />
+<script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
+    let app = angular.module('app', ['ngSanitize']);
+
+    app.controller('indexController', function($scope, $http) { //$http will be used for accessing the server side data
+
+        $scope.posts = {};
+
+        $scope.fetchPosts = function() {
+                $http({
+                    method: 'GET',
+                    url: '/posts'
+                }).then(function (response) {
+                    console.log("success");
+                    console.log(response.data);
+                    $scope.posts = response.data;
+                    // $scope.postLimit = 3; | limitTo:postLimit
+                }, function (error) {
+                    console.log("Get posts error: " + error);
+                });
+            };
+
+
+    });
+
+
+
+
+</script>
 </body>
 </html>
