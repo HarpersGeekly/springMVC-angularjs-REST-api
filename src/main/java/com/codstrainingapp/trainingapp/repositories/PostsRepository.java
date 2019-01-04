@@ -5,6 +5,7 @@ import java.util.List;
 
 public interface PostsRepository {
 
+    List<Post> findAll();
     List<Post> findAllOrderByIdDesc();
     Post findOne(long id);
     void delete(Post post);
