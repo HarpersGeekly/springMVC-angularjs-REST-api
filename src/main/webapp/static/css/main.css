@@ -39,6 +39,10 @@ body {
     max-width:300px;
 }
 
+#index-post-image > p > img {
+    max-width:600px;
+}
+
 .upvoteIcon, .downvoteIcon {
     color: #8c8c8c;
 }
