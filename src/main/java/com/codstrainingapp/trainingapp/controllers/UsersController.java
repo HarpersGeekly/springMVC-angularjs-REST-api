@@ -1,19 +1,32 @@
 package com.codstrainingapp.trainingapp.controllers;
 
 import com.codstrainingapp.trainingapp.models.Password;
+import com.codstrainingapp.trainingapp.models.Post;
 import com.codstrainingapp.trainingapp.models.User;
 import com.codstrainingapp.trainingapp.services.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.gson.Gson;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Controller
 public class UsersController {
@@ -89,7 +102,7 @@ public class UsersController {
         } else {
             request.getSession().setAttribute("user", existingUser);
             redirect.addFlashAttribute("user", existingUser);
-            return "redirect:/profile/" + existingUser.getId() + "/" + existingUser.getUsername();
+            return "redirect:/profile";
         }
     }
 
@@ -167,18 +180,10 @@ public class UsersController {
         user.setDate(LocalDateTime.now());
         userSvc.save(user);
         request.getSession().setAttribute("user", user);
-        return "redirect:/profile/" + user.getId() + '/' + user.getUsername();
+        return "redirect:/profile";
     }
 
 // ---------------------------- Profile -------------------------------------------------------
-
-    @GetMapping("/profile/{id}/{username}")
-    public String showOtherUsersProfile(@PathVariable long id, Model viewModel) throws JsonProcessingException {
-        User user = userSvc.findOne(id);
-        viewModel.addAttribute("user", user);
-        viewModel.addAttribute("userJson", userSvc.toJson(user));
-        return "users/profile";
-    }
 
     @GetMapping("/profile")
     public String showProfile(HttpServletRequest request) {
@@ -190,18 +195,39 @@ public class UsersController {
         return "redirect:/profile/" + user.getId() + '/' + user.getUsername();
     }
 
+    @GetMapping("/profile/{id}/{username}")
+    public String showOtherUsersProfile(@PathVariable long id, Model viewModel) {
+        User user = userSvc.findOne(id);
+        viewModel.addAttribute("user", user);
+        return "users/profile";
+    }
+
 //----------------------- Get User -------------------------------------------------------
 
-//    @GetMapping(value = "/getUser/{id}", produces = "application/json")
-//    @ResponseBody
-//    public String getUser(@PathVariable(name="id") long id) throws JsonProcessingException {
-//        return userSvc.toJson(userSvc.findOne(id));
-//    }
-    
-    @GetMapping(value = "/getUser/{id}", produces = "application/json")
-    @ResponseBody
-    public User getUser(@PathVariable(name="id") long id) {
-        return userSvc.findOne(id);
+    @GetMapping(value = "/getUser/{id}")
+    @ResponseBody // this method currently returns a User as json string. I need to add posts to the json string
+    public ObjectNode getUser(@PathVariable(name="id") long id) {
+
+        User user = userSvc.findOne(id);
+        List<Post> posts = user.getPosts();
+
+//        ObjectMapper mapper = new ObjectMapper();
+//        ObjectNode userNode = mapper.createObjectNode();
+//        userNode.put("id", user.getId());
+//        userNode.put("username", user.getUsername());
+//        userNode.put("email", user.getEmail());
+//        userNode.put("bio", user.getBio());
+//        userNode.put("date", user.getDate());
+//        userNode.put("hoursMinutes", user.getHoursMinutes());
+//        userNode.put("posts", String.valueOf(posts));
+//        System.out.println(userNode);
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode userNode = mapper.valueToTree(user);
+        ArrayNode array = mapper.valueToTree(posts);
+        userNode.putArray("posts").addAll(array);
+        JsonNode result = mapper.createObjectNode().set("user", userNode);
+        return (ObjectNode) result;
     }
 
 //---------------------- Update User ---------------------------------------------------
@@ -209,7 +235,7 @@ public class UsersController {
     @PostMapping("/editUser/{id}")
     @ResponseBody
     public User updateUser(@PathVariable("id") long id, @RequestBody User user, Model viewModel) {
-//        User updatedUser = userSvc.findOne(id); //Do not need to find user, user is already provided by @RequestBody User user, which is the converted JSON string back to user object.
+//        User updatedUser = userSvc.findOne(id); // Do not need to find user, user is already provided by @RequestBody User user, which is the converted JSON string back to user object.
         User updatedUser = userSvc.update(id, user.getUsername(), user.getEmail(), user.getBio());
         viewModel.addAttribute("user", updatedUser);
         return updatedUser;
@@ -229,5 +255,6 @@ public class UsersController {
     }
 
 }
+
 
 
