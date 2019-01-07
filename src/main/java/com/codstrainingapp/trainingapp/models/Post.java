@@ -1,6 +1,7 @@
 package com.codstrainingapp.trainingapp.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.*;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,6 +14,9 @@ import org.hibernate.validator.constraints.NotBlank;
 
 @Entity // annotation saying "will be a table", an entity in the database
 @Table(name = "posts") // name of database table, required for query syntax in Hibernate (org.hibernate.hql.internal.ast.QuerySyntaxException)
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "id")
 public class Post {
 
     @Id // required. Hibernate maps this attribute to a table column named "id". It then maps the following fields automagically
@@ -39,7 +43,9 @@ public class Post {
 
     public Post() {}
 
-    public Post(Long id, String title, String subtitle, String leadImage, String body, User user, LocalDateTime date, List<PostVote> votes) {
+    public Post(Long id, String title, String subtitle, String leadImage, String body, User user, LocalDateTime date
+//                List<PostVote> votes
+    ) {
         this.id = id;
         this.title = title;
         this.subtitle = subtitle;
@@ -47,15 +53,15 @@ public class Post {
         this.body = body;
         this.user = user;
         this.date = date;
-        this.votes = votes;
+//        this.votes = votes;
     }
 
     @ManyToOne
-    @JsonBackReference
+    @JsonManagedReference
     private User user;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<PostVote> votes;
+//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+//    private List<PostVote> votes;
 
     public Long getId() {
         return id;
@@ -117,21 +123,21 @@ public class Post {
         return date.format(DateTimeFormatter.ofPattern("h:mm a"));
     }
 
-    public List<PostVote> getVotes() {
-        return votes;
-    }
-
-    public void setVotes(List<PostVote> votes) {
-        this.votes = votes;
-    }
-
-    public void addVote(PostVote vote) {
-        votes.add(vote);
-    }
-
-    public void removeVote(PostVote vote) {
-        votes.remove(vote);
-    }
+//    public List<PostVote> getVotes() {
+//        return votes;
+//    }
+//
+//    public void setVotes(List<PostVote> votes) {
+//        this.votes = votes;
+//    }
+//
+//    public void addVote(PostVote vote) {
+//        votes.add(vote);
+//    }
+//
+//    public void removeVote(PostVote vote) {
+//        votes.remove(vote);
+//    }
 
 
 

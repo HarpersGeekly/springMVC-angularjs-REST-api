@@ -12,6 +12,9 @@ import java.util.List;
 
 //JPA specification defines an object-relational mapping between tables in a relational database and a set of Java classes.
 @Entity(name="users") //is a POJO with mapping information. It's now a jpa entity object. Attributes then get automatically mapped to database columns with the same name
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "id")
 public class User {
 
     @Id // identifier, maps the primary key column
@@ -43,7 +46,9 @@ public class User {
 
     public User(){}
 
-    public User(Long id, String username, String email, String bio, String password, LocalDateTime date, List<Post> posts, List<PostVote> votes) {
+    public User(Long id, String username, String email, String bio, String password, LocalDateTime date, List<Post> posts
+//                List<PostVote> votes
+    ) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -51,7 +56,7 @@ public class User {
         this.password = password;
         this.date = date;
         this.posts = posts;
-        this.votes = votes;
+//        this.votes = votes;
     }
 
     public User(String username, String email, String bio) {
@@ -62,12 +67,20 @@ public class User {
 
 //    ============================= relationships ==========================
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER) //TODO double check why not to use EAGER vs LAZY
-    @JsonManagedReference // solves Infinite Recursion issue
+    @OneToMany(mappedBy="user", targetEntity=Post.class, fetch=FetchType.EAGER)
+    @JsonBackReference
     private List<Post> posts;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
-    private List<PostVote> votes; // one user can have many votes.
+//    The default fetch type for one-to-many relationship is LAZY. FetchType.LAZY is a hint to the JPA runtime,
+//    indicating that you want to defer loading of the field until you access it. This is called lazy loading.
+//    Lazy loading is completely transparent; data is loaded from the database in objects silently when you attempt
+//    to read the field for the first time. The other possible fetch type is FetchType.EAGER. Whenever you retrieve
+//    an entity from a query or from the EntityManager, you are guaranteed that all of its eager fields are populated
+//    with data store data. In order to override the default fetch type, EAGER fetching has been specified
+//    with fetch=FetchType.EAGER.
+
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+//    private List<PostVote> votes;
 
 //    ============================ getters and setters =====================
 
@@ -132,11 +145,11 @@ public class User {
         this.posts = posts;
     }
 
-    public List<PostVote> getVotes() {
-        return votes;
-    }
-
-    public void setVotes(List<PostVote> votes) {
-        this.votes = votes;
-    }
+//    public List<PostVote> getVotes() {
+//        return votes;
+//    }
+//
+//    public void setVotes(List<PostVote> votes) {
+//        this.votes = votes;
+//    }
 }
