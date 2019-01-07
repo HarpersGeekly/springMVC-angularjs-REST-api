@@ -29,8 +29,12 @@
     </div>
 
     <h3>{{jsonUser.username}}'s profile</h3>
-    <h4>Joined: ${user.date}</h4>
+    <h4>Joined: {{jsonUser.date}}</h4>
     <h4>Bio: {{jsonUser.bio}}</h4>
+
+    <c:if test="${sessionScope.user.id == user.id}">
+        <h3>You are currently logged in. <a href="/posts/create">Create a post.</a></h3>
+    </c:if>
 
     <ul class="nav nav-tabs">
         <li class="nav active"><a data-toggle="tab" href="#posts">Posts</a></li>
@@ -53,7 +57,7 @@
                 <div id="profile-post-image" ng-bind-html="post.htmlLeadImage">{{post.leadImage}}</div>
 
                 <c:if test="${sessionScope.user.id == user.id}">
-                    <button ng-click="jsonUser.posts.splice($index, 1); deletePost(post)">Delete</button>
+                    <button ng-click="deletePost(post)">Delete</button>
                 </c:if>
             </div>
 
@@ -137,10 +141,10 @@
                     url: '/getUser/' + userId
                 }).then(function (response) {
                     console.log("success");
-                    console.log("Get user username: " + response.data.username);
-                    console.log(response.data);
-                    $scope.jsonUser = response.data;
-                    $scope.posts = response.data.posts;
+                    console.log("Get user username: " + response.data.user.username);
+                    console.log(response.data.user);
+                    $scope.jsonUser = response.data.user;
+                    // $scope.posts = response.data.user.posts;
                     // $scope.postLimit = 3; | limitTo:postLimit
                 }, function (error) {
                     console.log("Get user error: " + error);
@@ -157,17 +161,20 @@
                     $scope.jsonUser = response.data;
                     $scope.toggleEditUserForm();
                     $scope.successfulUpdateMessage = !$scope.successfulUpdateMessage;
-
                 }, function (error) {
                     console.log("Save user error: " + error);
                 })
             };
 
             $scope.deletePost = function(post) {
+
+                $scope.jsonUser.posts.splice($scope.jsonUser.posts.indexOf(post),1);
+
                 $http({
                     method: 'POST',
                     url: '/deletePost/' + post.id,
                 }).then(function () {
+
                 }, function (error) {
                     console.log("Delete post error: " + error);
                 })
