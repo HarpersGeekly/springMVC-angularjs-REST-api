@@ -46,8 +46,8 @@ public class User {
 
     public User(){}
 
-    public User(Long id, String username, String email, String bio, String password, LocalDateTime date, List<Post> posts
-//                List<PostVote> votes
+    public User(Long id, String username, String email, String bio, String password, LocalDateTime date, List<Post> posts,
+                List<PostVote> postVotes
     ) {
         this.id = id;
         this.username = username;
@@ -56,7 +56,7 @@ public class User {
         this.password = password;
         this.date = date;
         this.posts = posts;
-//        this.votes = votes;
+        this.postVotes = postVotes;
     }
 
     public User(String username, String email, String bio) {
@@ -67,7 +67,7 @@ public class User {
 
 //    ============================= relationships ==========================
 
-    @OneToMany(mappedBy="user", targetEntity=Post.class, fetch=FetchType.EAGER)
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
     @JsonBackReference
     private List<Post> posts;
 
@@ -79,8 +79,9 @@ public class User {
 //    with data store data. In order to override the default fetch type, EAGER fetching has been specified
 //    with fetch=FetchType.EAGER.
 
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-//    private List<PostVote> votes;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<PostVote> postVotes;
 
 //    ============================ getters and setters =====================
 
@@ -145,11 +146,11 @@ public class User {
         this.posts = posts;
     }
 
-//    public List<PostVote> getVotes() {
-//        return votes;
-//    }
-//
-//    public void setVotes(List<PostVote> votes) {
-//        this.votes = votes;
-//    }
+    public List<PostVote> getPostVotes() {
+        return postVotes;
+    }
+
+    public void setVotes(List<PostVote> votes) {
+        this.postVotes = postVotes;
+    }
 }

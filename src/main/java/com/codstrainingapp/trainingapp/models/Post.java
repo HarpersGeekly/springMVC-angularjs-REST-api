@@ -43,8 +43,8 @@ public class Post {
 
     public Post() {}
 
-    public Post(Long id, String title, String subtitle, String leadImage, String body, User user, LocalDateTime date
-//                List<PostVote> votes
+    public Post(Long id, String title, String subtitle, String leadImage, String body, User user, LocalDateTime date,
+                List<PostVote> postVotes
     ) {
         this.id = id;
         this.title = title;
@@ -53,15 +53,16 @@ public class Post {
         this.body = body;
         this.user = user;
         this.date = date;
-//        this.votes = votes;
+        this.postVotes = postVotes;
     }
 
     @ManyToOne
     @JsonManagedReference
     private User user;
 
-//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-//    private List<PostVote> votes;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<PostVote> postVotes;
 
     public Long getId() {
         return id;
@@ -123,21 +124,46 @@ public class Post {
         return date.format(DateTimeFormatter.ofPattern("h:mm a"));
     }
 
-//    public List<PostVote> getVotes() {
-//        return votes;
-//    }
-//
-//    public void setVotes(List<PostVote> votes) {
-//        this.votes = votes;
-//    }
-//
-//    public void addVote(PostVote vote) {
-//        votes.add(vote);
-//    }
-//
-//    public void removeVote(PostVote vote) {
-//        votes.remove(vote);
-//    }
+    public List<PostVote> getPostVotes() {
+        return postVotes;
+    }
+
+    public void setVotes(List<PostVote> postVotes) {
+        this.postVotes = postVotes;
+    }
+
+    // VOTING LOGIC =============================================================================
+    @JsonGetter("voteCount") // saying that this method is only being used as an attribute in show.html
+    public int voteCount() {
+        return postVotes.stream().mapToInt(PostVote::getType).reduce(0, (sum, vote) -> sum + vote);
+        // takes all the votes and adds 1 or -1 (getType). Needs more users in application to vote and see results.
+        // http://www.baeldung.com/java-8-double-colon-operator (::)
+        // stream(), mapToInt(), reduce()
+        // https://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html
+        // A stream represents a sequence of elements and supports different kinds of operations to perform computations upon those elements.
+        // Streams can be created from various data sources, especially collections. Lists and Sets support new methods stream()
+        // mapToInt() returns an IntStream consisting of the results of applying the given function to the elements of this stream.
+        // PostVote::getType will evaluate to a function that invokes getType() directly without any delegation.
+        // There’s a really tiny performance difference due to saving one level of delegation.
+        // reduce() sums the values
+    }
+
+    public PostVote getVoteFrom(User user) {
+        for (PostVote vote : postVotes) {
+            if (vote.voteBelongsTo(user)) {
+                return vote;
+            }
+        }
+        return null;
+    }
+
+    public void addVote(PostVote vote) {
+        postVotes.add(vote);
+    }
+
+    public void removeVote(PostVote vote) {
+        postVotes.remove(vote);
+    }
 
 
 
