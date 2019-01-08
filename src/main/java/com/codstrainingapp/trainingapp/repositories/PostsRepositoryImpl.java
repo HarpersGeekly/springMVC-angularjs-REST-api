@@ -2,6 +2,7 @@ package com.codstrainingapp.trainingapp.repositories;
 
 import com.codstrainingapp.trainingapp.models.Post;
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -12,7 +13,11 @@ public class PostsRepositoryImpl extends AbstractDao<Long, Post> implements Post
     @SuppressWarnings("unchecked")
     public List<Post> findAll() {
         Criteria criteria = createEntityCriteria();
-        return (List<Post>) criteria.list();
+        List<Post> posts = (List<Post>) criteria.list();
+        for(Post p : posts) {
+            Hibernate.initialize(p.getPostVotes());
+        }
+        return posts;
     }
 
     @SuppressWarnings("unchecked")
@@ -39,7 +44,6 @@ public class PostsRepositoryImpl extends AbstractDao<Long, Post> implements Post
     public void save(Post post) {
         persist(post);
     }
-
 }
 
 
