@@ -27,11 +27,11 @@
         </dependency>
 
         <!--=== why was this breaking things earlier but not now???====-->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.data</groupId>-->
-            <!--<artifactId>spring-data-jpa</artifactId>-->
-            <!--<version>2.1.3.RELEASE</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>2.1.3.RELEASE</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
