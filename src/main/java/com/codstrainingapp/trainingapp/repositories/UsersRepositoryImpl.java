@@ -36,18 +36,11 @@ public class UsersRepositoryImpl extends AbstractDao<Long, User> implements User
     public User findOne(long id) {
         User user = getByKey(id);
         Hibernate.initialize(user.getPosts());
-        Hibernate.initialize(user.getPostVotes());
         return user;
     }
 
     public void save(User user) {
         persist(user);
-    }
-
-
-    public int totalPostVotes(Long id) {
-        Query query = createCustomQuery("FROM PostVote pv LEFT JOIN Post p ON p.id = pv.post_id inner JOIN User u ON u.id = p.user_id WHERE u.id LIKE ?1");
-        return query.getFetchSize();
     }
 
 }
