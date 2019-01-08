@@ -26,8 +26,8 @@
 
             By: <a href="/profile/{{post.user.id}}/{{post.user.username}}">{{post.user.username}}</a>
             <span>{{post.hoursMinutes}} <span>{{post.date}}</span></span>
-            <i class="fas fa-thumbs-up"></i><i class="far fa-eye"></i>
-            <div ng-bind-html="post.htmlLeadImage" id="index-post-image">{{post.leadImage}}</div>
+            <i class="fas fa-thumbs-up"></i>{{post.voteCount}}<i class="far fa-eye"></i>
+            <a href="/posts/{{post.id}}/{{post.title}}"><div ng-bind-html="post.htmlLeadImage" id="index-post-image">{{post.leadImage}}</div></a>
         </div>
 
     </div>
