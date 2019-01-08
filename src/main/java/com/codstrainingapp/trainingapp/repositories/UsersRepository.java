@@ -12,8 +12,4 @@ public interface UsersRepository {
     User findOne(long id);
     void save(User user);
     void delete(User user);
-
-//    @Query(nativeQuery = true,
-//            value = "SELECT * FROM users WHERE id LIKE=?1")
-//    User findById(Long id);
 }
