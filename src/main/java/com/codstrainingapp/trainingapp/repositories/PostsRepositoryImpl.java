@@ -38,7 +38,9 @@ public class PostsRepositoryImpl extends AbstractDao<Long, Post> implements Post
 //    }
 
     public Post findOne(long id) {
-        return getByKey(id);
+        Post post = getByKey(id);
+        Hibernate.initialize(post.getPostVotes());
+        return post;
     }
 
     public void save(Post post) {
