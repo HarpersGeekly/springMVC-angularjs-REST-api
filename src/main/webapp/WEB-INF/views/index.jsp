@@ -21,7 +21,9 @@
     <div class="container" ng-init="fetchPosts()">
 
         <div ng-repeat="post in posts | orderBy:'$index':true">
-            <a href="/posts/{{post.id}}/{{post.title}}"><h3 ng-bind-html="post.htmlTitle">{{post.title}}</h3></a> <%-- use ng-bind-html for parsing the markdown to html--%>
+            <a href="/posts/{{post.id}}/{{post.title}}"><%-- use ng-bind-html for parsing the markdown to html--%>
+                <h3 ng-bind-html="post.htmlTitle">{{post.title}}</h3>
+            </a>
             <h4 ng-bind-html="post.htmlSubtitle">{{post.subtitle}}</h4>
 
             By: <a href="/profile/{{post.user.id}}/{{post.user.username}}">{{post.user.username}}</a>

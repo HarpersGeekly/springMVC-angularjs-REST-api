@@ -17,7 +17,7 @@
 <body>
 
 <div ng-controller="postController">
-    <div class="container" ng-init="fetchPost(${post.id})">
+    <div class="container" id="post-wrapper-show-page" ng-init="fetchPost(${post.id})">
 
         <h3 ng-bind-html="post.htmlTitle">{{post.title}}</h3> <%-- use ng-bind-html for parsing the markdown to html--%>
         <h4 ng-bind-html="post.htmlSubtitle">{{post.subtitle}}</h4>
@@ -25,26 +25,42 @@
         By: <a href="/profile/{{post.user.id}}/{{post.user.username}}">{{post.user.username}}</a>
         <span>{{post.hoursMinutes}} <span>{{post.date}}</span></span>
         <i class="fas fa-thumbs-up"></i>{{post.voteCount}}<i class="far fa-eye"></i>{{post.hitCount}}
+
         <a href="/posts/{{post.id}}/{{post.title}}"><div ng-bind-html="post.htmlLeadImage" id="index-post-image">{{post.leadImage}}</div></a>
 
+        <div ng-bind-html="post.htmlBody">{{post.body}}</div>
+
+        <c:if test="${sessionScope.user == null}">
+            <a href="/login"><i class="fas fa-2x fa-thumbs-up"></i></a>
+            {{post.voteCount}}
+            <a href="/login"><i class="fas fa-2x fa-thumbs-down"></i></a>
+        </c:if>
+
+        <c:if test="${sessionScope.user != null}">
+            <i class="fas fa-2x fa-thumbs-up upvoteIcon"></i>
+            {{post.voteCount}}
+            <i class="fas fa-2x fa-thumbs-down downvoteIcon"></i>
+        </c:if>
     </div>
 </div>
 
 <jsp:include page="/WEB-INF/views/partials/footer.jsp" />
 <script>
 
-    let app = angular.module('app', []);
+    let app = angular.module('app', ['ngSanitize']);
 
     app.controller('postController', function($scope, $http) {
 
-        $scope.fetchPost = function(post) {
+        $scope.post = {};
+
+        $scope.fetchPost = function(postId) {
             $http({
                 method: 'GET',
-                url: '/posts/fetch/' + post.id,
+                url: '/posts/fetch/' + postId,
             }).then(function (response) {
                 console.log("success");
                 console.log(response.data);
-                $scope.posts = response.data;
+                $scope.post = response.data;
                 // $scope.postLimit = 3;  | limitTo:postLimit"
             }, function (error) {
                 console.log("Get posts error: " + error);

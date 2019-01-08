@@ -43,6 +43,10 @@ body {
     max-width:600px;
 }
 
+#post-wrapper-show-page {
+    margin-bottom: 65px;
+}
+
 .upvoteIcon, .downvoteIcon {
     color: #8c8c8c;
 }
