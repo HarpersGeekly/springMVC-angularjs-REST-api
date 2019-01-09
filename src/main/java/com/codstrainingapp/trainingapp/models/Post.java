@@ -61,7 +61,6 @@ public class Post {
     private User user;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    @JsonBackReference
     private List<PostVote> postVotes;
 
     public Long getId() {
