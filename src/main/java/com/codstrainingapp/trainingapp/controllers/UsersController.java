@@ -2,9 +2,11 @@ package com.codstrainingapp.trainingapp.controllers;
 
 import com.codstrainingapp.trainingapp.models.Password;
 import com.codstrainingapp.trainingapp.models.Post;
+import com.codstrainingapp.trainingapp.models.PostVote;
 import com.codstrainingapp.trainingapp.models.User;
 import com.codstrainingapp.trainingapp.services.UserService;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -205,29 +207,10 @@ public class UsersController {
 //----------------------- Get User -------------------------------------------------------
 
     @GetMapping(value = "/getUser/{id}")
-    @ResponseBody // this method currently returns a User as json string. I need to add posts to the json string
-    public ObjectNode getUser(@PathVariable(name="id") long id) {
-
+    @ResponseBody // this method currently returns a User as json string.
+    public ObjectNode fetchUser(@PathVariable(name="id") long id) throws JsonProcessingException {
         User user = userSvc.findOne(id);
-        List<Post> posts = user.getPosts();
-
-//        ObjectMapper mapper = new ObjectMapper();
-//        ObjectNode userNode = mapper.createObjectNode();
-//        userNode.put("id", user.getId());
-//        userNode.put("username", user.getUsername());
-//        userNode.put("email", user.getEmail());
-//        userNode.put("bio", user.getBio());
-//        userNode.put("date", user.getDate());
-//        userNode.put("hoursMinutes", user.getHoursMinutes());
-//        userNode.put("posts", String.valueOf(posts));
-//        System.out.println(userNode);
-
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode userNode = mapper.valueToTree(user);
-        ArrayNode array = mapper.valueToTree(posts);
-        userNode.putArray("posts").addAll(array);
-        JsonNode result = mapper.createObjectNode().set("user", userNode);
-        return (ObjectNode) result;
+        return userSvc.toJson(user);
     }
 
 //---------------------- Update User ---------------------------------------------------
