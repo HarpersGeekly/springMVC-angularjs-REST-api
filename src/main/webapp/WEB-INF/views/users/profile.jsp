@@ -19,6 +19,7 @@
 <body ng-app="myApp" ng-controller="editUserController as ctrl">
 <jsp:include page="/WEB-INF/views/partials/navbar.jsp" />
 
+<div ng-init="test(${user})"></div>
 <div class="container" ng-init="initMe(${user.id})"> <!-- moved ng-controller to body for now? -->
 
     <div class="alert alert-success alert-dismissible" role="alert" ng-model="successfulUpdateMessage" ng-show="successfulUpdateMessage">
@@ -48,14 +49,14 @@
 
         <div class="tab-pane fade in active" id="posts">
 
-            <div ng-repeat="post in jsonUser.posts | orderBy:'$index':true"> <%--<jsp:include page="/WEB-INF/views/partials/postAngular.jsp" />--%>
+            <div ng-if="jsonUser.posts === undefined || jsonUser.posts.length == 0">Posts are empty</div>
 
-                <div ng-if="jsonUser.posts === undefined || jsonUser.posts.length == 0">Posts are empty</div>
+            <div ng-repeat="post in jsonUser.posts | orderBy:'$index':true"> <%--<jsp:include page="/WEB-INF/views/partials/postAngular.jsp" />--%>
                 <a href="/posts/{{post.id}}/{{post.title}}"><h3 ng-bind-html="post.htmlTitle">{{post.title}}</h3></a> <%-- use ng-bind-html for parsing the markdown to html--%>
                 <h4 ng-bind-html="post.htmlSubtitle">{{post.subtitle}}</h4>
                 <span>{{post.hoursMinutes}} <span class="margin-right">{{post.date}}</span></span>
                 <i class="fas fa-thumbs-up margin-right-lt"></i><span>{{post.voteCount}}</span>
-                <div id="profile-post-image" ng-bind-html="post.htmlLeadImage">{{post.leadImage}}</div>
+                <a href="/posts/{{post.id}}/{{post.title}}"><div id="profile-post-image" ng-bind-html="post.htmlLeadImage">{{post.leadImage}}</div></a>
 
                 <c:if test="${sessionScope.user.id == user.id}">
                     <button ng-click="deletePost(post)">Delete</button>
@@ -155,7 +156,7 @@
             $scope.saveUser = function () {
                 $http({
                     method: 'POST',
-                    url: '/editUser/' + $scope.originalUser.id, // I don't need this id, do I?
+                    url: '/editUser/' + $scope.originalUser.id,
                     data: JSON.stringify($scope.originalUser)
                 }).then(function (response) {
                     console.log(response.data);

@@ -28,7 +28,7 @@
 
         <i class="fas fa-thumbs-up margin-right-lt"></i><span>{{post.voteCount}}</span>
 
-        <a href="/posts/{{post.id}}/{{post.title}}"><div ng-bind-html="post.htmlLeadImage" id="index-post-image">{{post.leadImage}}</div></a>
+        <div ng-bind-html="post.htmlLeadImage" id="index-post-image">{{post.leadImage}}</div>
 
         <div ng-bind-html="post.htmlBody">{{post.body}}</div>
 
@@ -39,9 +39,9 @@
         </c:if>
 
         <c:if test="${sessionScope.user != null}">
-            <i class="fas fa-2x fa-thumbs-up upvoteIcon margin-right-lt"></i>
+            <i class="fas fa-2x fa-thumbs-up upvoteIcon margin-right-lt" ng-click="upVote(post.id)" ng-class="{true:'upvoteActive', false:'upvoteIcon'}"></i>
             <span class="margin-right-lt">{{post.voteCount}}</span>
-            <i class="fas fa-2x fa-thumbs-down downvoteIcon"></i>
+            <i class="fas fa-2x fa-thumbs-down downvoteIcon" ng-click="downVote(post.id)" ng-class="{true:'downvoteActive', false:'downvoteIcon'}"></i>
         </c:if>
 
         <%--<i title="Up Votes" ng-click="upVote()" class="fa fa-arrow-circle-up fa-2x" ng-class="{true:'upvoteActive', false:''}"></i>--%>
@@ -75,11 +75,34 @@
             });
         };
 
-        // $scope.upVote = function () {
-        // }
-        //
-        // $scope.downVote = function () {
-        // }
+        $scope.upVote = function (postId) {
+
+            console.log("clicked me. postId = " + postId);
+            $http({
+                method: 'POST',
+                url: '/posts/' + postId + '/upvote',
+            }).then(function (response) {
+                console.log(response.data);
+                $scope.post.voteCount = response.data.voteCount;
+            }, function (error) {
+                console.log("Get posts error: " + error);
+            });
+        }
+
+
+        $scope.downVote = function (postId) {
+
+            console.log("clicked me. postId = " + postId);
+            $http({
+                method: 'POST',
+                url: '/posts/' + postId + '/downvote',
+            }).then(function (response) {
+                console.log(response.data);
+                $scope.post.voteCount = response.data.voteCount;
+            }, function (error) {
+                console.log("Get posts error: " + error);
+            });
+        }
 
 
 
