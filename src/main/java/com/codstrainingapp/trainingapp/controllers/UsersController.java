@@ -1,15 +1,10 @@
 package com.codstrainingapp.trainingapp.controllers;
 
 import com.codstrainingapp.trainingapp.models.Password;
-import com.codstrainingapp.trainingapp.models.Post;
-import com.codstrainingapp.trainingapp.models.PostVote;
 import com.codstrainingapp.trainingapp.models.User;
 import com.codstrainingapp.trainingapp.services.UserService;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +23,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Controller
 public class UsersController {

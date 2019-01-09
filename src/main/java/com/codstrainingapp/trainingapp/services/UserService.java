@@ -1,18 +1,20 @@
 package com.codstrainingapp.trainingapp.services;
 
+import com.codstrainingapp.trainingapp.models.Post;
 import com.codstrainingapp.trainingapp.models.User;
 import com.codstrainingapp.trainingapp.repositories.UsersRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -61,9 +63,16 @@ public class UserService {
 //        SecurityContextHolder.getContext().setAuthentication(null);
     }
 
-    public String toJson(User user) throws JsonProcessingException {
+    public ObjectNode toJson(User user) throws JsonProcessingException {
+
+        List<Post> posts = user.getPosts();
+        System.out.println(user.getPosts());
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(user);
+        ObjectNode userNode = mapper.valueToTree(user);
+        ArrayNode postArray = mapper.valueToTree(posts);
+        userNode.putArray("posts").addAll(postArray);
+        JsonNode result = mapper.createObjectNode().set("user", userNode);
+        return (ObjectNode) result;
     }
 
     public Object fromJson(String jsonString, Object valueType) throws IOException {
