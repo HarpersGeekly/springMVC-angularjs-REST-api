@@ -1,5 +1,6 @@
 package com.codstrainingapp.trainingapp.repositories;
 
+import com.codstrainingapp.trainingapp.models.Post;
 import com.codstrainingapp.trainingapp.models.User;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
@@ -36,6 +37,11 @@ public class UsersRepositoryImpl extends AbstractDao<Long, User> implements User
     public User findOne(long id) {
         User user = getByKey(id);
         Hibernate.initialize(user.getPosts());
+        List<Post> posts = user.getPosts();
+        for(Post p : posts) {
+            Hibernate.initialize(p.getPostVotes());
+        }
+        Hibernate.initialize(user.getPostVotes());
         return user;
     }
 
