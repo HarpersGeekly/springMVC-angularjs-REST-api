@@ -26,9 +26,9 @@
             </a>
             <h4 ng-bind-html="post.htmlSubtitle">{{post.subtitle}}</h4>
 
-            By: <a href="/profile/{{post.user.id}}/{{post.user.username}}">{{post.user.username}}</a>
-            <span>{{post.hoursMinutes}} <span>{{post.date}}</span></span>
-            <i class="fas fa-thumbs-up"></i>{{post.voteCount}}<i class="far fa-eye"></i>
+            By: <a href="/profile/{{post.user.id}}/{{post.user.username}}" class="margin-right">{{post.user.username}}</a>
+            <span class="margin-right-lt">{{post.hoursMinutes}}</span><span class="margin-right">{{post.date}}</span>
+            <i class="fas fa-thumbs-up margin-right-lt"></i>{{post.voteCount}}
             <a href="/posts/{{post.id}}/{{post.title}}"><div ng-bind-html="post.htmlLeadImage" id="index-post-image">{{post.leadImage}}</div></a>
         </div>
 

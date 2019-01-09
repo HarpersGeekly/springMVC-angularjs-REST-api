@@ -22,25 +22,33 @@
         <h3 ng-bind-html="post.htmlTitle">{{post.title}}</h3> <%-- use ng-bind-html for parsing the markdown to html--%>
         <h4 ng-bind-html="post.htmlSubtitle">{{post.subtitle}}</h4>
 
-        By: <a href="/profile/{{post.user.id}}/{{post.user.username}}">{{post.user.username}}</a>
-        <span>{{post.hoursMinutes}} <span>{{post.date}}</span></span>
-        <i class="fas fa-thumbs-up"></i>{{post.voteCount}}<i class="far fa-eye"></i>{{post.hitCount}}
+        By: <a href="/profile/{{post.user.id}}/{{post.user.username}}" class="margin-right">{{post.user.username}}</a>
+
+        <span class="margin-right">{{post.hoursMinutes}}</span><span class="margin-right">{{post.date}}</span>
+
+        <i class="fas fa-thumbs-up margin-right-lt"></i><span>{{post.voteCount}}</span>
 
         <a href="/posts/{{post.id}}/{{post.title}}"><div ng-bind-html="post.htmlLeadImage" id="index-post-image">{{post.leadImage}}</div></a>
 
         <div ng-bind-html="post.htmlBody">{{post.body}}</div>
 
         <c:if test="${sessionScope.user == null}">
-            <a href="/login"><i class="fas fa-2x fa-thumbs-up"></i></a>
-            {{post.voteCount}}
+            <a href="/login" class="margin-right-lt"><i class="fas fa-2x fa-thumbs-up"></i></a>
+            <span class="margin-right-lt">{{post.voteCount}}</span>
             <a href="/login"><i class="fas fa-2x fa-thumbs-down"></i></a>
         </c:if>
 
         <c:if test="${sessionScope.user != null}">
-            <i class="fas fa-2x fa-thumbs-up upvoteIcon"></i>
-            {{post.voteCount}}
+            <i class="fas fa-2x fa-thumbs-up upvoteIcon margin-right-lt"></i>
+            <span class="margin-right-lt">{{post.voteCount}}</span>
             <i class="fas fa-2x fa-thumbs-down downvoteIcon"></i>
         </c:if>
+
+        <%--<i title="Up Votes" ng-click="upVote()" class="fa fa-arrow-circle-up fa-2x" ng-class="{true:'upvoteActive', false:''}"></i>--%>
+        <%--<br>--%>
+        <%--<i title="Down Votes" ng-click="downVote()" class="fa fa-arrow-circle-down fa-2x"  ng-class="{true:'downvoteActive', false:''}"></i>--%>
+        <%--<br>Vote: {{post.voteCount}}--%>
+
     </div>
 </div>
 
@@ -66,6 +74,18 @@
                 console.log("Get posts error: " + error);
             });
         };
+
+        // $scope.upVote = function () {
+        // }
+        //
+        // $scope.downVote = function () {
+        // }
+
+
+
+
+
+
 
 
     })

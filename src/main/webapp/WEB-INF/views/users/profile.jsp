@@ -53,7 +53,8 @@
                 <div ng-if="jsonUser.posts === undefined || jsonUser.posts.length == 0">Posts are empty</div>
                 <a href="/posts/{{post.id}}/{{post.title}}"><h3 ng-bind-html="post.htmlTitle">{{post.title}}</h3></a> <%-- use ng-bind-html for parsing the markdown to html--%>
                 <h4 ng-bind-html="post.htmlSubtitle">{{post.subtitle}}</h4>
-                <span>{{post.hoursMinutes}} <span style="margin-left:20px">{{post.date}}</span></span>
+                <span>{{post.hoursMinutes}} <span class="margin-right">{{post.date}}</span></span>
+                <i class="fas fa-thumbs-up margin-right-lt"></i><span>{{post.voteCount}}</span>
                 <div id="profile-post-image" ng-bind-html="post.htmlLeadImage">{{post.leadImage}}</div>
 
                 <c:if test="${sessionScope.user.id == user.id}">
