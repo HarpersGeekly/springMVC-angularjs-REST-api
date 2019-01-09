@@ -1,8 +1,10 @@
 package com.codstrainingapp.trainingapp.controllers;
 
 import com.codstrainingapp.trainingapp.models.Post;
+import com.codstrainingapp.trainingapp.models.PostVote;
 import com.codstrainingapp.trainingapp.models.User;
 import com.codstrainingapp.trainingapp.services.PostService;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,7 +34,7 @@ public class PostsController {
     @GetMapping("/posts")
     @ResponseBody //returns jackson json string
     public List<Post> fetchPosts() {
-        return postSvc.findAllOrderByIdDesc();
+        return postSvc.findAll();
     }
 
     @GetMapping("/posts/create")
@@ -57,16 +59,42 @@ public class PostsController {
         return "redirect:/";
     }
 
+    @PostMapping("deletePost/{id}")
+    public void deletePost(@PathVariable long id) {
+        Post post = postSvc.findOne(id);
+        postSvc.delete(post);
+    }
+
     @GetMapping("/posts/{id}/{title}")
-    public String showPostPage(@PathVariable(name="id") long id, @PathVariable(name="title") String title, Model viewModel) {
+    public String showPostPage(@PathVariable(name="id") long id, Model viewModel) {
         Post post = postSvc.findOne(id);
         viewModel.addAttribute("post", post);
         return "posts/show";
     }
 
-    @PostMapping("deletePost/{id}")
-    public void deletePost(@PathVariable long id) {
-        postSvc.delete(postSvc.findOne(id));
+    @GetMapping("/posts/fetch/{id}")
+    @ResponseBody
+    public Post fetchPost(@PathVariable(name="id") long id) {
+        return postSvc.findOne(id);
+    }
+
+//    =============== post votes ================
+
+    @PostMapping("/posts/{id}/{type}")
+    @ResponseBody
+    public Post vote(@PathVariable(name="id") long id, @PathVariable(name="type") String vote, HttpServletRequest request) {
+
+        Post post = postSvc.findOne(id);
+        User user = (User) request.getSession().getAttribute("user");
+
+        if(vote.equals("upvote")) {
+            PostVote.vote(post, user, 1);
+        } else {
+            PostVote.vote(post, user, -1);
+        }
+
+        postSvc.save(post);
+        return post;
     }
 
 }
