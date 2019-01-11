@@ -58,17 +58,21 @@
                 <a href="/posts/{{post.id}}/{{post.title}}"><div id="profile-post-image" ng-bind-html="post.htmlLeadImage">{{post.leadImage}}</div></a>
 
                 <c:if test="${sessionScope.user.id == user.id}">
-                    <i class="fas fa-ellipsis-h fa-lg options-ellipsis dropdown-toggle"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    </i>
-                    <div class="dropdown-menu edit-delete-dropdown" aria-labelledby="dropdownMenu">
-
-                        <button ng-click="deletePost(post)">Delete</button>
-
-                        <div>
-                            <a class="dropdown-edit-btn" href="/posts/{{post.id}}/edit">
-                                <i class="far fa-edit"></i> edit
-                            </a>
+                    <div class="dropdown-container">
+                        <i class="fas fa-ellipsis-h fa-lg options-ellipsis dropdown-toggle"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        </i>
+                        <div class="dropdown-menu edit-delete-dropdown" aria-labelledby="dropdownMenu">
+                            <div>
+                                <a href="/posts/{{post.id}}/edit" class="dropdown-edit-btn">
+                                    <i class="far fa-edit"></i> edit
+                                </a>
+                            </div>
+                            <div>
+                                <a ng-click="deletePost(post)" class="dropdown-delete-btn">
+                                    <i class="fas fa-trash-alt"></i> delete
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </c:if>
@@ -167,7 +171,6 @@
             };
 
             $scope.saveUser = function () {
-
                 console.log($scope.originalUser);
                 let user = $scope.originalUser;
                 let id = $scope.originalUser.id;
@@ -186,18 +189,16 @@
             };
 
             $scope.deletePost = function(post) {
-
-                $scope.jsonUser.posts.splice($scope.jsonUser.posts.indexOf(post),1);
-
+                // $scope.jsonUser.posts.splice($scope.jsonUser.posts.indexOf(post),1);
                 $http({
                     method: 'POST',
-                    url: '/deletePost/' + post.id,
-                }).then(function () {
-
+                    url: '/deletePost/' + post.id
+                }).then(function (response) {
+                    console.log(response);
+                    $scope.initMe($scope.jsonUser.id);
                 }, function (error) {
                     console.log("Delete post error: " + error);
-                })
-
+                });
             };
 
 
