@@ -19,7 +19,6 @@
 <body ng-app="myApp" ng-controller="editUserController as ctrl">
 <jsp:include page="/WEB-INF/views/partials/navbar.jsp" />
 
-<div ng-init="test(${user})"></div>
 <div class="container" ng-init="initMe(${user.id})"> <!-- moved ng-controller to body for now? -->
 
     <div class="alert alert-success alert-dismissible" role="alert" ng-model="successfulUpdateMessage" ng-show="successfulUpdateMessage">
@@ -54,13 +53,26 @@
             <div ng-repeat="post in jsonUser.posts | orderBy:'$index':true"> <%--<jsp:include page="/WEB-INF/views/partials/postAngular.jsp" />--%>
                 <a href="/posts/{{post.id}}/{{post.title}}"><h3 ng-bind-html="post.htmlTitle">{{post.title}}</h3></a> <%-- use ng-bind-html for parsing the markdown to html--%>
                 <h4 ng-bind-html="post.htmlSubtitle">{{post.subtitle}}</h4>
-                <span>{{post.hoursMinutes}} <span class="margin-right">{{post.date}}</span></span>
+                <span class="margin-right-lt">{{post.hoursMinutes}}</span><span class="margin-right">{{post.formatDate}}</span>
                 <i class="fas fa-thumbs-up margin-right-lt"></i><span>{{post.voteCount}}</span>
                 <a href="/posts/{{post.id}}/{{post.title}}"><div id="profile-post-image" ng-bind-html="post.htmlLeadImage">{{post.leadImage}}</div></a>
 
                 <c:if test="${sessionScope.user.id == user.id}">
-                    <button ng-click="deletePost(post)">Delete</button>
+                    <i class="fas fa-ellipsis-h fa-lg options-ellipsis dropdown-toggle"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </i>
+                    <div class="dropdown-menu edit-delete-dropdown" aria-labelledby="dropdownMenu">
+
+                        <button ng-click="deletePost(post)">Delete</button>
+
+                        <div>
+                            <a class="dropdown-edit-btn" href="/posts/{{post.id}}/edit">
+                                <i class="far fa-edit"></i> edit
+                            </a>
+                        </div>
+                    </div>
                 </c:if>
+
             </div>
 
         </div>
@@ -102,8 +114,9 @@
                     <textarea id="userEditBio" class="form-control" name="bio" ng-model="originalUser.bio" ng-init="originalUser.bio='${user.bio}'" style="resize:none">${user.bio}</textarea>
                 </div>
                 <button class="btn btn-success">
-                     Save Changes
+                    Save Changes
                 </button>
+
             </form>
 
             <form action="/deleteUser/ + ${user.id}" method="post" ng-model="deleteUserForm" ng-show="deleteUserForm">
@@ -154,10 +167,14 @@
             };
 
             $scope.saveUser = function () {
+
+                console.log($scope.originalUser);
+                let user = $scope.originalUser;
+                let id = $scope.originalUser.id;
                 $http({
                     method: 'POST',
-                    url: '/editUser/' + $scope.originalUser.id,
-                    data: JSON.stringify($scope.originalUser)
+                    url: '/editUser/' + id,
+                    data: JSON.stringify(user)
                 }).then(function (response) {
                     console.log(response.data);
                     $scope.jsonUser = response.data;
