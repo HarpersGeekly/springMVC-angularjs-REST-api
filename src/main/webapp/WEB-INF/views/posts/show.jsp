@@ -24,7 +24,7 @@
 
         By: <a href="/profile/{{post.user.id}}/{{post.user.username}}" class="margin-right">{{post.user.username}}</a>
 
-        <span class="margin-right">{{post.hoursMinutes}}</span><span class="margin-right">{{post.date}}</span>
+        <span class="margin-right">{{post.hoursMinutes}}</span><span class="margin-right">{{post.formatDate}}</span>
 
         <i class="fas fa-thumbs-up margin-right-lt"></i><span>{{post.voteCount}}</span>
 
@@ -32,22 +32,47 @@
 
         <div ng-bind-html="post.htmlBody">{{post.body}}</div>
 
+
         <c:if test="${sessionScope.user == null}">
             <a href="/login" class="margin-right-lt"><i class="fas fa-2x fa-thumbs-up"></i></a>
             <span class="margin-right-lt">{{post.voteCount}}</span>
             <a href="/login"><i class="fas fa-2x fa-thumbs-down"></i></a>
         </c:if>
 
-        <c:if test="${sessionScope.user != null}">
-            <i class="fas fa-2x fa-thumbs-up upvoteIcon margin-right-lt" ng-click="upVote(post.id)" ng-class="{true:'upvoteActive', false:'upvoteIcon'}"></i>
-            <span class="margin-right-lt">{{post.voteCount}}</span>
-            <i class="fas fa-2x fa-thumbs-down downvoteIcon" ng-click="downVote(post.id)" ng-class="{true:'downvoteActive', false:'downvoteIcon'}"></i>
-        </c:if>
+         <div class="vote-options-row">
+            <c:if test="${sessionScope.user != null}">
+                <div class="thumbs-wrapper">
+                    <i class="fas fa-2x fa-thumbs-up upvoteIcon margin-right-lt" ng-click="upVote(post.id)" ng-class="{true:'upvoteActive', false:'upvoteIcon'}"></i>
+                    <span class="margin-right-lt">{{post.voteCount}}</span>
+                    <i class="fas fa-2x fa-thumbs-down downvoteIcon" ng-click="downVote(post.id)" ng-class="{true:'downvoteActive', false:'downvoteIcon'}"></i>
+                </div>
+            </c:if>
 
-        <%--<i title="Up Votes" ng-click="upVote()" class="fa fa-arrow-circle-up fa-2x" ng-class="{true:'upvoteActive', false:''}"></i>--%>
-        <%--<br>--%>
-        <%--<i title="Down Votes" ng-click="downVote()" class="fa fa-arrow-circle-down fa-2x"  ng-class="{true:'downvoteActive', false:''}"></i>--%>
-        <%--<br>Vote: {{post.voteCount}}--%>
+            <%--<i title="Up Votes" ng-click="upVote()" class="fa fa-arrow-circle-up fa-2x" ng-class="{true:'upvoteActive', false:''}"></i>--%>
+            <%--<br>--%>
+            <%--<i title="Down Votes" ng-click="downVote()" class="fa fa-arrow-circle-down fa-2x"  ng-class="{true:'downvoteActive', false:''}"></i>--%>
+            <%--<br>Vote: {{post.voteCount}}--%>
+
+            <c:if test="${sessionScope.user.id == post.user.id}">
+                <div class="dropdown-container">
+                    <i class="fas fa-ellipsis-h fa-lg options-ellipsis dropdown-toggle"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </i>
+                    <div class="dropdown-menu edit-delete-dropdown" aria-labelledby="dropdownMenu">
+                        <div>
+                            <a href="/posts/{{post.id}}/edit" class="dropdown-edit-btn">
+                                <i class="far fa-edit"></i> edit
+                            </a>
+                        </div>
+                        <div>
+                            <a ng-click="deletePost(post)" class="dropdown-delete-btn">
+                                <i class="fas fa-trash-alt"></i> delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </c:if>
+        </div>
 
     </div>
 </div>
@@ -57,7 +82,7 @@
 
     let app = angular.module('app', ['ngSanitize']);
 
-    app.controller('postController', function($scope, $http) {
+    app.controller('postController', function($scope, $http, $window) {
 
         $scope.post = {};
 
@@ -76,8 +101,6 @@
         };
 
         $scope.upVote = function (postId) {
-
-            console.log("clicked me. postId = " + postId);
             $http({
                 method: 'POST',
                 url: '/posts/' + postId + '/upvote',
@@ -87,12 +110,10 @@
             }, function (error) {
                 console.log("Get posts error: " + error);
             });
-        }
+        };
 
 
         $scope.downVote = function (postId) {
-
-            console.log("clicked me. postId = " + postId);
             $http({
                 method: 'POST',
                 url: '/posts/' + postId + '/downvote',
@@ -102,7 +123,20 @@
             }, function (error) {
                 console.log("Get posts error: " + error);
             });
-        }
+        };
+
+        $scope.deletePost = function(post) {
+            $http({
+                method: 'POST',
+                url: '/deletePost/' + post.id + '/redirect',
+            }).then(function () {
+                $window.location.href = "/profile"
+            }, function (error) {
+                console.log("Delete post error: " + error);
+            })
+
+        };
+
 
 
 
