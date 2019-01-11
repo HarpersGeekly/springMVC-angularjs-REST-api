@@ -1,7 +1,6 @@
 package com.codstrainingapp.trainingapp.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 
@@ -17,10 +16,11 @@ public class PostVote {
     private int type;
 
     @ManyToOne @JoinColumn(name = "post_id", insertable = false, updatable = false)
+    @JsonManagedReference(value = "post_votes")
     private Post post;
 
     @ManyToOne @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    @JsonManagedReference
+    @JsonManagedReference(value = "user_post_votes")
     private User user;
 
     public PostVote() {}

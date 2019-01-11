@@ -14,9 +14,6 @@ import org.hibernate.validator.constraints.NotBlank;
 
 @Entity // annotation saying "will be a table", an entity in the database
 @Table(name = "posts") // name of database table, required for query syntax in Hibernate (org.hibernate.hql.internal.ast.QuerySyntaxException)
-//@JsonIdentityInfo(
-//        generator = ObjectIdGenerators.PropertyGenerator.class,
-//        property = "id")
 public class Post {
 
     @Id // required. Hibernate maps this attribute to a table column named "id". It then maps the following fields automagically
@@ -57,10 +54,11 @@ public class Post {
     }
 
     @ManyToOne
-    @JsonManagedReference
+    @JsonManagedReference(value = "user_posts")
     private User user;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @JsonBackReference(value="post_votes")
     private List<PostVote> postVotes;
 
     public Long getId() {
@@ -111,16 +109,22 @@ public class Post {
         this.user = user;
     }
 
-    public String getDate() {
-        return date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+    public LocalDateTime getDate() {
+        return date;
     }
 
     public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
-    public String getHoursMinutes() {
+    @JsonGetter("hoursMinutes")
+    public String hoursMinutes() {
         return date.format(DateTimeFormatter.ofPattern("h:mm a"));
+    }
+
+    @JsonGetter("formatDate")
+    public String formatDate() {
+        return date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
     }
 
     public List<PostVote> getPostVotes() {
