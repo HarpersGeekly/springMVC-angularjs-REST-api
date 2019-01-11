@@ -1,7 +1,9 @@
 package com.codstrainingapp.trainingapp.services;
 
 import com.codstrainingapp.trainingapp.models.Post;
+import com.codstrainingapp.trainingapp.models.PostVote;
 import com.codstrainingapp.trainingapp.models.User;
+import com.codstrainingapp.trainingapp.models.ViewModelUser;
 import com.codstrainingapp.trainingapp.repositories.UsersRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
@@ -44,29 +46,29 @@ public class UserService {
         return usersDao.findByEmail(email);
     }
 
+//    public void save(ViewModelUser viewModelUser) {
+//       // User user = new User(viewModelUser);
+//        usersDao.save(user);
+//    }
+
     public void save(User user) {
         usersDao.save(user);
     }
 
-    public User update(long id, String username, String email, String bio) {
-        User updatedUser = usersDao.findOne(id);
-        updatedUser.setUsername(username);
-        updatedUser.setEmail(email);
-        updatedUser.setBio(bio);
+    public User update(User user) {
+        User updatedUser = usersDao.findOne(user.getId());
+        updatedUser.setUsername(user.getUsername());
+        updatedUser.setEmail(user.getEmail());
+        updatedUser.setBio(user.getBio());
         return updatedUser;
     }
 
     public void delete(User user) {
         usersDao.delete(user);
     }
-    public void deleteSession() {
-//        SecurityContextHolder.getContext().setAuthentication(null);
-    }
 
-    public ObjectNode toJson(User user) throws JsonProcessingException {
-
+    public ObjectNode toJson(User user) {
         List<Post> posts = user.getPosts();
-        System.out.println(user.getPosts());
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode userNode = mapper.valueToTree(user);
         ArrayNode postArray = mapper.valueToTree(posts);
