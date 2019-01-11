@@ -1,6 +1,7 @@
 package com.codstrainingapp.trainingapp.services;
 
 import com.codstrainingapp.trainingapp.models.Post;
+import com.codstrainingapp.trainingapp.repositories.PostVotesRepository;
 import com.codstrainingapp.trainingapp.repositories.PostsRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
@@ -40,6 +41,10 @@ public class PostService {
 
     public void save(Post post) {
         postsDao.save(post);
+    }
+
+    public void update(Post post) {
+        postsDao.updatePost(post);
     }
 
     public String toJson(Object object) throws JsonProcessingException {

@@ -46,6 +46,20 @@ public class PostsRepositoryImpl extends AbstractDao<Long, Post> implements Post
     public void save(Post post) {
         persist(post);
     }
+
+    public void updatePost(Post post) {
+        update(post);
+    }
+
+//    public void updatePost(Post post) {
+//        Query query = createCustomQuery("UPDATE Post set body = :body, title = :title, subtitle = :subtitle, leadImage = :leadImage WHERE ID = :id");
+//        query.setParameter("id", post.getId());
+//        query.setParameter("body", post.getBody());
+//        query.setParameter("title", post.getTitle());
+//        query.setParameter("subtitle", post.getSubtitle());
+//        query.setParameter("leadImage", post.getLeadImage());
+//        query.executeUpdate();
+//    }
 }
 
 

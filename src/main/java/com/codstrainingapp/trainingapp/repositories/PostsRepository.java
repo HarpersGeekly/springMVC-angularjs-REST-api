@@ -10,4 +10,5 @@ public interface PostsRepository {
     Post findOne(long id);
     void delete(Post post);
     void save(Post post);
+    void updatePost(Post post);
 }
