@@ -43,20 +43,16 @@ public class User {
 
     public User(){}
 
-    public User(Long id, String username, String email, String bio, String password, LocalDateTime date, List<Post> posts,
-                List<PostVote> postVotes) {
+    public User(Long id, String username, String email, String bio, String password, LocalDateTime date) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.bio = bio;
         this.password = password;
         this.date = date;
-        this.posts = posts;
-        this.postVotes = postVotes;
     }
 
-    public User(Long id, String username, String email, String bio) {
-        this.id = id;
+    public User(String username, String email, String bio) {
         this.username = username;
         this.email = email;
         this.bio = bio;
@@ -64,11 +60,11 @@ public class User {
 
 //    ============================= relationships ==========================
 
-    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonBackReference(value = "user_posts")
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonBackReference(value = "user_post_votes")
     private List<PostVote> postVotes;
 
@@ -107,12 +103,8 @@ public class User {
         this.email = email;
     }
 
-    public String getDate() {
-        return date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
-    }
-
-    public String getHoursMinutes() {
-        return date.format(DateTimeFormatter.ofPattern("h:mm a"));
+    public LocalDateTime getDate() {
+        return date;
     }
 
     public void setDate(LocalDateTime date) {
@@ -141,5 +133,15 @@ public class User {
 
     public void setVotes(List<PostVote> votes) {
         this.postVotes = postVotes;
+    }
+
+    @JsonGetter("hoursMinutes")
+    public String hoursMinutes() {
+        return date.format(DateTimeFormatter.ofPattern("h:mm a"));
+    }
+
+    @JsonGetter("formatDate")
+    public String formatDate() {
+        return date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
     }
 }

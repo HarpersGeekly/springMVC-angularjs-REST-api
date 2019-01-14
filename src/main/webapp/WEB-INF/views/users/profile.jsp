@@ -29,7 +29,7 @@
     </div>
 
     <h3>{{jsonUser.username}}'s profile</h3>
-    <h4>Joined: {{jsonUser.date}}</h4>
+    <h4>Joined: {{jsonUser.formatDate}}</h4>
     <h4>Bio: {{jsonUser.bio}}</h4>
 
     <c:if test="${sessionScope.user.id == user.id}">
@@ -95,10 +95,6 @@
                 <button class="btn" ng-click="toggleEditUserForm()">
                     Change Password
                 </button>
-
-                <button class="btn" ng-click="toggleEditUserForm()">
-                    Change Profile Picture
-                </button>
             </div>
 
             <form class="form-horizontal" ng-submit="saveUser()" ng-model="editUserForm" ng-show="editUserForm" >
@@ -115,7 +111,7 @@
                     <input id="userEditEmail" class="form-control" type="text" name="email" ng-model="originalUser.email" ng-init="originalUser.email='${user.email}'" required>
 
                     <label for="userEditBio">Bio:</label>
-                    <textarea id="userEditBio" class="form-control" name="bio" ng-model="originalUser.bio" ng-init="originalUser.bio='${user.bio}'" style="resize:none">${user.bio}</textarea>
+                    <textarea id="userEditBio" class="form-control" name="bio" ng-model="originalUser.bio" ng-init="originalUser.bio='${user.bio}'" style="resize:none">{{jsonUser.bio}}</textarea>
                 </div>
                 <button class="btn btn-success">
                     Save Changes
@@ -161,8 +157,10 @@
                 }).then(function (response) {
                     console.log("success");
                     console.log("Get user username: " + response.data.user.username);
+                    // console.log(response.data);
                     console.log(response.data.user);
                     $scope.jsonUser = response.data.user;
+                    // $scope.jsonUser = response.data;
                     // $scope.posts = response.data.user.posts;
                     // $scope.postLimit = 3; | limitTo:postLimit
                 }, function (error) {
@@ -171,7 +169,6 @@
             };
 
             $scope.saveUser = function () {
-                console.log($scope.originalUser);
                 let user = $scope.originalUser;
                 let id = $scope.originalUser.id;
                 $http({
@@ -179,8 +176,12 @@
                     url: '/editUser/' + id,
                     data: JSON.stringify(user)
                 }).then(function (response) {
+                    console.log("back from edit user");
                     console.log(response.data);
-                    $scope.jsonUser = response.data;
+                    // $scope.jsonUser = response.data;
+                    $scope.initMe($scope.jsonUser.id);
+
+                    //this is acting weird. Works the first time, then works every other time.
                     $scope.toggleEditUserForm();
                     $scope.successfulUpdateMessage = !$scope.successfulUpdateMessage;
                 }, function (error) {
