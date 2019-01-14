@@ -41,7 +41,7 @@ public class UsersRepositoryImpl extends AbstractDao<Long, User> implements User
         for(Post p : posts) {
             Hibernate.initialize(p.getPostVotes());
         }
-//        Hibernate.initialize(user.getPostVotes());
+        Hibernate.initialize(user.getPostVotes());
         return user;
     }
 

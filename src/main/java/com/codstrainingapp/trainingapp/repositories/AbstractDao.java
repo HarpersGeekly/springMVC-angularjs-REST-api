@@ -39,6 +39,7 @@ public abstract class AbstractDao<PK extends Serializable, T> {
         getSession().persist(entity);
     }
 
+    //saveOrUpdate(), update(), merge() jpa native
     public void update(T entity) { getSession().merge(entity); }
 
     public void delete(T entity) {
