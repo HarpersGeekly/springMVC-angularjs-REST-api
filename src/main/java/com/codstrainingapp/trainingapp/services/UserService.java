@@ -55,7 +55,7 @@ public class UserService {
         usersDao.save(user);
     }
 
-    public User update(User user) {
+    public User update(ViewModelUser user) {
         User updatedUser = usersDao.findOne(user.getId());
         updatedUser.setUsername(user.getUsername());
         updatedUser.setEmail(user.getEmail());

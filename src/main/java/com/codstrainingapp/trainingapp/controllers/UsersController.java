@@ -4,17 +4,16 @@ import com.codstrainingapp.trainingapp.models.User;
 import com.codstrainingapp.trainingapp.models.ViewModelUser;
 import com.codstrainingapp.trainingapp.services.UserService;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+
 
 @Controller
 public class UsersController {
@@ -48,8 +47,8 @@ public class UsersController {
 //----------------------- Get User -------------------------------------------------------
 
     @GetMapping(value = "/getUser/{id}")
-    @ResponseBody // this method currently returns a User as json string.
-    public ObjectNode fetchUser(@PathVariable(name="id") long id) throws JsonProcessingException {
+    @ResponseBody
+    public ObjectNode fetchUser(@PathVariable(name="id") long id) {
         User user = userSvc.findOne(id);
         return userSvc.toJson(user);
     }
@@ -57,13 +56,10 @@ public class UsersController {
 //---------------------- Update User ---------------------------------------------------
 
     @PostMapping(value = "/editUser/{id}")
-    @ResponseBody
-    public User updateUser(@PathVariable("id") long id, @RequestBody User user, Model viewModel) {
-        System.out.println("get here");
-//        User updatedUser = userSvc.findOne(id); // Do not need to find user, user is already provided by @RequestBody User user, which is the converted JSON string back to user object.
-        System.out.println(user.getPostVotes() + " / " + user.getPosts());
+    @ResponseBody// this method currently returns a User as json string.
+    public User updateUser(@PathVariable(name = "id") long id, @RequestBody ViewModelUser user, Model viewModel) {
+        // User updatedUser = userSvc.findOne(id); // Do not need to find user with /{id} and @PathVariable, user is already provided by @RequestBody User user, which is the converted JSON string back to user object.
         User updatedUser = userSvc.update(user);
-        userSvc.save(updatedUser);
         viewModel.addAttribute("user", updatedUser);
         return updatedUser;
     }
@@ -76,7 +72,7 @@ public class UsersController {
         userSvc.delete(user);
         request.getSession().removeAttribute("user");
         request.getSession().invalidate();
-        redirect.addFlashAttribute("successDelete", userSvc.findOne(id) == null);
+        redirect.addFlashAttribute("deleteIsSuccessful", true);
         redirect.addFlashAttribute("successMessage", "Sorry to see you go! Your account has been deactivated.");
         return "redirect:/register";
     }
