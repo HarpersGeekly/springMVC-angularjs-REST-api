@@ -7,7 +7,6 @@ import com.codstrainingapp.trainingapp.services.UserService;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -15,39 +14,65 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 
 
-@Controller
-public class UsersController {
+@RestController
+@RequestMapping("/api/user")
+@CrossOrigin
+public class UsersRestController {
 
     private UserService userSvc;
 
     @Autowired
-    public UsersController(UserService userSvc) {
+    public UsersRestController(UserService userSvc) {
         this.userSvc = userSvc;
     }
 
-// ---------------------------- Profile -------------------------------------------------------
+////// ---------------------------- Profile -------------------------------------------------------
+////
+//    @GetMapping("/profile")
+//    public String showProfile(HttpServletRequest request) {
+//        User sessionUser = (User) request.getSession().getAttribute("user");
+//        if (sessionUser == null) {
+//            return "redirect:/login";
+//        }
+//        User user = userSvc.findOne(sessionUser.getId());
+//        return "redirect:/profile/" + user.getId() + '/' + user.getUsername();
+//    }
+////
+//    @GetMapping("/profile/{id}/{username}")
+//    public String showOtherUsersProfile(@PathVariable long id, Model viewModel) {
+//        User user = userSvc.findOne(id);
+//        viewModel.addAttribute("user", user);
+//        return "users/profile";
+//    }
 
-    @GetMapping("/profile")
-    public String showProfile(HttpServletRequest request) {
-        User sessionUser = (User) request.getSession().getAttribute("user");
-        if (sessionUser == null) {
-            return "redirect:/login";
-        }
-        User user = userSvc.findOne(sessionUser.getId());
-        return "redirect:/profile/" + user.getId() + '/' + user.getUsername();
+    @GetMapping(value = "/id/{id}")
+    @ResponseBody
+    public User findById(@PathVariable(name = "id") Long id) {
+        return userSvc.findOne(id);
     }
 
-    @GetMapping("/profile/{id}/{username}")
-    public String showOtherUsersProfile(@PathVariable long id, Model viewModel) {
-        User user = userSvc.findOne(id);
-        viewModel.addAttribute("user", user);
-        return "users/profile";
+    @GetMapping(value = "/{username}")
+    @ResponseBody
+    public User findByUsername(@PathVariable(name = "username") String username) {
+        return userSvc.findByUsername(username);
     }
 
+//    //-------------------Retrieve Single User--------------------------------------------------------
+////
+//    @RequestMapping(value = "/getUser/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<User> getUser(@PathVariable("id") long id) {
+//        System.out.println("Fetching User with id " + id);
+//        User user = userSvc.findOne(id);
+//        if (user == null) {
+//            System.out.println("User with id " + id + " not found");
+//            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+//        }
+//        return new ResponseEntity<User>(user, HttpStatus.OK);
+//    }
 //----------------------- Get User -------------------------------------------------------
 
     @GetMapping(value = "/getUser/{id}")
-    @ResponseBody
+//    @ResponseBody
     public ObjectNode fetchUser(@PathVariable(name="id") long id) {
         User user = userSvc.findOne(id);
         return userSvc.toJson(user);
@@ -56,7 +81,7 @@ public class UsersController {
 //---------------------- Update User ---------------------------------------------------
 
     @PostMapping(value = "/editUser/{id}")
-    @ResponseBody// this method currently returns a User as json string.
+//    @ResponseBody// this method currently returns a User as json string.
     public User updateUser(@PathVariable(name = "id") long id, @RequestBody ViewModelUser user, Model viewModel) {
         // User updatedUser = userSvc.findOne(id); // Do not need to find user with /{id} and @PathVariable, user is already provided by @RequestBody User user, which is the converted JSON string back to user object.
         User updatedUser = userSvc.update(user);
@@ -74,7 +99,7 @@ public class UsersController {
         request.getSession().invalidate();
         redirect.addFlashAttribute("deleteIsSuccessful", true);
         redirect.addFlashAttribute("successMessage", "Sorry to see you go! Your account has been deactivated.");
-        return "redirect:/register";
+        return "redirect:http://localhost:8080/register";
     }
 
 }
