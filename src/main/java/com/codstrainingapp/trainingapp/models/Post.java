@@ -53,13 +53,17 @@ public class Post {
         this.postVotes = postVotes;
     }
 
+    //=============================== relationships =========================================
+
     @ManyToOne
     @JsonManagedReference(value = "user_posts")
     private User user;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    @JsonBackReference(value="post_votes")
+    @JsonBackReference(value = "post_votes")
     private List<PostVote> postVotes;
+
+    //=============================== getters and setters =========================================
 
     public Long getId() {
         return id;
