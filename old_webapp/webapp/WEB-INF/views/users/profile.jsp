@@ -92,7 +92,7 @@
                     Edit Account
                 </button>
 
-                <button class="btn" ng-click="toggleEditUserForm()">
+                <button class="btn" ng-click="toggleEditPasswordForm()">
                     Change Password
                 </button>
             </div>
