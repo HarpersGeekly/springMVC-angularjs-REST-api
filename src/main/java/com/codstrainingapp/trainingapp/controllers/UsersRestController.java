@@ -78,6 +78,14 @@ public class UsersRestController {
         return userSvc.toJson(user);
     }
 
+//---------------------- Save User ------------------------------------------------------
+
+    @PostMapping(value = "/save")
+    public void saveUser(User user) {
+        System.out.println("get here user save");
+        userSvc.save(user);
+    }
+
 //---------------------- Update User ---------------------------------------------------
 
     @PostMapping(value = "/editUser/{id}")
