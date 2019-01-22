@@ -36,8 +36,6 @@ public abstract class AbstractDao<PK extends Serializable, T> {
     }
 
     public void save(T entity) {
-        System.out.println("get here");
-        System.out.println(entity);
         getSession().saveOrUpdate(entity);
     }
 

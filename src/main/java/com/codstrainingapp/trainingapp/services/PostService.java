@@ -35,12 +35,16 @@ public class PostService {
         return postsDao.findOne(id);
     }
 
+    public List<Post> findAllByUserId(long id) {
+        return postsDao.findAllByUserId(id);
+    }
+
     public void delete(Post post) {
         postsDao.delete(post);
     }
 
-    public void save(Post post) {
-        postsDao.save(post);
+    public void savePost(Post post) {
+        postsDao.savePost(post);
     }
 
     public void update(Post post) {

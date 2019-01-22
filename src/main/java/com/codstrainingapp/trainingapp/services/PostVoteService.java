@@ -17,13 +17,7 @@ public class PostVoteService {
         this.postVotesDao = postVotesDao;
     }
 
-    public void save(PostVote postVote) {
-        postVotesDao.save(postVote);
+    public void savePostVote(PostVote postVote) {
+        postVotesDao.savePostVote(postVote);
     }
-
-//    int totalPostVote(Long id) {
-//        return postVoteDao.totalPostVotes(id);
-//    }
-
-
 }

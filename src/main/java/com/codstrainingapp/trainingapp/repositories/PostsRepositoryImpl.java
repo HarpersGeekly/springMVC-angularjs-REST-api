@@ -27,6 +27,16 @@ public class PostsRepositoryImpl extends AbstractDao<Long, Post> implements Post
         return query.list();
     }
 
+    @SuppressWarnings("unchecked")
+    public List<Post> findAllByUserId(long id) {
+        Query query = createCustomQuery("FROM Post WHERE user_id = " + id);
+        List<Post> posts = query.list();
+        for(Post p : posts) {
+            Hibernate.initialize(p.getPostVotes());
+        }
+        return posts;
+    }
+
     public Post findPost(long id) {
         return getByKey(id);
     }
@@ -43,8 +53,8 @@ public class PostsRepositoryImpl extends AbstractDao<Long, Post> implements Post
         return post;
     }
 
-    public void save(Post post) {
-        persist(post);
+    public void savePost(Post post) {
+        save(post);
     }
 
     public void updatePost(Post post) {

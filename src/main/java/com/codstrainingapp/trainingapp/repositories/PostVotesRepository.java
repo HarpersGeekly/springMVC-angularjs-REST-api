@@ -5,5 +5,5 @@ import com.codstrainingapp.trainingapp.models.PostVote;
 public interface PostVotesRepository {
 
 //    int totalPostVotes(Long id);
-    void save(PostVote postVote);
+    void savePostVote(PostVote postVote);
 }

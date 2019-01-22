@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PostVotesRepositoryImpl extends AbstractDao<Long, PostVote> implements PostVotesRepository {
 
-    public void save(PostVote postVote) {
-        persist(postVote);
+    public void savePostVote(PostVote postVote) {
+        save(postVote);
     }
 
 

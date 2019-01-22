@@ -7,8 +7,9 @@ public interface PostsRepository {
 
     List<Post> findAll();
     List<Post> findAllOrderByIdDesc();
+    List<Post> findAllByUserId(long id);
     Post findOne(long id);
     void delete(Post post);
-    void save(Post post);
+    void savePost(Post post);
     void updatePost(Post post);
 }

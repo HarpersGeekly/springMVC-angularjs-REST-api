@@ -7,12 +7,8 @@ import com.codstrainingapp.trainingapp.services.PostService;
 import com.codstrainingapp.trainingapp.services.PostVoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController // @RestController = @Controller + @ResponseBody (returns jackson json string) instead of annotating methods with @ResponseBody
@@ -39,10 +35,15 @@ public class PostsRestController {
         return postSvc.findOne(id);
     }
 
+    @GetMapping(value = "/userPosts/{id}")
+    public List<Post> findAllByUserId(@PathVariable(name = "id") Long id) {
+        return postSvc.findAllByUserId(id);
+    }
+
     @PostMapping(value = "/save")
     public void savePost(Post post) {
         System.out.println("get here save");
-        postSvc.save(post);
+        postSvc.savePost(post);
     }
 
     @DeleteMapping("/deletePost/{id}")
@@ -90,11 +91,11 @@ public class PostsRestController {
 
         if (vote.equalsIgnoreCase("upvote")) {
             post.addVote(PostVote.up(post, user));
-            postVoteSvc.save(PostVote.up(post, user));
+            postVoteSvc.savePostVote(PostVote.up(post, user));
             System.out.println("up");
         } else {
             post.addVote(PostVote.down(post, user));
-            postVoteSvc.save(PostVote.down(post, user));
+            postVoteSvc.savePostVote(PostVote.down(post, user));
             System.out.println("down");
         }
 
