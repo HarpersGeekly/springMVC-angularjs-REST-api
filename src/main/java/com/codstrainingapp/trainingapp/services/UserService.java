@@ -46,13 +46,9 @@ public class UserService {
         return usersDao.findByEmail(email);
     }
 
-//    public void save(ViewModelUser viewModelUser) {
-//       // User user = new User(viewModelUser);
-//        usersDao.save(user);
-//    }
-
-    public void save(User user) {
-        usersDao.save(user);
+    public void saveUser(User user) {
+        System.out.println("saving in service");
+        usersDao.saveUser(user);
     }
 
     public User update(ViewModelUser user) {
@@ -68,11 +64,11 @@ public class UserService {
     }
 
     public ObjectNode toJson(User user) {
-        List<Post> posts = user.getPosts();
+//        List<Post> posts = user.getPosts();
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode userNode = mapper.valueToTree(user);
-        ArrayNode postArray = mapper.valueToTree(posts);
-        userNode.putArray("posts").addAll(postArray);
+//        ArrayNode postArray = mapper.valueToTree(posts);
+//        userNode.putArray("posts").addAll(postArray);
         JsonNode result = mapper.createObjectNode().set("user", userNode);
         return (ObjectNode) result;
     }

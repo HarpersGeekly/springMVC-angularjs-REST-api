@@ -17,7 +17,7 @@ public class UsersRepositoryImpl extends AbstractDao<Long, User> implements User
         Criteria criteria = createEntityCriteria();
         List<User> users = (List<User>) criteria.list();
         for(User u : users) {
-            Hibernate.initialize(u.getPosts());
+//            Hibernate.initialize(u.getPosts());
         }
         return users;
     }
@@ -35,18 +35,17 @@ public class UsersRepositoryImpl extends AbstractDao<Long, User> implements User
     }
 
     public User findOne(long id) {
-        User user = getByKey(id);
-        Hibernate.initialize(user.getPosts());
-        List<Post> posts = user.getPosts();
-        for(Post p : posts) {
-            Hibernate.initialize(p.getPostVotes());
-        }
-        Hibernate.initialize(user.getPostVotes());
-        return user;
+        //        Hibernate.initialize(user.getPosts());
+//        List<Post> posts = user.getPosts();
+//        for(Post p : posts) {
+//            Hibernate.initialize(p.getPostVotes());
+//        }
+//        Hibernate.initialize(user.getPostVotes());
+        return getByKey(id);
     }
 
-    public void save(User user) {
-        persist(user);
+    public void saveUser(User user) {
+        save(user);
     }
 
 }
