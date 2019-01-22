@@ -65,7 +65,7 @@ public class UsersRestController {
     }
 
 //    //-------------------Retrieve Single User--------------------------------------------------------
-////
+//
 //    @RequestMapping(value = "/getUser/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 //    public ResponseEntity<User> getUser(@PathVariable("id") long id) {
 //        System.out.println("Fetching User with id " + id);
@@ -76,13 +76,21 @@ public class UsersRestController {
 //        }
 //        return new ResponseEntity<User>(user, HttpStatus.OK);
 //    }
+//
+// IS THE SAME AS...
 //----------------------- Get User -------------------------------------------------------
 
+    @Deprecated
     @GetMapping(value = "/getUser/{id}")
-//    @ResponseBody
-    public ObjectNode fetchUser(@PathVariable(name="id") long id) {
+    public ObjectNode fetchUserToJson(@PathVariable(name="id") long id) {
         User user = userSvc.findOne(id);
         return userSvc.toJson(user);
+    }
+
+    @GetMapping(value = "/getUser/{id}")
+    @ResponseBody
+    public User fetchUser(@PathVariable(name = "id") long id) {
+        return userSvc.findOne(id);
     }
 
 //---------------------- Save User ------------------------------------------------------
