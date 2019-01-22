@@ -10,6 +10,6 @@ public interface UsersRepository {
     User findByEmail(String email);
     List<User> findAll();
     User findOne(long id);
-    void save(User user);
+    void saveUser(User user);
     void delete(User user);
 }

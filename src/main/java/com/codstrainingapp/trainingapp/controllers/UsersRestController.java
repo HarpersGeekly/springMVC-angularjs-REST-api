@@ -7,6 +7,7 @@ import com.codstrainingapp.trainingapp.services.UserService;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -51,10 +52,16 @@ public class UsersRestController {
         return userSvc.findOne(id);
     }
 
-    @GetMapping(value = "/{username}")
+    @GetMapping(value = "/username/{username}")
     @ResponseBody
     public User findByUsername(@PathVariable(name = "username") String username) {
         return userSvc.findByUsername(username);
+    }
+
+    @GetMapping(value = "/email/{email}")
+    @ResponseBody
+    public User findByEmail(@PathVariable(name = "email") String email) {
+        return userSvc.findByEmail(email);
     }
 
 //    //-------------------Retrieve Single User--------------------------------------------------------
@@ -81,9 +88,8 @@ public class UsersRestController {
 //---------------------- Save User ------------------------------------------------------
 
     @PostMapping(value = "/save")
-    public void saveUser(User user) {
-        System.out.println("get here user save");
-        userSvc.save(user);
+    public void saveUser(@RequestBody User user) {
+        userSvc.saveUser(user);
     }
 
 //---------------------- Update User ---------------------------------------------------
