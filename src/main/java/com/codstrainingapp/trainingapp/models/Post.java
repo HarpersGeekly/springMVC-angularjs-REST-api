@@ -59,8 +59,7 @@ public class Post {
     @JsonManagedReference(value = "user_posts")
     private User user;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    @JsonBackReference(value = "post_votes")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<PostVote> postVotes;
 
     //=============================== getters and setters =========================================

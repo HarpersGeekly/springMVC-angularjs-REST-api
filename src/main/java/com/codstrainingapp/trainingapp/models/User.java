@@ -8,7 +8,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 //JPA specification defines an object-relational mapping between tables in a relational database and a set of Java classes.
 @Entity(name="users") //is a POJO with mapping information. It's now a jpa entity object. Attributes then get automatically mapped to database columns with the same name
@@ -35,7 +34,6 @@ public class User {
     @Column(nullable = false)
     @NotBlank(message = "Your password cannot be empty.")
     @Length(min = 8, max = 100, message="Your password must be between 8-100 characters.") // BCrypt PasswordEncoder hashes passwords with 60 random characters. Make sure the max is >= 60
-    @JsonIgnore //password is hidden from the client
     private String password;
 
     @Column(name = "joined_date")
@@ -57,16 +55,6 @@ public class User {
         this.email = email;
         this.bio = bio;
     }
-
-//    ============================= relationships ==========================
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    @JsonBackReference(value = "user_posts")
-    private List<Post> posts;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    @JsonBackReference(value = "user_post_votes")
-    private List<PostVote> postVotes;
 
 //    ============================ getters and setters =====================
 
@@ -91,7 +79,6 @@ public class User {
     }
 
     public void setPassword(String password) {
-//        this.password = Password.hash(password);
         this.password = password;
     }
 
@@ -117,22 +104,6 @@ public class User {
 
     public void setBio(String bio) {
         this.bio = bio;
-    }
-
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
-
-    public List<PostVote> getPostVotes() {
-        return postVotes;
-    }
-
-    public void setVotes(List<PostVote> votes) {
-        this.postVotes = postVotes;
     }
 
     @JsonGetter("hoursMinutes")

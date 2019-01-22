@@ -16,11 +16,9 @@ public class PostVote {
     private int type;
 
     @ManyToOne @JoinColumn(name = "post_id", insertable = false, updatable = false)
-    @JsonManagedReference(value = "post_votes")
     private Post post;
 
     @ManyToOne @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    @JsonManagedReference(value = "user_post_votes")
     private User user;
 
     public PostVote() {}
