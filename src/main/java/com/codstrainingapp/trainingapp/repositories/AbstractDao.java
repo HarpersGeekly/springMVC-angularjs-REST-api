@@ -35,9 +35,16 @@ public abstract class AbstractDao<PK extends Serializable, T> {
         return (T) getSession().get(persistentClass, key);
     }
 
-    public void persist(T entity) {
-        getSession().persist(entity);
+    public void save(T entity) {
+        System.out.println("get here");
+        System.out.println(entity);
+        getSession().saveOrUpdate(entity);
     }
+
+//    public void persist(T entity) {
+//        System.out.println("get here");
+//        getSession().persist(entity);
+//    }
 
     //saveOrUpdate(), update(), merge() jpa native
     public void update(T entity) { getSession().merge(entity); }
