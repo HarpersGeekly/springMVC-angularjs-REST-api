@@ -28,6 +28,12 @@ public class UsersRepositoryImpl extends AbstractDao<Long, User> implements User
         return (User) criteria.uniqueResult();
     }
 
+//    public User findByUsername(String username) {
+//        Query query = createCustomQuery("FROM User WHERE username = " + username);
+//        System.out.println("user: " + (User) query.list());
+//        return (User) query.list();
+//    }
+
     public User findByEmail(String email) {
         Criteria criteria = createEntityCriteria();
         criteria.add(Restrictions.eq("email", email));

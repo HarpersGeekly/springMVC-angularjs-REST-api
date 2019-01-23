@@ -27,25 +27,6 @@ public class UsersRestController {
         this.userSvc = userSvc;
     }
 
-////// ---------------------------- Profile -------------------------------------------------------
-////
-//    @GetMapping("/profile")
-//    public String showProfile(HttpServletRequest request) {
-//        User sessionUser = (User) request.getSession().getAttribute("user");
-//        if (sessionUser == null) {
-//            return "redirect:/login";
-//        }
-//        User user = userSvc.findOne(sessionUser.getId());
-//        return "redirect:/profile/" + user.getId() + '/' + user.getUsername();
-//    }
-////
-//    @GetMapping("/profile/{id}/{username}")
-//    public String showOtherUsersProfile(@PathVariable long id, Model viewModel) {
-//        User user = userSvc.findOne(id);
-//        viewModel.addAttribute("user", user);
-//        return "users/profile";
-//    }
-
     @GetMapping(value = "/id/{id}")
     @ResponseBody
     public User findById(@PathVariable(name = "id") Long id) {
@@ -80,12 +61,12 @@ public class UsersRestController {
 // IS THE SAME AS...
 //----------------------- Get User -------------------------------------------------------
 
-    @Deprecated
-    @GetMapping(value = "/getUser/{id}")
-    public ObjectNode fetchUserToJson(@PathVariable(name="id") long id) {
-        User user = userSvc.findOne(id);
-        return userSvc.toJson(user);
-    }
+//    @Deprecated
+//    @GetMapping(value = "/getUser/{id}")
+//    public ObjectNode fetchUserToJson(@PathVariable(name="id") long id) {
+//        User user = userSvc.findOne(id);
+//        return userSvc.toJson(user);
+//    }
 
     @GetMapping(value = "/getUser/{id}")
     @ResponseBody

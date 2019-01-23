@@ -47,7 +47,6 @@ public class UserService {
     }
 
     public void saveUser(User user) {
-        System.out.println("saving in service");
         usersDao.saveUser(user);
     }
 
