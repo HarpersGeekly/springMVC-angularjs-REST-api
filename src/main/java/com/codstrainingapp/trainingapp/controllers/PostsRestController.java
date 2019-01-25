@@ -26,7 +26,7 @@ public class PostsRestController {
     }
 
     @GetMapping("/posts")
-    public List<Post> fetchPosts() {
+    public List<Post> findAll() {
         return postSvc.findAll();
     }
 
@@ -35,7 +35,7 @@ public class PostsRestController {
         return postSvc.findOne(id);
     }
 
-    @GetMapping(value = "/userPosts/{id}")
+    @GetMapping(value = "/postsByUserId/{id}")
     public List<Post> findAllByUserId(@PathVariable(name = "id") Long id) {
         return postSvc.findAllByUserId(id);
     }
@@ -77,53 +77,6 @@ public class PostsRestController {
 //        return "redirect:http://localhost:8080/profile";
 //    }
 
-//    =============== post votes ================
 
-    @PostMapping("/posts/{id}/{type}")
-    public Post vote(@PathVariable(name="id") long id, @PathVariable(name="type") String vote, HttpServletRequest request) {
 
-        Post post = postSvc.findOne(id);
-        User user = (User) request.getSession().getAttribute("user");
-
-        System.out.println("post: " + post);
-        System.out.println("user: " + user);
-        System.out.println("vote type: " + vote);
-
-        if (vote.equalsIgnoreCase("upvote")) {
-            post.addVote(PostVote.up(post, user));
-            postVoteSvc.savePostVote(PostVote.up(post, user));
-            System.out.println("up");
-        } else {
-            post.addVote(PostVote.down(post, user));
-            postVoteSvc.savePostVote(PostVote.down(post, user));
-            System.out.println("down");
-        }
-
-        System.out.println("get here: " + post.getPostVotes());
-        return post;
-    }
-
-//    @GetMapping("/")
-//    public String index() {
-//        System.out.println("get to Home Page");
-//        return "index";
-//    }
-//    @GetMapping("/posts/create")
-//    public String showCreatePostForm(Model viewModel) {
-//        viewModel.addAttribute("post", new Post());
-//        return "/posts/create";
-//    }
-//    @GetMapping("/posts/{id}/{title}")
-//    public String showPostPage(@PathVariable(name="id") long id, Model viewModel) {
-//        Post post = postSvc.findOne(id);
-//        viewModel.addAttribute("post", post);
-//        return "posts/show";
-//    }
-//
-//    @GetMapping("/posts/{id}/edit")
-//    public String showEditPostPage(@PathVariable(name="id") long id, Model viewModel) {
-//        Post post = postSvc.findOne(id);
-//        viewModel.addAttribute("post", post);
-//        return "posts/edit";
-//    }
 }
