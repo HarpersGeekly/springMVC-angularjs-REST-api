@@ -1,17 +1,11 @@
 package com.codstrainingapp.trainingapp.services;
 
-import com.codstrainingapp.trainingapp.models.Post;
-import com.codstrainingapp.trainingapp.models.PostVote;
 import com.codstrainingapp.trainingapp.models.User;
-import com.codstrainingapp.trainingapp.models.ViewModelUser;
 import com.codstrainingapp.trainingapp.repositories.UsersRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +28,7 @@ public class UserService {
         return usersDao.findAll();
     }
 
-    public User findOne(long id) {
+    public User findOne(Long id) {
         return usersDao.findOne(id);
     }
 
@@ -46,16 +40,20 @@ public class UserService {
         return usersDao.findByEmail(email);
     }
 
-    public void saveUser(User user) {
+    public User saveUser(User user) {
+        System.out.println("arrive at saveUser() in Service");
+        System.out.println("user to save: " + user.toString());
         usersDao.saveUser(user);
+        return user;
     }
 
-    public User update(ViewModelUser user) {
-        User updatedUser = usersDao.findOne(user.getId());
-        updatedUser.setUsername(user.getUsername());
-        updatedUser.setEmail(user.getEmail());
-        updatedUser.setBio(user.getBio());
-        return updatedUser;
+    public User updateUser(User user) {
+        User existingUser = usersDao.findOne(user.getId());
+        existingUser.setUsername(user.getUsername());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setBio(user.getBio());
+        System.out.println("user properties have been set");
+        return existingUser;
     }
 
     public void delete(User user) {
