@@ -30,7 +30,7 @@ public class PostsRestController {
         return postSvc.findAll();
     }
 
-    @GetMapping(value = "/id/{id}")
+    @GetMapping(value = "/postById/{id}")
     public Post findById(@PathVariable(name = "id") Long id) {
         return postSvc.findOne(id);
     }
