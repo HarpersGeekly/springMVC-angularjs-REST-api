@@ -1,14 +1,8 @@
 package com.codstrainingapp.trainingapp.models;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
-
-import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 //Data transfer object. Web "service object" that converts from json to persistent entity object User
 public class UserDTO {
