@@ -1,21 +1,17 @@
 package com.codstrainingapp.trainingapp.controllers;
 
 import com.codstrainingapp.trainingapp.models.User;
-import com.codstrainingapp.trainingapp.models.ViewModelUser;
+import com.codstrainingapp.trainingapp.models.UserDTO;
 import com.codstrainingapp.trainingapp.services.UserService;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 
 
-@RestController
+@RestController // includes @ResponseBody
 @RequestMapping("/api/user")
 @CrossOrigin
 public class UsersRestController {
@@ -45,6 +41,65 @@ public class UsersRestController {
         return userSvc.findByEmail(email);
     }
 
+//---------------------- Save User ------------------------------------------------------
+
+    @PostMapping(value = "/saveUser")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDTO saveUser(@RequestBody UserDTO user) throws ParseException {
+        System.out.println("arrive at saveUser() in api Userrestcontroller");
+        System.out.println("user that comes over wire: " + user.toString());
+        User entity = convertToUser(user);
+        User entityCreated = userSvc.saveUser(entity);
+        System.out.println(entityCreated.getId());
+        return convertToUserDTO(entityCreated);
+    }
+
+    private UserDTO convertToUserDTO(User user){
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
+        dto.setUsername(user.getUsername());
+        dto.setBio(user.getBio());
+        dto.setEmail(user.getEmail());
+        dto.setPassword(user.getPassword());
+        dto.setDate(user.getDate());
+        System.out.println("dto id: " + dto.getId());
+        return dto;
+    }
+
+    private User convertToUser(UserDTO userDto){
+        User entity = new User();
+        entity.setId(userDto.getId());
+        entity.setUsername(userDto.getUsername());
+        entity.setEmail(userDto.getEmail());
+        entity.setBio(userDto.getBio());
+        entity.setPassword(userDto.getPassword());
+        entity.setDate(userDto.getDate());
+        return entity;
+    }
+
+//---------------------- Update User ---------------------------------------------------
+
+    @PostMapping(value = "/editUser")
+    public User updateUser(@RequestBody User user) {
+        return userSvc.updateUser(user);
+    }
+
+//--------------------- Delete User ----------------------------------------------------
+
+    @PostMapping("/deleteUser")
+    public void deleteUser(@RequestBody User user) {
+        userSvc.delete(user);
+    }
+
+}
+
+
+
+
+
+
+
+
 //    //-------------------Retrieve Single User--------------------------------------------------------
 //
 //    @RequestMapping(value = "/getUser/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -68,44 +123,8 @@ public class UsersRestController {
 //        return userSvc.toJson(user);
 //    }
 
-    @GetMapping(value = "/getUser/{id}")
-    @ResponseBody
-    public User fetchUser(@PathVariable(name = "id") long id) {
-        return userSvc.findOne(id);
-    }
-
-//---------------------- Save User ------------------------------------------------------
-
-    @PostMapping(value = "/save")
-    public void saveUser(@RequestBody User user) {
-        userSvc.saveUser(user);
-    }
-
-//---------------------- Update User ---------------------------------------------------
-
-    @PostMapping(value = "/editUser/{id}")
-//    @ResponseBody// this method currently returns a User as json string.
-    public User updateUser(@PathVariable(name = "id") long id, @RequestBody ViewModelUser user, Model viewModel) {
-        // User updatedUser = userSvc.findOne(id); // Do not need to find user with /{id} and @PathVariable, user is already provided by @RequestBody User user, which is the converted JSON string back to user object.
-        User updatedUser = userSvc.update(user);
-        viewModel.addAttribute("user", updatedUser);
-        return updatedUser;
-    }
-
-//--------------------- Delete User ----------------------------------------------------
-
-    @PostMapping("/deleteUser/{id}")
-    public String deleteUser(@PathVariable("id") long id, HttpServletRequest request, RedirectAttributes redirect, Model viewModel) {
-        User user = userSvc.findOne(id);
-        userSvc.delete(user);
-        request.getSession().removeAttribute("user");
-        request.getSession().invalidate();
-        redirect.addFlashAttribute("deleteIsSuccessful", true);
-        redirect.addFlashAttribute("successMessage", "Sorry to see you go! Your account has been deactivated.");
-        return "redirect:http://localhost:8080/register";
-    }
-
-}
-
-
+//    @GetMapping(value = "/getUser/{id}")
+//    public User fetchUser(@PathVariable(name = "id") long id) {
+//        return userSvc.findOne(id);
+//    }
 
