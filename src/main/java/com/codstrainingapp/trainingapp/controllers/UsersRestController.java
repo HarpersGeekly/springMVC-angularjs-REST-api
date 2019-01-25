@@ -45,36 +45,8 @@ public class UsersRestController {
 
     @PostMapping(value = "/saveUser")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO saveUser(@RequestBody UserDTO user) throws ParseException {
-        System.out.println("arrive at saveUser() in api Userrestcontroller");
-        System.out.println("user that comes over wire: " + user.toString());
-        User entity = convertToUser(user);
-        User entityCreated = userSvc.saveUser(entity);
-        System.out.println(entityCreated.getId());
-        return convertToUserDTO(entityCreated);
-    }
-
-    private UserDTO convertToUserDTO(User user){
-        UserDTO dto = new UserDTO();
-        dto.setId(user.getId());
-        dto.setUsername(user.getUsername());
-        dto.setBio(user.getBio());
-        dto.setEmail(user.getEmail());
-        dto.setPassword(user.getPassword());
-        dto.setDate(user.getDate());
-        System.out.println("dto id: " + dto.getId());
-        return dto;
-    }
-
-    private User convertToUser(UserDTO userDto){
-        User entity = new User();
-        entity.setId(userDto.getId());
-        entity.setUsername(userDto.getUsername());
-        entity.setEmail(userDto.getEmail());
-        entity.setBio(userDto.getBio());
-        entity.setPassword(userDto.getPassword());
-        entity.setDate(userDto.getDate());
-        return entity;
+    public UserDTO saveUser(@RequestBody UserDTO user) {
+        return userSvc.saveUser(user);
     }
 
 //---------------------- Update User ---------------------------------------------------

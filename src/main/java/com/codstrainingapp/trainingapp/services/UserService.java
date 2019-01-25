@@ -1,6 +1,7 @@
 package com.codstrainingapp.trainingapp.services;
 
 import com.codstrainingapp.trainingapp.models.User;
+import com.codstrainingapp.trainingapp.models.UserDTO;
 import com.codstrainingapp.trainingapp.repositories.UsersRepository;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -40,11 +41,10 @@ public class UserService {
         return usersDao.findByEmail(email);
     }
 
-    public User saveUser(User user) {
-        System.out.println("arrive at saveUser() in Service");
-        System.out.println("user to save: " + user.toString());
-        usersDao.saveUser(user);
-        return user;
+    public UserDTO saveUser(UserDTO user) {
+        User entity = convertToUser(user);
+        usersDao.saveUser(entity);
+        return convertToUserDTO(entity);
     }
 
     public User updateUser(User user) {
@@ -52,12 +52,34 @@ public class UserService {
         existingUser.setUsername(user.getUsername());
         existingUser.setEmail(user.getEmail());
         existingUser.setBio(user.getBio());
-        System.out.println("user properties have been set");
         return existingUser;
     }
 
     public void delete(User user) {
         usersDao.delete(user);
+    }
+
+    private UserDTO convertToUserDTO(User user){
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
+        dto.setUsername(user.getUsername());
+        dto.setBio(user.getBio());
+        dto.setEmail(user.getEmail());
+        dto.setPassword(user.getPassword());
+        dto.setDate(user.getDate());
+        System.out.println("dto id: " + dto.getId());
+        return dto;
+    }
+
+    private User convertToUser(UserDTO userDto){
+        User entity = new User();
+        entity.setId(userDto.getId());
+        entity.setUsername(userDto.getUsername());
+        entity.setEmail(userDto.getEmail());
+        entity.setBio(userDto.getBio());
+        entity.setPassword(userDto.getPassword());
+        entity.setDate(userDto.getDate());
+        return entity;
     }
 
     public ObjectNode toJson(User user) {
