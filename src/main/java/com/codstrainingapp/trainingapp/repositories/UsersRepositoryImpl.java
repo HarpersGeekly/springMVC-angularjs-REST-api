@@ -2,6 +2,7 @@ package com.codstrainingapp.trainingapp.repositories;
 
 import com.codstrainingapp.trainingapp.models.Post;
 import com.codstrainingapp.trainingapp.models.User;
+import com.codstrainingapp.trainingapp.models.UserDTO;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Restrictions;
@@ -53,5 +54,4 @@ public class UsersRepositoryImpl extends AbstractDao<Long, User> implements User
     public void saveUser(User user) {
         save(user);
     }
-
 }

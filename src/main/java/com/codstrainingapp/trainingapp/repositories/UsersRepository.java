@@ -1,7 +1,6 @@
 package com.codstrainingapp.trainingapp.repositories;
 
 import com.codstrainingapp.trainingapp.models.User;
-
 import java.util.List;
 
 public interface UsersRepository {
