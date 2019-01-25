@@ -79,14 +79,14 @@ public class UsersRestController {
 
 //---------------------- Update User ---------------------------------------------------
 
-    @PostMapping(value = "/editUser")
+    @PutMapping(value = "/editUser")
     public User updateUser(@RequestBody User user) {
         return userSvc.updateUser(user);
     }
 
 //--------------------- Delete User ----------------------------------------------------
 
-    @PostMapping("/deleteUser")
+    @DeleteMapping("/deleteUser")
     public void deleteUser(@RequestBody User user) {
         userSvc.delete(user);
     }
