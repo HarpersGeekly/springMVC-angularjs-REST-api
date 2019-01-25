@@ -1,14 +1,17 @@
 package com.codstrainingapp.trainingapp.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonGetter;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class ViewModelUser {
+//Data transfer object. Web "service object" that converts from json to persistent entity object User
+public class UserDTO {
 
     private Long id;
     private String username;
@@ -17,12 +20,19 @@ public class ViewModelUser {
     private String password;
     private LocalDateTime date;
 
-    public ViewModelUser(){}
+    public UserDTO(){}
 
-//    ============================= relationships ==========================
-
-//    private List<Post> posts;
-//    private List<PostVote> postVotes;
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", bio='" + bio + '\'' +
+                ", password='" + password + '\'' +
+                ", date=" + date +
+                '}';
+    }
 
 //    ============================ getters and setters =====================
 
@@ -30,7 +40,7 @@ public class ViewModelUser {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -83,20 +93,4 @@ public class ViewModelUser {
     public String formatDate() {
         return date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
     }
-//
-//    public List<Post> getPosts() {
-//        return posts;
-//    }
-//
-//    public void setPosts(List<Post> posts) {
-//        this.posts = posts;
-//    }
-//
-//    public List<PostVote> getPostVotes() {
-//        return postVotes;
-//    }
-//
-//    public void setVotes(List<PostVote> votes) {
-//        this.postVotes = postVotes;
-//    }
 }

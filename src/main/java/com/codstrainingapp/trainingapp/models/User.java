@@ -62,7 +62,7 @@ public class User {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -104,15 +104,5 @@ public class User {
 
     public void setBio(String bio) {
         this.bio = bio;
-    }
-
-    @JsonGetter("hoursMinutes")
-    public String hoursMinutes() {
-        return date.format(DateTimeFormatter.ofPattern("h:mm a"));
-    }
-
-    @JsonGetter("formatDate")
-    public String formatDate() {
-        return date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
     }
 }
