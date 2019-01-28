@@ -28,7 +28,7 @@ public class PostsRestController {
         return postSvc.findAll();
     }
 
-    @GetMapping(value = "/postById/{id}")
+    @GetMapping("/postById/{id}")
     public Post findById(@PathVariable(name = "id") Long id) {
         return postSvc.findOne(id);
     }
@@ -40,7 +40,7 @@ public class PostsRestController {
 
 // --------------- Save Post ---------------------------------
 
-    @PostMapping(value = "/savePost")
+    @PostMapping("/savePost")
     @ResponseStatus(HttpStatus.CREATED)
     public PostDTO savePost(@RequestBody PostDTO post) {
         System.out.println("get here save Post");
@@ -49,24 +49,23 @@ public class PostsRestController {
 
 // ---------------- Update Post ------------------------------
 
-    @PutMapping(value = "/editPost")
+    @PutMapping("/editPost")
     public Post editPost(@RequestBody Post post) {
         return postSvc.updatePost(post);
     }
 
 // ---------------- Delete Post ------------------------------
 
-    @DeleteMapping("/deletePost/{id}")
+    @DeleteMapping("/deletePost")
     @ResponseStatus(HttpStatus.OK)
-    public void deletePost(@PathVariable long id) {
-        Post post = postSvc.findOne(id);
+    public void deletePost(@RequestBody Post post) {
         postSvc.delete(post);
     }
 
-    @DeleteMapping("/deletePost/{id}/redirect")
-    public String deletePostRedirect(@PathVariable long id) {
-        Post post = postSvc.findOne(id);
-        postSvc.delete(post);
-        return "redirect:http://localhost:8080/profile";
-    }
+//    @DeleteMapping("/deletePost/{id}/redirect")
+//    public String deletePostRedirect(@PathVariable long id) {
+//        Post post = postSvc.findOne(id);
+//        postSvc.delete(post);
+//        return "redirect:http://localhost:8080/profile";
+//    }
 }
