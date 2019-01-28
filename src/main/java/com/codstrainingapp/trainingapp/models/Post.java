@@ -52,7 +52,6 @@ public class Post {
     //=============================== relationships =========================================
 
     @ManyToOne
-    @JsonManagedReference(value = "user_posts")
     private User user;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
