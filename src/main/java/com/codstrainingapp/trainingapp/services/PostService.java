@@ -45,8 +45,13 @@ public class PostService {
         return convertToPostDTO(entity);
     }
 
-    public void update(Post post) {
-        postsDao.updatePost(post);
+    public Post updatePost(Post post) {
+        Post existingPost = postsDao.findOne(post.getId());
+        existingPost.setTitle(post.getTitle());
+        existingPost.setSubtitle(post.getSubtitle());
+        existingPost.setLeadImage(post.getLeadImage());
+        existingPost.setBody(post.getBody());
+        return existingPost;
     }
 
     public void delete(Post post) {

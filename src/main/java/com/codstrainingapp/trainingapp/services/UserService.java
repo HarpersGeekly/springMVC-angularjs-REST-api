@@ -67,7 +67,6 @@ public class UserService {
         dto.setEmail(user.getEmail());
         dto.setPassword(user.getPassword());
         dto.setDate(user.getDate());
-        System.out.println("dto id: " + dto.getId());
         return dto;
     }
 
