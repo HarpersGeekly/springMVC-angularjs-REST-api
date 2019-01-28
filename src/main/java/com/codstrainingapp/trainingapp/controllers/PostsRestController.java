@@ -49,6 +49,10 @@ public class PostsRestController {
 
 // ---------------- Update Post ------------------------------
 
+    @PutMapping(value = "/editPost")
+    public Post editPost(@RequestBody Post post) {
+        return postSvc.updatePost(post);
+    }
 
 // ---------------- Delete Post ------------------------------
 
