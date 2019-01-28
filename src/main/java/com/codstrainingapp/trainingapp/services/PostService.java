@@ -1,7 +1,7 @@
 package com.codstrainingapp.trainingapp.services;
 
 import com.codstrainingapp.trainingapp.models.Post;
-import com.codstrainingapp.trainingapp.repositories.PostVotesRepository;
+import com.codstrainingapp.trainingapp.models.PostDTO;
 import com.codstrainingapp.trainingapp.repositories.PostsRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
@@ -39,16 +39,44 @@ public class PostService {
         return postsDao.findAllByUserId(id);
     }
 
-    public void delete(Post post) {
-        postsDao.delete(post);
-    }
-
-    public void savePost(Post post) {
-        postsDao.savePost(post);
+    public PostDTO savePost(PostDTO post) {
+        Post entity = convertToPost(post);
+        postsDao.savePost(entity);
+        return convertToPostDTO(entity);
     }
 
     public void update(Post post) {
         postsDao.updatePost(post);
+    }
+
+    public void delete(Post post) {
+        postsDao.delete(post);
+    }
+
+    private PostDTO convertToPostDTO(Post post){
+        PostDTO dto = new PostDTO();
+        dto.setId(post.getId());
+        dto.setTitle(post.getTitle());
+        dto.setSubtitle(post.getSubtitle());
+        dto.setLeadImage(post.getLeadImage());
+        dto.setBody(post.getBody());
+        dto.setDate(post.getDate());
+        dto.setUser(post.getUser());
+        dto.setVotes(post.getPostVotes());
+        return dto;
+    }
+
+    private Post convertToPost(PostDTO dto){
+        Post entity = new Post();
+        entity.setId(dto.getId());
+        entity.setTitle(dto.getTitle());
+        entity.setSubtitle(dto.getSubtitle());
+        entity.setBody(dto.getBody());
+        entity.setLeadImage(dto.getLeadImage());
+        entity.setDate(dto.getDate());
+        entity.setUser(dto.getUser());
+        entity.setPostVotes(dto.getPostVotes());
+        return entity;
     }
 
     public String toJson(Object object) throws JsonProcessingException {

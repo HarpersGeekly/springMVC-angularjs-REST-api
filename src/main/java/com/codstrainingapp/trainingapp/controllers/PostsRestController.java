@@ -1,14 +1,12 @@
 package com.codstrainingapp.trainingapp.controllers;
 
 import com.codstrainingapp.trainingapp.models.Post;
-import com.codstrainingapp.trainingapp.models.PostVote;
-import com.codstrainingapp.trainingapp.models.User;
+import com.codstrainingapp.trainingapp.models.PostDTO;
 import com.codstrainingapp.trainingapp.services.PostService;
 import com.codstrainingapp.trainingapp.services.PostVoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController // @RestController = @Controller + @ResponseBody (returns jackson json string) instead of annotating methods with @ResponseBody
@@ -40,11 +38,19 @@ public class PostsRestController {
         return postSvc.findAllByUserId(id);
     }
 
-    @PostMapping(value = "/save")
-    public void savePost(Post post) {
-        System.out.println("get here save");
-        postSvc.savePost(post);
+// --------------- Save Post ---------------------------------
+
+    @PostMapping(value = "/savePost")
+    @ResponseStatus(HttpStatus.CREATED)
+    public PostDTO savePost(@RequestBody PostDTO post) {
+        System.out.println("get here save Post");
+        return postSvc.savePost(post);
     }
+
+// ---------------- Update Post ------------------------------
+
+
+// ---------------- Delete Post ------------------------------
 
     @DeleteMapping("/deletePost/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -53,30 +59,10 @@ public class PostsRestController {
         postSvc.delete(post);
     }
 
-    @PostMapping("/deletePost/{id}/redirect")
+    @DeleteMapping("/deletePost/{id}/redirect")
     public String deletePostRedirect(@PathVariable long id) {
         Post post = postSvc.findOne(id);
         postSvc.delete(post);
         return "redirect:http://localhost:8080/profile";
     }
-
-//    @PostMapping("/posts/edit")
-//    public String editPost(@Valid @ModelAttribute("post") Post post,
-//                           BindingResult validation, Model viewModel) {
-//
-//        Post existingPost = postSvc.findOne(post.getId());
-//
-//        if(validation.hasErrors()) {
-//            viewModel.addAttribute("hasErrors", validation.hasErrors());
-//            return "posts/edit";
-//        }
-//
-//        post.setDate(existingPost.getDate());
-//        post.setUser(existingPost.getUser());
-//        postSvc.update(post);
-//        return "redirect:http://localhost:8080/profile";
-//    }
-
-
-
 }
