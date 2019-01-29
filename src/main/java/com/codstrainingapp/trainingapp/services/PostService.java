@@ -31,11 +31,11 @@ public class PostService {
         return postsDao.findAllOrderByIdDesc();
     }
 
-    public Post findOne(long id) {
+    public Post findOne(Long id) {
         return postsDao.findOne(id);
     }
 
-    public List<Post> findAllByUserId(long id) {
+    public List<Post> findAllByUserId(Long id) {
         return postsDao.findAllByUserId(id);
     }
 
