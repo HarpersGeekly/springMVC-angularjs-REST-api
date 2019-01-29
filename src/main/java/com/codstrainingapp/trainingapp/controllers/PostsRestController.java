@@ -33,7 +33,7 @@ public class PostsRestController {
         return postSvc.findOne(id);
     }
 
-    @GetMapping(value = "/postsByUserId/{id}")
+    @GetMapping("/postsByUserId/{id}")
     public List<Post> findAllByUserId(@PathVariable(name = "id") Long id) {
         return postSvc.findAllByUserId(id);
     }
@@ -43,7 +43,6 @@ public class PostsRestController {
     @PostMapping("/savePost")
     @ResponseStatus(HttpStatus.CREATED)
     public PostDTO savePost(@RequestBody PostDTO post) {
-        System.out.println("get here save Post");
         return postSvc.savePost(post);
     }
 
@@ -57,7 +56,6 @@ public class PostsRestController {
 // ---------------- Delete Post ------------------------------
 
     @DeleteMapping("/deletePost")
-    @ResponseStatus(HttpStatus.OK)
     public void deletePost(@RequestBody Post post) {
         postSvc.delete(post);
     }

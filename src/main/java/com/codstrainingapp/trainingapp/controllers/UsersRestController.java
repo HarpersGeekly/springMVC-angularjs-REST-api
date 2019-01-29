@@ -24,19 +24,16 @@ public class UsersRestController {
     }
 
     @GetMapping(value = "/id/{id}")
-    @ResponseBody
     public User findById(@PathVariable(name = "id") Long id) {
         return userSvc.findOne(id);
     }
 
     @GetMapping(value = "/username/{username}")
-    @ResponseBody
     public User findByUsername(@PathVariable(name = "username") String username) {
         return userSvc.findByUsername(username);
     }
 
     @GetMapping(value = "/email/{email}")
-    @ResponseBody
     public User findByEmail(@PathVariable(name = "email") String email) {
         return userSvc.findByEmail(email);
     }
