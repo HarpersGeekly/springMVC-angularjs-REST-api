@@ -11,7 +11,8 @@ import java.util.List;
 
 @RestController // @RestController = @Controller + @ResponseBody (returns jackson json string) instead of annotating methods with @ResponseBody
 @RequestMapping("/api/post")
-@CrossOrigin(origins = "http://localhost:8080")// https://spring.io/blog/2015/06/08/cors-support-in-spring-framework  Access to XMLHttpRequest at 'http://localhost:8888/posts' from origin 'http://localhost:8080' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+@CrossOrigin// https://spring.io/blog/2015/06/08/cors-support-in-spring-framework  Access to XMLHttpRequest at 'http://localhost:8888/posts' from origin 'http://localhost:8080' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+// @CrossOrigin(origins = "localhost:8080") only needed if I wanted just that caller
 public class PostsRestController {
 
     private PostService postSvc;
