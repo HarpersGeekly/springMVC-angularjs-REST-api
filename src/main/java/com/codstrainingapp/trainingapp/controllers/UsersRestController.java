@@ -24,17 +24,17 @@ public class UsersRestController {
     }
 
     @GetMapping(value = "/id/{id}")
-    public User findById(@PathVariable(name = "id") Long id) {
+    public UserDTO findById(@PathVariable(name = "id") Long id) {
         return userSvc.findOne(id);
     }
 
     @GetMapping(value = "/username/{username}")
-    public User findByUsername(@PathVariable(name = "username") String username) {
+    public UserDTO findByUsername(@PathVariable(name = "username") String username) {
         return userSvc.findByUsername(username);
     }
 
     @GetMapping(value = "/email/{email}")
-    public User findByEmail(@PathVariable(name = "email") String email) {
+    public UserDTO findByEmail(@PathVariable(name = "email") String email) {
         return userSvc.findByEmail(email);
     }
 
@@ -49,14 +49,14 @@ public class UsersRestController {
 //---------------------- Update User ---------------------------------------------------
 
     @PutMapping(value = "/editUser")
-    public User updateUser(@RequestBody User user) {
+    public UserDTO updateUser(@RequestBody UserDTO user) {
         return userSvc.updateUser(user);
     }
 
 //--------------------- Delete User ----------------------------------------------------
 
     @DeleteMapping("/deleteUser")
-    public void deleteUser(@RequestBody User user) {
+    public void deleteUser(@RequestBody UserDTO user) {
         userSvc.delete(user);
     }
 

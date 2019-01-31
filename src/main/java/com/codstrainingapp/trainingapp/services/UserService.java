@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,20 +26,29 @@ public class UserService {
         this.usersDao = usersDao;
     }
 
-    public List<User> findAll() {
-        return usersDao.findAll();
+    public List<UserDTO> findAll() {
+        List<User> users = usersDao.findAll();
+        List<UserDTO> dtos = new ArrayList<>();
+        for(User u : users) {
+            UserDTO converted = convertToUserDTO(u);
+            dtos.add(converted);
+        }
+        return dtos;
     }
 
-    public User findOne(Long id) {
-        return usersDao.findOne(id);
+    public UserDTO findOne(Long id) {
+        User user = usersDao.findOne(id);
+        return convertToUserDTO(user);
     }
 
-    public User findByUsername(String username) {
-        return usersDao.findByUsername(username);
+    public UserDTO findByUsername(String username) {
+        User user = usersDao.findByUsername(username);
+        return convertToUserDTO(user);
     }
 
-    public User findByEmail(String email) {
-        return usersDao.findByEmail(email);
+    public UserDTO findByEmail(String email) {
+        User user = usersDao.findByEmail(email);
+        return convertToUserDTO(user);
     }
 
     public UserDTO saveUser(UserDTO user) {
@@ -47,15 +57,16 @@ public class UserService {
         return convertToUserDTO(entity);
     }
 
-    public User updateUser(User user) {
+    public UserDTO updateUser(UserDTO user) {
         User existingUser = usersDao.findOne(user.getId());
         existingUser.setUsername(user.getUsername());
         existingUser.setEmail(user.getEmail());
         existingUser.setBio(user.getBio());
-        return existingUser;
+        return convertToUserDTO(existingUser);
     }
 
-    public void delete(User user) {
+    public void delete(UserDTO dto) {
+        User user = convertToUser(dto);
         usersDao.delete(user);
     }
 
