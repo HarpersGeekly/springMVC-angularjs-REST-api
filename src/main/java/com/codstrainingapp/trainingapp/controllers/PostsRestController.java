@@ -25,17 +25,17 @@ public class PostsRestController {
     }
 
     @GetMapping("/posts")
-    public List<Post> findAll() {
+    public List<PostDTO> findAll() {
         return postSvc.findAll();
     }
 
     @GetMapping("/postById/{id}")
-    public Post findById(@PathVariable(name = "id") Long id) {
+    public PostDTO findById(@PathVariable(name = "id") Long id) {
         return postSvc.findOne(id);
     }
 
     @GetMapping("/postsByUserId/{id}")
-    public List<Post> findAllByUserId(@PathVariable(name = "id") Long id) {
+    public List<PostDTO> findAllByUserId(@PathVariable(name = "id") Long id) {
         return postSvc.findAllByUserId(id);
     }
 
@@ -50,14 +50,14 @@ public class PostsRestController {
 // ---------------- Update Post ------------------------------
 
     @PutMapping("/editPost")
-    public Post editPost(@RequestBody Post post) {
+    public PostDTO editPost(@RequestBody PostDTO post) {
         return postSvc.updatePost(post);
     }
 
 // ---------------- Delete Post ------------------------------
 
     @DeleteMapping("/deletePost")
-    public void deletePost(@RequestBody Post post) {
+    public void deletePost(@RequestBody PostDTO post) {
         postSvc.delete(post);
     }
 

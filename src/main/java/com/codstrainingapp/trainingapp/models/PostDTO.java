@@ -139,24 +139,28 @@ public class PostDTO {
 
     // MARKDOWN PARSING FOR VIEW ==============================================================
 
+    @JsonGetter("htmlTitle")
     public String getHtmlTitle() {
         Parser parser = Parser.builder().build();
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         return renderer.render(parser.parse(title));
     }
 
+    @JsonGetter("htmlLeadImage")
     public String getHtmlLeadImage() {
         Parser parser = Parser.builder().build();
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         return renderer.render(parser.parse(leadImage));
     }
 
+    @JsonGetter("htmlSubtitle")
     public String getHtmlSubtitle() {
         Parser parser = Parser.builder().build();
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         return renderer.render(parser.parse(subtitle));
     }
 
+    @JsonGetter("htmlBody")
     public String getHtmlBody() {
         Parser parser = Parser.builder().build();
         HtmlRenderer renderer = HtmlRenderer.builder().build();
