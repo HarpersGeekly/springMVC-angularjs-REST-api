@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.List;
 
 
 @RestController // includes @ResponseBody
@@ -23,6 +24,11 @@ public class UsersRestController {
         this.userSvc = userSvc;
     }
 
+    @GetMapping(value = "/users")
+    public List<UserDTO> findAll() {
+        return userSvc.findAll();
+    }
+
     @GetMapping(value = "/id/{id}")
     public UserDTO findById(@PathVariable(name = "id") Long id) {
         return userSvc.findOne(id);
@@ -30,6 +36,8 @@ public class UsersRestController {
 
     @GetMapping(value = "/username/{username}")
     public UserDTO findByUsername(@PathVariable(name = "username") String username) {
+        System.out.println("Did I get here?");
+        System.out.println(userSvc.findByUsername(username) == null);
         return userSvc.findByUsername(username);
     }
 
@@ -55,8 +63,9 @@ public class UsersRestController {
 
 //--------------------- Delete User ----------------------------------------------------
 
-    @DeleteMapping("/deleteUser")
-    public void deleteUser(@RequestBody UserDTO user) {
+    @DeleteMapping(value = "/deleteUser/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        UserDTO user = userSvc.findOne(id);
         userSvc.delete(user);
     }
 
