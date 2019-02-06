@@ -30,15 +30,15 @@ public class UsersRepositoryImpl extends AbstractDao<Long, User> implements User
     }
 
 //    public User findByUsername(String username) {
+//        System.out.println("down in DAO");
 //        Query query = createCustomQuery("FROM User WHERE username = " + username);
 //        System.out.println("user: " + (User) query.list());
 //        return (User) query.list();
 //    }
 
     public User findByEmail(String email) {
-        Criteria criteria = createEntityCriteria();
-        criteria.add(Restrictions.eq("email", email));
-        return (User) criteria.uniqueResult();
+        Query query = createCustomQuery("FROM User WHERE email = " + email);
+        return (User) query.list();
     }
 
     public User findOne(long id) {

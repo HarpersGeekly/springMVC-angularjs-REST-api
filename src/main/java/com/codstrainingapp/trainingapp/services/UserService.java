@@ -43,6 +43,9 @@ public class UserService {
 
     public UserDTO findByUsername(String username) {
         User user = usersDao.findByUsername(username);
+        if(user == null) {
+            return null;
+        }
         return convertToUserDTO(user);
     }
 

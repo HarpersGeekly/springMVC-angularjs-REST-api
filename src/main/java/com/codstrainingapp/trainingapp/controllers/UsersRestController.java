@@ -36,8 +36,6 @@ public class UsersRestController {
 
     @GetMapping(value = "/username/{username}")
     public UserDTO findByUsername(@PathVariable(name = "username") String username) {
-        System.out.println("Did I get here?");
-        System.out.println(userSvc.findByUsername(username) == null);
         return userSvc.findByUsername(username);
     }
 
