@@ -1,13 +1,11 @@
 package com.codstrainingapp.trainingapp.models;
 
-import com.fasterxml.jackson.annotation.*;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 //JPA specification defines an object-relational mapping between tables in a relational database and a set of Java classes.
 @Entity(name="users") //is a POJO with mapping information. It's now a jpa entity object. Attributes then get automatically mapped to database columns with the same name
