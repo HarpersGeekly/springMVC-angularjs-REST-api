@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -22,6 +23,20 @@ public class UsersRestController {
     @Autowired
     public UsersRestController(UserService userSvc) {
         this.userSvc = userSvc;
+    }
+
+    @PostMapping("/authenticate")
+    public UserDTO authenticate(@RequestBody UserDTO user) {
+        // validate
+        String username = user.getUsername();
+        String password = user.getPassword();
+        UserDTO existingUser = userSvc.findByUsername(username);
+        boolean valid = existingUser != null && existingUser.getPassword().equals(password);
+        if (valid) {
+            return userSvc.authenticate(user);
+        } else {
+            return null;
+        }
     }
 
     @GetMapping(value = "/users")
@@ -49,6 +64,7 @@ public class UsersRestController {
     @PostMapping(value = "/saveUser")
     @ResponseStatus(HttpStatus.CREATED)
     public UserDTO saveUser(@RequestBody UserDTO user) {
+        user.setDate(LocalDateTime.now());
         return userSvc.saveUser(user);
     }
 
