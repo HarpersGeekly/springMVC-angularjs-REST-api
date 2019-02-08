@@ -13,6 +13,7 @@ public class UserDTO {
     private String bio;
     private String password;
     private LocalDateTime date;
+    private String token;
 
     public UserDTO(){}
 
@@ -24,7 +25,8 @@ public class UserDTO {
                 ", email='" + email + '\'' +
                 ", bio='" + bio + '\'' +
                 ", password='" + password + '\'' +
-                ", date=" + date +
+                ", date=" + date + '\'' +
+                ", token=" + token +
                 '}';
     }
 
@@ -86,5 +88,13 @@ public class UserDTO {
     @JsonGetter("formatDate")
     public String formatDate() {
         return date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

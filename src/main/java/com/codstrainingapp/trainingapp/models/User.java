@@ -39,6 +39,15 @@ public class User {
 
     public User(){}
 
+    public User(User copy) {
+        this.id = copy.id; // This line is SUPER important! Many things won't work if it's absent
+        this.email = copy.email;
+        this.username = copy.username;
+        this.password = copy.password;
+        this.date = copy.date;
+        this.bio = copy.bio;
+    }
+
     public User(Long id, String username, String email, String bio, String password, LocalDateTime date) {
         this.id = id;
         this.username = username;

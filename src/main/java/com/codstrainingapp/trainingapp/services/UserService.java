@@ -1,5 +1,6 @@
 package com.codstrainingapp.trainingapp.services;
 
+import com.codstrainingapp.trainingapp.models.SecureTokenGenerator;
 import com.codstrainingapp.trainingapp.models.User;
 import com.codstrainingapp.trainingapp.models.UserDTO;
 import com.codstrainingapp.trainingapp.repositories.UsersRepository;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -41,6 +43,17 @@ public class UserService {
         return convertToUserDTO(user);
     }
 
+    public UserDTO authenticate(UserDTO dto) {
+        User user = usersDao.findByUsername(dto.getUsername());
+        UserDTO responseUser = convertToUserDTO(user);
+        String token =  SecureTokenGenerator.nextToken();
+//        String token =  UUID.randomUUID().toString();
+        System.out.println("token to give: " + token);
+        responseUser.setToken(token);
+        System.out.println("converted user: " + responseUser.toString());
+        return responseUser;
+    }
+
     public UserDTO findByUsername(String username) {
         User user = usersDao.findByUsername(username);
         if(user == null) {
@@ -51,6 +64,9 @@ public class UserService {
 
     public UserDTO findByEmail(String email) {
         User user = usersDao.findByEmail(email);
+        if(user == null) {
+            return null;
+        }
         return convertToUserDTO(user);
     }
 
