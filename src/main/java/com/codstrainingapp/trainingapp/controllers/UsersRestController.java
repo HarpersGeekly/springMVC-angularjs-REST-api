@@ -54,8 +54,9 @@ public class UsersRestController {
         return userSvc.findByUsername(username);
     }
 
-    @GetMapping(value = "/email/{email}")
-    public UserDTO findByEmail(@PathVariable(name = "email") String email) {
+    @GetMapping(value = "/email")
+    public UserDTO findByEmail(@RequestParam(name = "email") String email) {
+        System.out.println("email: " + email);
         return userSvc.findByEmail(email);
     }
 

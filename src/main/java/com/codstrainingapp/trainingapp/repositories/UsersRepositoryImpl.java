@@ -31,7 +31,7 @@ public class UsersRepositoryImpl extends AbstractDao<Long, User> implements User
 
 //    public User findByUsername(String username) {
 //        System.out.println("down in DAO");
-//        Query query = createCustomQuery("FROM User WHERE username = :username);
+//        Query query = createCustomQuery("FROM User WHERE username = :username");
 //        System.out.println("user: " + (User) query.list());
 //        return (User) query.list();
 //    }
@@ -40,6 +40,14 @@ public class UsersRepositoryImpl extends AbstractDao<Long, User> implements User
         Criteria criteria = createEntityCriteria();
         criteria.add(Restrictions.eq("email", email));
         return (User) criteria.uniqueResult();
+//        Query query = createCustomQuery("FROM users WHERE email = :email");
+//        query.setParameter("email", email);
+//        User foundUser = (User) query.list().get(0);
+//        if(foundUser == null) {
+//            return null;
+//        } else {
+//            return foundUser;
+//        }// why get(0)? email has a unique constraint so I'm never getting more than 1
     }
 
     public User findOne(long id) {
