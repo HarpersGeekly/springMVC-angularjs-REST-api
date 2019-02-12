@@ -148,9 +148,14 @@ public class PostDTO {
 
     @JsonGetter("htmlLeadImage")
     public String getHtmlLeadImage() {
-        Parser parser = Parser.builder().build();
-        HtmlRenderer renderer = HtmlRenderer.builder().build();
-        return renderer.render(parser.parse(leadImage));
+        //null checker
+        if (leadImage != null) {
+            Parser parser = Parser.builder().build();
+            HtmlRenderer renderer = HtmlRenderer.builder().build();
+            return renderer.render(parser.parse(leadImage));
+        } else {
+            return null;
+        }
     }
 
     @JsonGetter("htmlSubtitle")

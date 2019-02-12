@@ -7,6 +7,8 @@ import com.codstrainingapp.trainingapp.services.PostVoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController // @RestController = @Controller + @ResponseBody (returns jackson json string) instead of annotating methods with @ResponseBody
@@ -44,6 +46,7 @@ public class PostsRestController {
     @PostMapping("/savePost")
     @ResponseStatus(HttpStatus.CREATED)
     public PostDTO savePost(@RequestBody PostDTO post) {
+        post.setDate(LocalDateTime.now());
         return postSvc.savePost(post);
     }
 
