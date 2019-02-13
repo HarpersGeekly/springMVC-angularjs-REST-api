@@ -2,10 +2,13 @@ package com.codstrainingapp.trainingapp.controllers;
 
 import com.codstrainingapp.trainingapp.models.Post;
 import com.codstrainingapp.trainingapp.models.PostDTO;
+import com.codstrainingapp.trainingapp.models.PostVote;
+import com.codstrainingapp.trainingapp.models.UserDTO;
 import com.codstrainingapp.trainingapp.services.PostService;
 import com.codstrainingapp.trainingapp.services.PostVoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -59,8 +62,9 @@ public class PostsRestController {
 
 // ---------------- Delete Post ------------------------------
 
-    @DeleteMapping("/deletePost")
-    public void deletePost(@RequestBody PostDTO post) {
+    @DeleteMapping("/deletePost/{id}")
+    public void deletePost(@PathVariable Long id) {
+        PostDTO post = postSvc.findOne(id);
         postSvc.delete(post);
     }
 
@@ -69,5 +73,47 @@ public class PostsRestController {
 //        Post post = postSvc.findOne(id);
 //        postSvc.delete(post);
 //        return "redirect:http://localhost:8080/profile";
+//    }
+
+    @PostMapping("/posts/{type}/{id}")
+    @ResponseBody
+    public PostDTO postVoting(@PathVariable Long id, @PathVariable String type,
+                    Authentication token) {
+
+        PostDTO post = postSvc.findOne(id);
+        UserDTO user = (UserDTO) token.getPrincipal(); //userSvc.loggedInUser()));
+
+        if (type.equalsIgnoreCase("upvote")) {
+//            post.addVote(PostVote.up(post, user));
+        } else {
+//            post.addVote(PostVote.down(post, user));
+        }
+
+        postSvc.savePost(post);
+        return post;
+    }
+
+//    @PostMapping("/posts/{postId}/removeVote")
+//    public @ResponseBody
+//    Post voteRemoval(@PathVariable Long postId) {
+//
+//        PostDTO post = postSvc.findOne(postId);
+//        UserDTO user = userSvc.loggedInUser();
+
+//        List<PostVote> votes = post.getVotes();
+//        System.out.println("vote count:" + post.voteCount());
+
+//        for (PostVote vote : votes) {
+////            if (vote.getUser().getId() == (user.getId())) {
+//            if (vote.voteBelongsTo(user)) {
+//                post.removeVote(vote);
+//                postVoteSvc.delete(vote);
+//                postSvc.save(post);
+//                System.out.println("vote count:" + post.voteCount());
+//                break;
+//            }
+//        }
+//        postSvc.save(post);
+//        return post;
 //    }
 }
