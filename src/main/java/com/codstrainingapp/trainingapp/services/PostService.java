@@ -88,10 +88,10 @@ public class PostService {
     private Post convertToPost(PostDTO dto){
         Post entity = new Post();
         entity.setId(dto.getId());
-        entity.setTitle(dto.getHtmlTitle());
-        entity.setSubtitle(dto.getHtmlSubtitle());
-        entity.setBody(dto.getHtmlBody());
-        entity.setLeadImage(dto.getHtmlLeadImage());
+        entity.setTitle(dto.getTitle());
+        entity.setSubtitle(dto.getSubtitle());
+        entity.setBody(dto.getBody());
+        entity.setLeadImage(dto.getLeadImage());
         entity.setDate(dto.getDate());
         entity.setUser(dto.getUser());
         entity.setPostVotes(dto.getPostVotes());
