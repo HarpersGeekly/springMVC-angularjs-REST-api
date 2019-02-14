@@ -6,8 +6,10 @@ import com.codstrainingapp.trainingapp.models.PostVote;
 import com.codstrainingapp.trainingapp.models.UserDTO;
 import com.codstrainingapp.trainingapp.services.PostService;
 import com.codstrainingapp.trainingapp.services.PostVoteService;
+import com.codstrainingapp.trainingapp.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,11 +38,21 @@ public class PostsRestController {
 
     @GetMapping("/postById/{id}")
     public PostDTO findById(@PathVariable(name = "id") Long id) {
+        try {
+            postSvc.findOne(id);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException();
+        }
         return postSvc.findOne(id);
     }
 
     @GetMapping("/postsByUserId/{id}")
     public List<PostDTO> findAllByUserId(@PathVariable(name = "id") Long id) {
+        try {
+            postSvc.findAllByUserId(id);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException();
+        }
         return postSvc.findAllByUserId(id);
     }
 
@@ -63,17 +75,15 @@ public class PostsRestController {
 // ---------------- Delete Post ------------------------------
 
     @DeleteMapping("/deletePost/{id}")
-    public void deletePost(@PathVariable Long id) {
-        PostDTO post = postSvc.findOne(id);
-        postSvc.delete(post);
+    public ResponseEntity<String> deleteById(@PathVariable Long id) {
+        try {
+            PostDTO user = postSvc.findOne(id);
+            postSvc.delete(user);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
-
-//    @DeleteMapping("/deletePost/{id}/redirect")
-//    public String deletePostRedirect(@PathVariable long id) {
-//        Post post = postSvc.findOne(id);
-//        postSvc.delete(post);
-//        return "redirect:http://localhost:8080/profile";
-//    }
 
     @PostMapping("/posts/{type}/{id}")
     @ResponseBody

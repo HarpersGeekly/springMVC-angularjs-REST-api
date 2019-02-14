@@ -1,14 +1,14 @@
 package com.codstrainingapp.trainingapp.controllers;
 
-import com.codstrainingapp.trainingapp.models.User;
 import com.codstrainingapp.trainingapp.models.UserDTO;
 import com.codstrainingapp.trainingapp.services.UserService;
 
+import com.codstrainingapp.trainingapp.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -46,17 +46,31 @@ public class UsersRestController {
 
     @GetMapping(value = "/id/{id}")
     public UserDTO findById(@PathVariable(name = "id") Long id) {
+        try {
+            userSvc.findOne(id);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException();
+        }
         return userSvc.findOne(id);
     }
 
     @GetMapping(value = "/username/{username}")
     public UserDTO findByUsername(@PathVariable(name = "username") String username) {
+        try {
+            userSvc.findByUsername(username);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException();
+        }
         return userSvc.findByUsername(username);
     }
 
     @GetMapping(value = "/email")
     public UserDTO findByEmail(@RequestParam(name = "email") String email) {
-        System.out.println("email: " + email);
+        try {
+            userSvc.findByEmail(email);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException();
+        }
         return userSvc.findByEmail(email);
     }
 
@@ -79,9 +93,15 @@ public class UsersRestController {
 //--------------------- Delete User ----------------------------------------------------
 
     @DeleteMapping(value = "/deleteUser/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        UserDTO user = userSvc.findOne(id);
-        userSvc.delete(user);
+//    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<String> deleteById(@PathVariable Long id) {
+        try {
+            UserDTO user = userSvc.findOne(id);
+            userSvc.delete(user);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 }
