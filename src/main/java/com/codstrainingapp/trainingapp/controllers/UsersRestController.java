@@ -1,6 +1,9 @@
 package com.codstrainingapp.trainingapp.controllers;
 
+import com.codstrainingapp.trainingapp.models.Post;
+import com.codstrainingapp.trainingapp.models.PostDTO;
 import com.codstrainingapp.trainingapp.models.UserDTO;
+import com.codstrainingapp.trainingapp.services.PostService;
 import com.codstrainingapp.trainingapp.services.UserService;
 
 import com.codstrainingapp.trainingapp.utils.ResourceNotFoundException;
@@ -19,10 +22,12 @@ import java.util.List;
 public class UsersRestController {
 
     private UserService userSvc;
+    private PostService postSvc;
 
     @Autowired
-    public UsersRestController(UserService userSvc) {
+    public UsersRestController(UserService userSvc, PostService postSvc) {
         this.userSvc = userSvc;
+        this.postSvc = postSvc;
     }
 
     @PostMapping("/authenticate")
@@ -97,6 +102,10 @@ public class UsersRestController {
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
         try {
             UserDTO user = userSvc.findOne(id);
+            List<PostDTO> posts = postSvc.findAllByUserId(id);
+            for(PostDTO p : posts) {
+                postSvc.delete(p);
+            }
             userSvc.delete(user);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
