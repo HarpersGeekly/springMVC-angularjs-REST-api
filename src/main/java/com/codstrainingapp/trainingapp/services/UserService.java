@@ -89,7 +89,7 @@ public class UserService {
         usersDao.delete(user);
     }
 
-    private UserDTO convertToUserDTO(User user){
+    public UserDTO convertToUserDTO(User user){
         UserDTO dto = new UserDTO();
         dto.setId(user.getId());
         dto.setUsername(user.getUsername());
@@ -100,7 +100,7 @@ public class UserService {
         return dto;
     }
 
-    private User convertToUser(UserDTO userDto){
+    public User convertToUser(UserDTO userDto){
         User entity = new User();
         entity.setId(userDto.getId());
         entity.setUsername(userDto.getUsername());

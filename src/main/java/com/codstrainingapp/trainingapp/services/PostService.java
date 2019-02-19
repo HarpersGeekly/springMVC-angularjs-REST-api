@@ -72,7 +72,7 @@ public class PostService {
         postsDao.delete(post);
     }
 
-    private PostDTO convertToPostDTO(Post post){
+    public PostDTO convertToPostDTO(Post post){
         PostDTO dto = new PostDTO();
         dto.setId(post.getId());
         dto.setTitle(post.getTitle());
@@ -85,7 +85,7 @@ public class PostService {
         return dto;
     }
 
-    private Post convertToPost(PostDTO dto){
+    public Post convertToPost(PostDTO dto){
         Post entity = new Post();
         entity.setId(dto.getId());
         entity.setTitle(dto.getTitle());
