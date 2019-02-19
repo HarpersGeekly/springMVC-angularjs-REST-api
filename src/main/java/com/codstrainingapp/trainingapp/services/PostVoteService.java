@@ -20,4 +20,7 @@ public class PostVoteService {
     public void savePostVote(PostVote postVote) {
         postVotesDao.savePostVote(postVote);
     }
+    public void deletePostVote(PostVote postVote) {
+        postVotesDao.deletePostVote(postVote);
+    }
 }

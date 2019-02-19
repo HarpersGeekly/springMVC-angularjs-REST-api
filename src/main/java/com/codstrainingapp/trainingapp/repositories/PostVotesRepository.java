@@ -6,4 +6,5 @@ public interface PostVotesRepository {
 
 //    int totalPostVotes(Long id);
     void savePostVote(PostVote postVote);
+    void deletePostVote(PostVote postVote);
 }

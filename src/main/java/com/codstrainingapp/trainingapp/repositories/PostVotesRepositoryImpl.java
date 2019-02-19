@@ -10,6 +10,9 @@ public class PostVotesRepositoryImpl extends AbstractDao<Long, PostVote> impleme
     public void savePostVote(PostVote postVote) {
         save(postVote);
     }
+    public void deletePostVote(PostVote postVote) {
+        delete(postVote);
+    }
 
 
 //    public int totalPostVotes(Long id) {
