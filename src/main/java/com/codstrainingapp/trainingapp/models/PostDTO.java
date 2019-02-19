@@ -1,6 +1,7 @@
 package com.codstrainingapp.trainingapp.models;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 
@@ -17,7 +18,8 @@ public class PostDTO {
     private String body;
     private LocalDateTime date;
 
-    public PostDTO() {}
+    public PostDTO() {
+    }
 
     //=============================== relationships =========================================
 
@@ -92,6 +94,7 @@ public class PostDTO {
         return date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
     }
 
+    @JsonIgnore
     public List<PostVote> getPostVotes() {
         return postVotes;
     }
@@ -100,10 +103,11 @@ public class PostDTO {
         this.postVotes = postVotes;
     }
 
-    // VOTING LOGIC =============================================================================
-    @JsonGetter("voteCount") // saying that this method is only being used as an attribute in show.html
+    // ===================== VOTING LOGIC =============================================================================
+
+    @JsonGetter("voteCount")
     public int voteCount() {
-        if(postVotes != null) {
+        if (postVotes != null) {
             return postVotes.stream().mapToInt(PostVote::getType).reduce(0, (sum, vote) -> sum + vote);
         } else {
             return 0;
@@ -120,24 +124,33 @@ public class PostDTO {
         // reduce() sums the values
     }
 
-    public PostVote getVoteFrom(User user) {
+    public void getVoteFrom(User user) {
         for (PostVote vote : postVotes) {
             if (vote.voteBelongsTo(user)) {
-                return vote;
+                if (vote.isUpvote()) {
+                    hasVotedUp = true;
+                } else {
+                    hasVotedDown = true;
+                }
+                return;
             }
         }
-        return null;
     }
 
-    public void addVote(PostVote vote) {
-        postVotes.add(vote);
+    private boolean hasVotedUp;
+    private boolean hasVotedDown;
+
+    @JsonGetter("loggedInUserHasVotedUp")
+    public boolean hasVotedUp() {
+        return hasVotedUp;
     }
 
-    public void removeVote(PostVote vote) {
-        postVotes.remove(vote);
+    @JsonGetter("loggedInUserHasVotedDown")
+    public boolean hasVotedDown() {
+        return hasVotedDown;
     }
 
-    // MARKDOWN PARSING FOR VIEW ==============================================================
+    // ======================== MARKDOWN PARSING FOR VIEW ==============================================================
 
     @JsonGetter("htmlTitle")
     public String getHtmlTitle() {
@@ -172,3 +185,4 @@ public class PostDTO {
         return renderer.render(parser.parse(body));
     }
 }
+
