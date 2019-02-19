@@ -54,8 +54,25 @@ public class Post {
     @ManyToOne
     private User user;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL) // .ALL needed for saving in db.
     private List<PostVote> postVotes;
+
+    public void addVote(PostVote vote) {
+        postVotes.add(vote);
+    }
+
+    public void removeVote(PostVote vote) {
+        postVotes.remove(vote);
+    }
+
+    public PostVote getVoteFrom(User user) {
+        for (PostVote vote : postVotes) {
+            if (vote.voteBelongsTo(user)) {
+                return vote;
+            }
+        }
+        return null;
+    }
 
     //=============================== getters and setters =========================================
 
