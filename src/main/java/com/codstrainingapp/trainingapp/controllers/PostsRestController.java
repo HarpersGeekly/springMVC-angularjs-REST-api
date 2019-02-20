@@ -1,11 +1,9 @@
 package com.codstrainingapp.trainingapp.controllers;
 
-import com.codstrainingapp.trainingapp.models.Post;
-import com.codstrainingapp.trainingapp.models.PostDTO;
-import com.codstrainingapp.trainingapp.models.PostVote;
-import com.codstrainingapp.trainingapp.models.UserDTO;
+import com.codstrainingapp.trainingapp.models.*;
 import com.codstrainingapp.trainingapp.services.PostService;
 import com.codstrainingapp.trainingapp.services.PostVoteService;
+import com.codstrainingapp.trainingapp.services.UserService;
 import com.codstrainingapp.trainingapp.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,11 +22,13 @@ public class PostsRestController {
 
     private PostService postSvc;
     private PostVoteService postVoteSvc;
+    private UserService userSvc;
 
     @Autowired
-    public PostsRestController(PostService postSvc, PostVoteService postVoteSvc) {
+    public PostsRestController(PostService postSvc, PostVoteService postVoteSvc, UserService userSvc) {
         this.postSvc = postSvc;
         this.postVoteSvc = postVoteSvc;
+        this.userSvc = userSvc;
     }
 
     @GetMapping("/posts")
@@ -37,9 +37,14 @@ public class PostsRestController {
     }
 
     @GetMapping("/postById/{id}")
-    public PostDTO findById(@PathVariable(name = "id") Long id) {
+    public PostDTO findById(@PathVariable(name = "id") Long id, @RequestParam(name = "userId", required=false) Long userId) {
         try {
-            postSvc.findOne(id);
+            PostDTO postDto = postSvc.findOne(id);
+            if (userId != null) {
+                UserDTO userDto = userSvc.findOne(userId);
+                postDto.getVoteFrom(userSvc.convertToUser(userDto));
+                return postDto;
+            }
         } catch (Exception e) {
             throw new ResourceNotFoundException();
         }
@@ -85,45 +90,38 @@ public class PostsRestController {
         }
     }
 
-    @PostMapping("/posts/{type}/{id}")
-    @ResponseBody
-    public PostDTO postVoting(@PathVariable Long id, @PathVariable String type,
-                    Authentication token) {
-
-        PostDTO post = postSvc.findOne(id);
-        UserDTO user = (UserDTO) token.getPrincipal(); //userSvc.loggedInUser()));
-
-        if (type.equalsIgnoreCase("upvote")) {
-//            post.addVote(PostVote.up(post, user));
+    @PostMapping("/postVote/{postId}/{userId}/{type}")
+    public PostDTO postVoting(@PathVariable Long postId, @PathVariable Long userId, @PathVariable int type) {
+        PostDTO postDto = postSvc.findOne(postId);
+        UserDTO userDto = userSvc.findOne(userId);
+        Post post = postSvc.convertToPost(postDto);
+        User user = userSvc.convertToUser(userDto);
+        if (type == 1) {
+            post.addVote(PostVote.up(post, user));
         } else {
-//            post.addVote(PostVote.down(post, user));
+            post.addVote(PostVote.down(post, user));
         }
-
-        postSvc.savePost(post);
-        return post;
+        postSvc.savePost(postDto);
+        return postDto;
     }
 
-//    @PostMapping("/posts/{postId}/removeVote")
-//    public @ResponseBody
-//    Post voteRemoval(@PathVariable Long postId) {
-//
-//        PostDTO post = postSvc.findOne(postId);
-//        UserDTO user = userSvc.loggedInUser();
+    @PostMapping("/removeVote/{postId}/{userId}")
+    public PostDTO voteRemoval(@PathVariable Long postId, @PathVariable Long userId) {
+        UserDTO userDto = userSvc.findOne(userId);
+        PostDTO postDto = postSvc.findOne(postId);
+        User user = userSvc.convertToUser(userDto);
+        Post post = postSvc.convertToPost(postDto);
+        List<PostVote> votes = post.getPostVotes();
 
-//        List<PostVote> votes = post.getVotes();
-//        System.out.println("vote count:" + post.voteCount());
-
-//        for (PostVote vote : votes) {
-////            if (vote.getUser().getId() == (user.getId())) {
-//            if (vote.voteBelongsTo(user)) {
-//                post.removeVote(vote);
-//                postVoteSvc.delete(vote);
-//                postSvc.save(post);
-//                System.out.println("vote count:" + post.voteCount());
-//                break;
-//            }
-//        }
-//        postSvc.save(post);
-//        return post;
-//    }
+        for (PostVote vote : votes) {
+            if (vote.voteBelongsTo(user)) {
+                post.removeVote(vote);
+                postVoteSvc.deletePostVote(vote);
+                postSvc.savePost(postDto);
+                break;
+            }
+        }
+        postSvc.savePost(postDto);
+        return postDto;
+    }
 }
