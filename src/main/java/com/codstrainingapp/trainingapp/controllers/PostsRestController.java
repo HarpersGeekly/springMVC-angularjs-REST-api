@@ -31,9 +31,21 @@ public class PostsRestController {
         this.userSvc = userSvc;
     }
 
+// -------------------- Get Posts ------------------------------
+
     @GetMapping("/posts")
     public List<PostDTO> findAll() {
         return postSvc.findAll();
+    }
+
+    @GetMapping("/postsByUserId/{id}")
+    public List<PostDTO> findAllByUserId(@PathVariable(name = "id") Long id) {
+        try {
+            postSvc.findAllByUserId(id);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException();
+        }
+        return postSvc.findAllByUserId(id);
     }
 
     @GetMapping("/postById/{id}")
@@ -51,17 +63,7 @@ public class PostsRestController {
         return postSvc.findOne(id);
     }
 
-    @GetMapping("/postsByUserId/{id}")
-    public List<PostDTO> findAllByUserId(@PathVariable(name = "id") Long id) {
-        try {
-            postSvc.findAllByUserId(id);
-        } catch (Exception e) {
-            throw new ResourceNotFoundException();
-        }
-        return postSvc.findAllByUserId(id);
-    }
-
-// --------------- Save Post ---------------------------------
+// -------------------- Save Post ---------------------------------
 
     @PostMapping("/savePost")
     @ResponseStatus(HttpStatus.CREATED)
@@ -70,14 +72,14 @@ public class PostsRestController {
         return postSvc.savePost(post);
     }
 
-// ---------------- Update Post ------------------------------
+// ------------------- Update Post ------------------------------
 
     @PutMapping("/editPost")
     public PostDTO editPost(@RequestBody PostDTO post) {
         return postSvc.updatePost(post);
     }
 
-// ---------------- Delete Post ------------------------------
+// ------------------- Delete Post ------------------------------
 
     @DeleteMapping("/deletePost/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
@@ -89,6 +91,8 @@ public class PostsRestController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+// ----------------- Post Voting --------------------------------
 
     @PostMapping("/postVote/{postId}/{userId}/{type}")
     public PostDTO postVoting(@PathVariable Long postId, @PathVariable Long userId, @PathVariable int type) {
