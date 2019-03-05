@@ -127,27 +127,19 @@ public class PostDTO {
     public void getVoteFrom(User user) {
         for (PostVote vote : postVotes) {
             if (vote.voteBelongsTo(user)) {
-                if (vote.isUpvote()) {
-                    hasVotedUp = true;
-                } else {
-                    hasVotedDown = true;
-                }
+                setUserVote(vote.getType());
                 return;
             }
         }
     }
 
-    private boolean hasVotedUp;
-    private boolean hasVotedDown;
-
-    @JsonGetter("loggedInUserHasVotedUp")
-    public boolean hasVotedUp() {
-        return hasVotedUp;
+    private int userVote;
+    public int getUserVote() {
+        return userVote;
     }
 
-    @JsonGetter("loggedInUserHasVotedDown")
-    public boolean hasVotedDown() {
-        return hasVotedDown;
+    public void setUserVote(int userVote) {
+        this.userVote = userVote;
     }
 
     // ======================== MARKDOWN PARSING FOR VIEW ==============================================================
@@ -184,5 +176,6 @@ public class PostDTO {
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         return renderer.render(parser.parse(body));
     }
+
 }
 
