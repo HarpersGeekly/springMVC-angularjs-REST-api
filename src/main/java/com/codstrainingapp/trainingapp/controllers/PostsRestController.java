@@ -84,8 +84,8 @@ public class PostsRestController {
     @DeleteMapping("/deletePost/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
         try {
-            PostDTO user = postSvc.findOne(id);
-            postSvc.delete(user);
+            PostDTO post = postSvc.findOne(id);
+            postSvc.delete(post);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -105,8 +105,10 @@ public class PostsRestController {
         } else {
             post.addVote(PostVote.down(post, user));
         }
-        postSvc.savePost(postDto);
-        return postDto;
+
+        PostDTO postDTO = postSvc.savePost(postDto);
+        postDTO.getVoteFrom(user);
+        return postDTO;
     }
 
     @PostMapping("/removeVote/{postId}/{userId}")
@@ -125,7 +127,8 @@ public class PostsRestController {
                 break;
             }
         }
-        postSvc.savePost(postDto);
-        return postDto;
+        PostDTO postDTO = postSvc.savePost(postDto);
+        postDTO.getVoteFrom(user);
+        return postDTO;
     }
 }
