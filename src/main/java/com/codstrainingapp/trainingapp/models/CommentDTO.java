@@ -7,11 +7,16 @@ public class CommentDTO {
     private Long id;
     private String body;
     private LocalDateTime date;
-    private Post post;
-    private User user;
 
     public CommentDTO(){}
 
+    //======================== relationships =====================
+
+    private Post post;
+    private User user;
+
+    //======================== getters & setters =================
+    
     public User getUser() {
         return user;
     }
