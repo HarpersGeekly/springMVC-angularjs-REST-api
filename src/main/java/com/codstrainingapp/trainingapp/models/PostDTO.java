@@ -25,6 +25,7 @@ public class PostDTO {
 
     private User user;
     private List<PostVote> postVotes;
+    private List<Comment> comments;
 
     //=============================== getters and setters =========================================
 
@@ -103,6 +104,25 @@ public class PostDTO {
         this.postVotes = postVotes;
     }
 
+    @JsonIgnore
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    private int commentCount;
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
+
     // ===================== VOTING LOGIC =============================================================================
 
     @JsonGetter("voteCount")
@@ -176,6 +196,5 @@ public class PostDTO {
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         return renderer.render(parser.parse(body));
     }
-
 }
 

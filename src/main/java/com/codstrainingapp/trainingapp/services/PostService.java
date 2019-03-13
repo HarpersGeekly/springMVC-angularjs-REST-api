@@ -82,6 +82,7 @@ public class PostService {
         dto.setDate(post.getDate());
         dto.setUser(post.getUser());
         dto.setVotes(post.getPostVotes());
+        dto.setCommentCount(post.getComments().size());
         return dto;
     }
 

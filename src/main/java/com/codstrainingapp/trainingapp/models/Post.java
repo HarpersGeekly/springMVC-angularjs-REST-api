@@ -57,6 +57,9 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL) // .ALL needed for saving in db.
     private List<PostVote> postVotes;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL) // one user can have many comments. When User is deleted, these delete too
+    private List<Comment> comments;
+
     public void addVote(PostVote vote) {
         postVotes.add(vote);
     }
@@ -138,5 +141,13 @@ public class Post {
 
     public void setPostVotes(List<PostVote> postVotes) {
         this.postVotes = postVotes;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }
