@@ -1,5 +1,6 @@
 package com.codstrainingapp.trainingapp.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -21,15 +22,16 @@ public class Comment {
     private LocalDateTime date;
 
     @ManyToOne
-    private Post post;
-
-    @ManyToOne
     private User user;
 
-    public Comment(String body, LocalDateTime date, Post post, User user) {
+    @ManyToOne
+    private Post post;
+
+    public Comment(){}
+
+    public Comment(String body, LocalDateTime date, User user) {
         this.body = body;
         this.date = date;
-        this.post = post;
         this.user = user;
     }
 
@@ -39,14 +41,6 @@ public class Comment {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public Post getPost() {
-        return post;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
     }
 
     public LocalDateTime getDate() {
@@ -71,5 +65,13 @@ public class Comment {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
     }
 }

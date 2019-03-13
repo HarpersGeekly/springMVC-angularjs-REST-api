@@ -1,6 +1,10 @@
 package com.codstrainingapp.trainingapp.models;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class CommentDTO {
 
@@ -16,7 +20,7 @@ public class CommentDTO {
     private User user;
 
     //======================== getters & setters =================
-    
+
     public User getUser() {
         return user;
     }
@@ -56,4 +60,15 @@ public class CommentDTO {
     public void setId(Long id) {
         this.id = id;
     }
+
+    @JsonGetter("hoursMinutes")
+    public String hoursMinutes() {
+        return date.format(DateTimeFormatter.ofPattern("h:mm a"));
+    }
+
+    @JsonGetter("formatDate")
+    public String formatDate() {
+        return date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
+    }
+
 }
