@@ -11,6 +11,7 @@ public class CommentDTO {
     private Long id;
     private String body;
     private LocalDateTime date;
+    private boolean hasBeenDeleted;
 
     public CommentDTO(){}
 
@@ -71,4 +72,11 @@ public class CommentDTO {
         return date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
     }
 
+    public boolean hasBeenDeleted() {
+        return hasBeenDeleted;
+    }
+
+    public void setHasBeenDeleted(boolean hasBeenDeleted) {
+        this.hasBeenDeleted = hasBeenDeleted;
+    }
 }

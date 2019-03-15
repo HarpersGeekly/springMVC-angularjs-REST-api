@@ -21,6 +21,8 @@ public class Comment {
 
     private LocalDateTime date;
 
+    private boolean hasBeenDeleted;
+
     @ManyToOne
     private User user;
 
@@ -73,5 +75,13 @@ public class Comment {
 
     public void setPost(Post post) {
         this.post = post;
+    }
+
+    public boolean hasBeenDeleted() {
+        return hasBeenDeleted;
+    }
+
+    public void setHasBeenDeleted(boolean hasBeenDeleted) {
+        this.hasBeenDeleted = hasBeenDeleted;
     }
 }
