@@ -53,21 +53,25 @@ public class CommentService {
         return convertToCommentDTO(entity);
     }
 
-    public void delete(CommentDTO dto) {
+    public CommentDTO delete(CommentDTO dto) { // void
         Comment comment = convertToComment(dto);
-        commentsDao.delete(comment);
+//        commentsDao.delete(comment);
+        comment.setBody("[deleted]");
+        comment.setHasBeenDeleted(true);
+        return convertToCommentDTO(comment);
     }
 
-    private CommentDTO convertToCommentDTO(Comment comment){
+    public CommentDTO convertToCommentDTO(Comment comment){
         CommentDTO dto = new CommentDTO();
         dto.setId(comment.getId());
         dto.setBody(comment.getBody());
         dto.setUser(comment.getUser());
         dto.setDate(comment.getDate());
+        dto.setHasBeenDeleted(comment.hasBeenDeleted());
         return dto;
     }
 
-    private Comment convertToComment(CommentDTO commentDto){
+    public Comment convertToComment(CommentDTO commentDto){
         Comment entity = new Comment();
         entity.setId(commentDto.getId());
         entity.setUser(commentDto.getUser());
