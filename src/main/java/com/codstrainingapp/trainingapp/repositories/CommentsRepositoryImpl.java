@@ -9,6 +9,10 @@ import java.util.List;
 @Repository
 public class CommentsRepositoryImpl extends AbstractDao<Long, Comment> implements CommentsRepository {
 
+    public Comment findOne(long id) {
+        return getByKey(id);
+    }
+
     @SuppressWarnings("unchecked")
     public List<Comment> findAllByPostId(long id) {
         Query query = createCustomQuery("FROM Comment WHERE post_id =" + id);

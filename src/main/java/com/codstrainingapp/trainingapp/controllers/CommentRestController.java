@@ -23,6 +23,8 @@ public class CommentRestController {
         this.commentSvc = commentSvc;
     }
 
+    // ------------------- Find Comment(s) ------------------------------
+
     @GetMapping("/commentsByPost/{postId}")
     public List<CommentDTO> getCommentsByPost(@PathVariable Long postId) {
         try {
@@ -43,6 +45,8 @@ public class CommentRestController {
         return commentSvc.findAllByUserId(userId);
     }
 
+    // ------------------- Save Comment --------------------------------
+
     @PostMapping("/saveComment")
     @ResponseStatus(HttpStatus.CREATED)
     public CommentDTO saveComment(@RequestBody CommentDTO comment) {
@@ -50,4 +54,22 @@ public class CommentRestController {
         comment.setDate(LocalDateTime.now());
         return commentSvc.saveComment(comment);
     }
+
+    // ------------------- Delete Comment ------------------------------
+
+    @DeleteMapping("/deleteComment/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable Long id) {
+        try {
+            CommentDTO commentDto = commentSvc.findOne(id);
+            commentSvc.delete(commentDto);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // ------------------- Edit Comment ------------------------------
+
+
+
 }

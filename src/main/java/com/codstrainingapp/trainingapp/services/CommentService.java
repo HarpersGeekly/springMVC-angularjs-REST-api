@@ -33,7 +33,7 @@ public class CommentService {
         return getCommentDTOS(comments);
     }
 
-    private List<CommentDTO> getCommentDTOS(List<Comment> comments) {
+    public List<CommentDTO> getCommentDTOS(List<Comment> comments) {
         List<CommentDTO> dtos = new ArrayList<>();
         for(Comment c : comments) {
             CommentDTO converted = convertToCommentDTO(c);
@@ -42,13 +42,23 @@ public class CommentService {
         return dtos;
     }
 
+    public CommentDTO findOne(Long id) {
+        Comment comment = commentsDao.findOne(id);
+        return convertToCommentDTO(comment);
+    }
+
     public CommentDTO saveComment(CommentDTO dto) {
         Comment entity = convertToComment(dto);
         commentsDao.saveComment(entity);
         return convertToCommentDTO(entity);
     }
 
-    public CommentDTO convertToCommentDTO(Comment comment){
+    public void delete(CommentDTO dto) {
+        Comment comment = convertToComment(dto);
+        commentsDao.delete(comment);
+    }
+
+    private CommentDTO convertToCommentDTO(Comment comment){
         CommentDTO dto = new CommentDTO();
         dto.setId(comment.getId());
         dto.setBody(comment.getBody());
@@ -57,7 +67,7 @@ public class CommentService {
         return dto;
     }
 
-    public Comment convertToComment(CommentDTO commentDto){
+    private Comment convertToComment(CommentDTO commentDto){
         Comment entity = new Comment();
         entity.setId(commentDto.getId());
         entity.setUser(commentDto.getUser());

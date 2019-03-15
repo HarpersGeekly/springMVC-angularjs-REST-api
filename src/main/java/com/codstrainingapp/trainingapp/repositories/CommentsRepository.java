@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface CommentsRepository {
 
-    List findAllByPostId(long id);
+    Comment findOne(long id)
+;    List findAllByPostId(long id);
     List<Comment> findAllByUserId(long id);
     void saveComment(Comment comment);
+    void delete(Comment comment);
 }
