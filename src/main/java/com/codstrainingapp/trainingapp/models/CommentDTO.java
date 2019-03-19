@@ -72,7 +72,7 @@ public class CommentDTO {
         return date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
     }
 
-    public boolean hasBeenDeleted() {
+    public boolean isHasBeenDeleted() {
         return hasBeenDeleted;
     }
 

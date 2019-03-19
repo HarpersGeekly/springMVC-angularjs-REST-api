@@ -77,7 +77,7 @@ public class Comment {
         this.post = post;
     }
 
-    public boolean hasBeenDeleted() {
+    public boolean isHasBeenDeleted() {
         return hasBeenDeleted;
     }
 

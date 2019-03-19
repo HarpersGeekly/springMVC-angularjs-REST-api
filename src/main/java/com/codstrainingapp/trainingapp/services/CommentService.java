@@ -2,8 +2,6 @@ package com.codstrainingapp.trainingapp.services;
 
 import com.codstrainingapp.trainingapp.models.Comment;
 import com.codstrainingapp.trainingapp.models.CommentDTO;
-import com.codstrainingapp.trainingapp.models.Post;
-import com.codstrainingapp.trainingapp.models.PostDTO;
 import com.codstrainingapp.trainingapp.repositories.CommentsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,9 +52,8 @@ public class CommentService {
     }
 
     public CommentDTO delete(CommentDTO dto) { // void
-        Comment comment = convertToComment(dto);
+        Comment comment = commentsDao.findOne(dto.getId());
 //        commentsDao.delete(comment);
-        comment.setBody("[deleted]");
         comment.setHasBeenDeleted(true);
         return convertToCommentDTO(comment);
     }
@@ -67,7 +64,7 @@ public class CommentService {
         dto.setBody(comment.getBody());
         dto.setUser(comment.getUser());
         dto.setDate(comment.getDate());
-        dto.setHasBeenDeleted(comment.hasBeenDeleted());
+        dto.setHasBeenDeleted(comment.isHasBeenDeleted());
         return dto;
     }
 
@@ -78,6 +75,7 @@ public class CommentService {
         entity.setBody(commentDto.getBody());
         entity.setDate(commentDto.getDate());
         entity.setPost(commentDto.getPost());
+        entity.setHasBeenDeleted(commentDto.isHasBeenDeleted());
         return entity;
     }
 }
