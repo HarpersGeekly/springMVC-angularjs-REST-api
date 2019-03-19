@@ -58,14 +58,9 @@ public class CommentRestController {
     // ------------------- Delete Comment ------------------------------
 
     @DeleteMapping("/deleteComment/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable Long id) {
-        try {
-            CommentDTO commentDto = commentSvc.findOne(id);
-            commentSvc.delete(commentDto);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public CommentDTO deleteById(@PathVariable Long id) {
+        CommentDTO commentDto = commentSvc.findOne(id);
+        return commentSvc.delete(commentDto);
     }
 
     // ------------------- Edit Comment ------------------------------
