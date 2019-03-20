@@ -20,7 +20,8 @@ public class CommentsRepositoryImpl extends AbstractDao<Long, Comment> implement
     }
 
     public List<Comment> findAllByUserId(long id) {
-        return null;
+        Query query = createCustomQuery("FROM Comment WHERE user_id =" + id);
+        return query.list();
     }
 
     public void saveComment(Comment comment) {
