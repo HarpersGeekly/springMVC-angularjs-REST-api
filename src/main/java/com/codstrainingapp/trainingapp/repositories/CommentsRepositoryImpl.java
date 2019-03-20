@@ -19,6 +19,7 @@ public class CommentsRepositoryImpl extends AbstractDao<Long, Comment> implement
         return query.list();
     }
 
+    @SuppressWarnings("unchecked")
     public List<Comment> findAllByUserId(long id) {
         Query query = createCustomQuery("FROM Comment WHERE user_id =" + id);
         return query.list();
