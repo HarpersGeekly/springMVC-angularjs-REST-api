@@ -1,6 +1,8 @@
 package com.codstrainingapp.trainingapp.repositories;
 
 import com.codstrainingapp.trainingapp.models.Post;
+import org.springframework.data.jpa.repository.Query;
+
 import java.util.List;
 
 public interface PostsRepository {
